@@ -1401,6 +1401,11 @@ def _safe(s) -> str:
 app, rt = fast_app(hdrs=PWA_HEADERS, live=False)
 app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
 
+from starlette.responses import FileResponse
+@app.route("/sw.js")
+async def service_worker(request):
+    return FileResponse(str(_STATIC_DIR / "sw.js"), media_type="application/javascript", headers={"Service-Worker-Allowed": "/"})
+
 # ─────────────────────────────────────────────────────────────
 # Page shell
 # ─────────────────────────────────────────────────────────────
