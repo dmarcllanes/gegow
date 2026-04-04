@@ -1,0 +1,2024 @@
+"""
+Gegow — Digital-in-Pocket Travel Agency
+FastHTML entry point — premium UI, Airbnb/Agoda/Kayak inspired.
+"""
+
+import sys
+import os
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from fasthtml.common import (
+    fast_app, serve,
+    Html, Head, Body, Title, Meta, Link, Script, Style,
+    Div, Main, Span, A, Button, Input, Select, Option, H2, P, H1,
+)
+from starlette.responses import RedirectResponse as StarletteRedirect
+
+from app.components.navigation import app_header, bottom_nav, sidebar, NAV_CSS
+from app.components.wizard import WIZARD_CSS
+from app.components.suitcase import SUITCASE_CSS
+from app.routes import explore, booking, shop, b2b
+
+# ─────────────────────────────────────────────────────────────
+# DESIGN SYSTEM CSS
+# ─────────────────────────────────────────────────────────────
+
+CSS = """
+/* ── 1. Tokens (UI.md) ───────────────────────────────────── */
+:root {
+  /* — Official Gegow palette from UI.md — */
+  --gegow-primary:      #006D77;
+  --gegow-accent:       #FF7043;
+  --gegow-bg:           #F1F1E6;
+  --gegow-gradient-btn: linear-gradient(90deg, #FF7043, #F4511E);
+  --gegow-glass:        rgba(255,255,255,0.7);
+
+  /* — Aliases used throughout — */
+  --teal:      #006D77;
+  --teal-dk:   #005760;
+  --teal-lt:   #B2DFDB;
+  --teal-xl:   #E0F2F1;
+  --beige:     #F1F1E6;
+  --border:    #DDD9CE;
+  --border-dk: #C8C4B8;
+  --text:      #0F172A;
+  --muted:     #5F6B72;
+  --muted-lt:  #94A3B8;
+  --amber:     #FF7043;
+  --amber-lt:  #FBE9E7;
+  --white:     #FFFFFF;
+  --sidebar:   240px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.05);
+  --shadow-lg: 0 12px 32px rgba(15,23,42,.10), 0 4px 8px rgba(15,23,42,.06);
+  --shadow-xl: 0 24px 56px rgba(15,23,42,.14), 0 8px 16px rgba(15,23,42,.07);
+}
+
+/* ── 2. Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, 'Segoe UI', Roboto, Inter, system-ui, sans-serif;
+  background: var(--beige);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font-family: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── 3. App shell ─────────────────────────────────────────── */
+.app-layout { display: flex; min-height: 100vh; }
+.main-area  {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 80px;
+}
+@media (min-width: 768px) { .main-area { padding-bottom: 40px; } }
+
+/* ── 4. Animations ────────────────────────────────────────── */
+@keyframes aurora {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+@keyframes fadeUpIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes rippleExpand {
+  to { transform: scale(4); opacity: 0; }
+}
+@keyframes shimmer {
+  from { background-position: -600px 0; }
+  to   { background-position:  600px 0; }
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.3); opacity: .7; }
+}
+
+.js-loaded .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+.js-loaded .fade-up.in-view { opacity: 1; transform: none; }
+/* fallback: visible without JS */
+.fade-up { opacity: 1; transform: none; }
+
+.ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  transform: scale(0);
+  animation: rippleExpand .6s linear forwards;
+  pointer-events: none;
+}
+
+/* ── 5. Hero ──────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(-45deg, #005760, #006D77, #0F766E, #006D77, #005760);
+  background-size: 400% 400%;
+  animation: aurora 14s ease infinite;
+  padding: 48px 20px 0;
+  overflow: hidden;
+  position: relative;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(255,255,255,.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.05) 0%, transparent 55%);
+  pointer-events: none;
+}
+@media (min-width: 768px) { .hero { padding: 64px 48px 0; } }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.9);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  animation: fadeUpIn .5s ease forwards;
+}
+.hero-title {
+  font-size: clamp(30px, 5vw, 56px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -.5px;
+  margin-bottom: 12px;
+  animation: fadeUpIn .55s .1s ease forwards;
+}
+.hero-sub {
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: rgba(255,255,255,.8);
+  max-width: 480px;
+  margin-bottom: 32px;
+  animation: fadeUpIn .55s .2s ease forwards;
+}
+
+/* ── 6. Hero search widget (Kayak/Expedia style) ─────────── */
+.search-widget {
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 20px 20px 0;
+  max-width: 820px;
+  animation: fadeUpIn .6s .25s ease forwards;
+  position: relative;
+  z-index: 2;
+}
+@media (min-width: 768px) { .search-widget { padding: 24px 28px 0; } }
+
+.htabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+.htab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.7);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.htab.active {
+  background: rgba(255,255,255,.2);
+  color: #fff;
+}
+.htab:hover:not(.active) { background: rgba(255,255,255,.1); color: #fff; }
+
+.search-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+@media (min-width: 600px) {
+  .search-form { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 900px) {
+  .search-form { grid-template-columns: 1fr 1fr 1fr auto; align-items: end; }
+}
+
+.sf-group { display: flex; flex-direction: column; gap: 4px; }
+.sf-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: rgba(255,255,255,.7);
+}
+.sf-input, .sf-select {
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.25);
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color .2s, background .2s;
+  width: 100%;
+}
+.sf-input::placeholder { color: rgba(255,255,255,.5); }
+.sf-input:focus, .sf-select:focus {
+  border-color: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.22);
+}
+.sf-select option { background: #0F766E; color: #fff; }
+
+.search-submit {
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, transform .1s, box-shadow .15s;
+  box-shadow: 0 4px 16px rgba(245,158,11,.4);
+  position: relative;
+  overflow: hidden;
+}
+.search-submit:hover {
+  background: #D97706;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(245,158,11,.5);
+}
+
+/* ── 7. Trust bar ─────────────────────────────────────────── */
+.trust-bar {
+  display: flex;
+  gap: 0;
+  padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.trust-bar::-webkit-scrollbar { display: none; }
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--muted);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.trust-item:last-child { border-right: none; }
+.trust-icon { font-size: 18px; }
+.trust-num  { font-size: 15px; font-weight: 800; color: var(--text); }
+@media (min-width: 768px) {
+  .trust-bar { padding: 0 32px; }
+  .trust-item { padding: 16px 24px; font-size: 14px; }
+}
+
+/* ── 8. Section headings ──────────────────────────────────── */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 32px 20px 16px;
+}
+@media (min-width: 768px) { .sec-head { padding: 36px 32px 18px; } }
+@media (min-width: 1200px){ .sec-head { padding: 40px 48px 20px; } }
+
+.sec-head-left {}
+.sec-head-title {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.3px;
+}
+.sec-head-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.sec-head-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--teal-lt);
+  border-radius: 20px;
+  background: var(--teal-xl);
+  transition: background .15s;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+.sec-head-link:hover { background: var(--teal-lt); }
+
+/* ── 9. Card grid ─────────────────────────────────────────── */
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 0 20px 8px;
+}
+@media (min-width: 768px) { .card-row { padding: 0 32px 8px; gap: 18px; } }
+@media (min-width: 1200px){ .card-row { padding: 0 48px 8px; gap: 20px; } }
+
+/* ── 10. Card base ────────────────────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s ease;
+}
+.card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: var(--shadow-xl);
+  border-color: transparent;
+}
+
+/* ── 11. Card visual header ───────────────────────────────── */
+.card-visual {
+  position: relative;
+  height: 168px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px 14px 14px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Badge overlaid on image — top left */
+.vc-badge-img {
+  position: absolute;
+  top: 10px; left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 700;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  letter-spacing: .2px;
+  z-index: 2;
+}
+.vc-badge-img.badge-hot {
+  background: rgba(220,38,38,.82);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(220,38,38,.4);
+}
+.vc-badge-img.badge-dom  { background: rgba(13,148,136,.8); color: #fff; }
+.vc-badge-img.badge-intl { background: rgba(109,40,217,.8); color: #fff; }
+.vc-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+.vc-code {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,.25);
+  letter-spacing: -1px;
+}
+.vc-line {
+  flex: 1;
+  border-top: 1.5px dashed rgba(255,255,255,.6);
+  position: relative;
+}
+.vc-line::after {
+  content: '✈';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  background: transparent;
+  color: rgba(255,255,255,.9);
+}
+.vc-cities {
+  font-size: 11px;
+  color: rgba(255,255,255,.8);
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+  font-weight: 500;
+}
+.vc-hotel-info { position: relative; z-index: 1; }
+.vc-stars   { color: #FCD34D; font-size: 14px; }
+.vc-hotel-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,.3);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+.vc-duration {
+  display: inline-block;
+  background: rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+
+/* ── 12. Card body ────────────────────────────────────────── */
+.card-body { padding: 14px; }
+.card-title { font-weight: 700; font-size: 15px; color: var(--text); line-height: 1.3; }
+
+.c-meta {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.c-airline { font-size: 13px; font-weight: 600; color: var(--text); }
+.c-time    { font-size: 12px; color: var(--muted); }
+.c-dot     { color: var(--border); margin: 0 4px; font-size: 11px; }
+
+.c-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  gap: 10px;
+}
+.from-label { display: block; font-size: 10px; color: var(--muted-lt); text-transform: uppercase; letter-spacing: .5px; }
+.price-big  { display: block; font-size: 20px; font-weight: 800; color: var(--teal); line-height: 1.1; }
+.price-unit { font-size: 11px; color: var(--muted); font-weight: 400; }
+.star-row   { color: var(--amber); font-size: 13px; letter-spacing: 1px; }
+.star-label { font-size: 12px; color: var(--muted); margin-left: 4px; }
+
+/* ── 13. Deal badges ──────────────────────────────────────── */
+.deal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.badge-hot  { background: #FFF7ED; color: #C2410C; }
+.badge-dom  { background: var(--teal-xl); color: var(--teal-dk); }
+.badge-intl { background: var(--amber-lt); color: #92400E; }
+
+/* ── 14. Buttons (UI.md .btn-gegow applied to all CTAs) ───── */
+
+/* Primary Gegow button — coral gradient from UI.md */
+.btn-gegow {
+  background: var(--gegow-gradient-btn);
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(255,112,67,0.3);
+  transition: transform 0.2s ease, box-shadow .2s ease;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.btn-gegow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,112,67,0.45);
+}
+.btn-gegow:active { transform: scale(0.95); }
+
+/* btn-book and btn-primary inherit the Gegow style */
+.btn-book, .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gegow-gradient-btn);
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(255,112,67,0.3);
+  transition: transform .2s ease, box-shadow .2s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+.btn-book:hover, .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,112,67,0.45);
+}
+.btn-book:active, .btn-primary:active { transform: scale(0.95); }
+
+/* Search submit */
+.search-submit {
+  background: var(--gegow-gradient-btn) !important;
+  box-shadow: 0 4px 16px rgba(255,112,67,0.4) !important;
+}
+.search-submit:hover {
+  box-shadow: 0 8px 28px rgba(255,112,67,0.55) !important;
+  transform: translateY(-2px);
+}
+
+/* B2B submit */
+.btn-submit {
+  background: var(--gegow-gradient-btn);
+  box-shadow: 0 4px 15px rgba(255,112,67,0.3);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn-submit:hover {
+  background: var(--gegow-gradient-btn);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,112,67,0.45);
+}
+.btn-submit:active { transform: scale(0.95); }
+
+.btn-outline {
+  display: block; width: 100%;
+  background: transparent;
+  color: var(--teal);
+  border: 1.5px solid var(--teal-lt);
+  padding: 9px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  text-align: center;
+  transition: background .15s, border-color .15s;
+}
+.btn-outline:hover { background: var(--teal-xl); border-color: var(--teal); }
+.btn-back, .btn-remove {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.btn-back:hover   { border-color: var(--border-dk); }
+.btn-remove { border-color: #FCA5A5; color: #DC2626; }
+.btn-remove:hover { background: #FEF2F2; }
+
+/* ── 14b. Shared page banner (Book / Gear / B2B) ──────────── */
+.page-banner {
+  background: var(--beige);
+  padding: 36px 24px 28px;
+  text-align: center;
+}
+@media (min-width: 768px) { .page-banner { padding: 44px 48px 32px; } }
+.page-banner-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal-xl); border: 1px solid var(--teal-lt);
+  color: var(--teal); font-size: 11px; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
+}
+.page-banner-title {
+  font-size: clamp(20px, 3vw, 30px); font-weight: 800;
+  color: var(--text); margin-bottom: 5px;
+}
+.page-banner-sub {
+  font-size: 14px; color: var(--muted); line-height: 1.6;
+  max-width: 520px; margin: 0 auto;
+}
+
+/* ── 15. Gear shop ────────────────────────────────────────── */
+.shop-banner {
+  background: var(--beige);
+  padding: 36px 20px 28px;
+  text-align: center;
+}
+@media (min-width: 768px) { .shop-banner { padding: 44px 48px 32px; } }
+.shop-banner-title { font-size: clamp(20px, 3vw, 30px); font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.shop-banner-sub   { font-size: 14px; color: var(--muted); max-width: 500px; margin: 0 auto; }
+
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.category-tabs::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .category-tabs { padding: 14px 32px; } }
+
+.cat-tab {
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  transition: all .15s;
+}
+.cat-tab.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.cat-tab:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+  padding: 20px;
+}
+@media (min-width: 768px) { .gear-grid { padding: 24px 32px; gap: 18px; } }
+@media (min-width: 1200px){ .gear-grid { padding: 28px 48px; } }
+
+.gear-visual {
+  height: 110px;
+  background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gear-emoji { font-size: 48px; }
+
+.cart-fab {
+  position: fixed;
+  bottom: 90px; right: 20px;
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: var(--shadow-xl);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 150;
+  transition: transform .2s, box-shadow .2s;
+}
+.cart-fab:hover { transform: scale(1.08); }
+@media (min-width: 768px) { .cart-fab { bottom: 28px; } }
+.cart-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: #DC2626; color: #fff;
+  border-radius: 50%;
+  width: 20px; height: 20px;
+  font-size: 11px; font-weight: 700;
+  display: none; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+
+/* ── 16. B2B portal ───────────────────────────────────────── */
+.b2b-banner {
+  background: var(--beige);
+  padding: 36px 20px 28px;
+  text-align: center;
+}
+@media (min-width: 768px) { .b2b-banner { padding: 44px 48px 32px; } }
+.b2b-banner-title { font-size: clamp(20px,3vw,30px); font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.b2b-banner-sub   { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 520px; margin: 0 auto; }
+.b2b-banner-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal-xl); border: 1px solid var(--teal-lt);
+  color: var(--teal); font-size: 11px; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
+}
+
+.b2b-tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.b2b-tab {
+  flex: 1;
+  padding: 15px 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color .15s;
+}
+.b2b-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+.b2b-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .b2b-layout { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+.b2b-benefits  { padding: 32px 24px; background: var(--teal-xl); }
+.b2b-form-wrap { padding: 32px 24px; }
+@media (min-width: 768px) {
+  .b2b-benefits  { padding: 40px 36px; }
+  .b2b-form-wrap { padding: 40px 36px; }
+}
+
+.b2b-section-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 18px; }
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  background: #fff;
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-lt);
+}
+.form-textarea { resize: vertical; min-height: 88px; }
+.btn-submit {
+  width: 100%;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background .15s, transform .1s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-submit:hover { background: var(--teal-dk); transform: translateY(-1px); }
+
+.benefit-card {
+  background: #fff;
+  border: 1px solid var(--teal-lt);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  transition: box-shadow .15s, transform .15s;
+}
+.benefit-card:hover { box-shadow: var(--shadow-md); transform: translateX(3px); }
+.benefit-title { font-weight: 700; font-size: 14px; color: var(--teal-dk); margin-bottom: 4px; }
+.benefit-desc  { font-size: 13px; color: var(--muted); }
+
+.success-banner { text-align: center; padding: 60px 28px; }
+.success-icon   { font-size: 72px; margin-bottom: 16px; }
+
+/* ── 17. Wizard ───────────────────────────────────────────── */
+.wizard-page { max-width: 540px; margin: 0 auto; padding: 12px 0 32px; }
+
+/* ── UI.md explicit classes ───────────────────────────────── */
+
+/* Glass nav (UI.md) — applied to bottom nav */
+.glass-nav {
+  background: var(--gegow-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Card gradient overlay (UI.md) */
+.card-gradient-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+}
+
+/* Wizard step transition (UI.md) */
+.wizard-step {
+  transition: opacity 0.3s ease-in-out;
+}
+#wizard-content > * {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* ── 18. Suitcase ─────────────────────────────────────────── */
+.suitcase-empty { text-align: center; padding: 80px 28px; }
+.empty-icon  { font-size: 80px; margin-bottom: 16px; }
+.empty-title { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+
+#suitcase-list { padding: 8px 20px 32px; }
+@media (min-width: 768px) {
+  #suitcase-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    padding: 16px 32px 40px;
+    align-items: start;
+  }
+}
+
+.itinerary-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: box-shadow .2s, transform .2s;
+}
+.itinerary-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+@media (min-width: 768px) { .itinerary-card { margin-bottom: 0; } }
+
+.itin-type-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--teal-lt);
+  color: var(--teal-dk);
+  margin-bottom: 10px;
+}
+.itin-title  { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.itin-meta   { font-size: 13px; color: var(--muted); margin-bottom: 8px; line-height: 1.6; }
+.itin-price  { font-size: 22px; font-weight: 800; color: var(--teal); }
+.itin-ref    { font-size: 11px; color: var(--muted-lt); margin-top: 3px; }
+.itin-actions{ display: flex; gap: 8px; margin-top: 14px; }
+.btn-view    {
+  flex: 1;
+  background: var(--teal-xl);
+  border: 1.5px solid var(--teal-lt);
+  color: var(--teal);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+  transition: background .15s;
+}
+.btn-view:hover { background: var(--teal-lt); }
+
+/* ── 19. Search banner ────────────────────────────────────── */
+.dash-search-banner {
+  background: var(--beige);
+  padding: 36px 20px 0;
+  text-align: center;
+}
+@media (min-width: 768px) { .dash-search-banner { padding: 44px 32px 0; } }
+@media (min-width: 1200px){ .dash-search-banner { padding: 52px 48px 0; } }
+.dsb-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* headline */
+.dsb-heading {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900; color: var(--text);
+  letter-spacing: -.5px; line-height: 1.2;
+  margin-bottom: 6px;
+}
+.dsb-sub {
+  font-size: 13px; color: var(--muted);
+  margin-bottom: 20px;
+}
+
+/* search row */
+.dsb-search-row {
+  position: relative; z-index: 1;
+  display: flex; gap: 10px; align-items: stretch;
+  margin-bottom: 20px;
+}
+.dsb-input-wrap {
+  flex: 1; position: relative;
+}
+.dsb-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 16px; color: var(--muted); pointer-events: none; line-height: 1;
+}
+.dsb-input {
+  width: 100%; height: 48px;
+  background: #fff;
+  border: 1.5px solid var(--border-dk);
+  border-radius: 12px;
+  color: var(--text); font-size: 14px; font-weight: 500;
+  padding: 0 14px 0 44px;
+  outline: none;
+  box-shadow: var(--shadow-md);
+  transition: border-color .18s, box-shadow .18s;
+}
+.dsb-input::placeholder { color: var(--muted-lt); }
+.dsb-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(0,109,119,.12);
+}
+.dsb-btn {
+  height: 48px; padding: 0 22px;
+  background: var(--teal);
+  border: none; border-radius: 12px;
+  color: #fff; font-size: 14px; font-weight: 700;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0,109,119,.25);
+  transition: transform .15s, box-shadow .15s, background .15s;
+  text-decoration: none; display: flex; align-items: center; gap: 7px;
+}
+.dsb-btn:hover { background: var(--teal-dk); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,109,119,.35); }
+.dsb-btn:active { transform: scale(.97); }
+
+/* ── 19b. Unified filter bar ──────────────────────────────── */
+.filter-bar {
+  background: var(--beige);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Main category tabs — underline style */
+.cat-tabs {
+  display: flex; gap: 0;
+  justify-content: center;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+.cat-tabs::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .cat-tabs { padding: 0 32px; } }
+@media (min-width: 1200px){ .cat-tabs { padding: 0 48px; } }
+
+.cat-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 12px 18px;
+  font-size: 13px; font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: color .15s, border-color .15s;
+  background: none; border-top: none; border-left: none; border-right: none;
+}
+.cat-pill:hover { color: var(--text); }
+.cat-pill.active {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+  font-weight: 700;
+}
+
+/* Sub-category chips */
+.sub-tabs-wrap { background: var(--beige); }
+.sub-tabs {
+  display: flex; gap: 8px;
+  justify-content: center;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 10px 20px;
+  -webkit-overflow-scrolling: touch;
+}
+.sub-tabs::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .sub-tabs { padding: 10px 32px; } }
+@media (min-width: 1200px){ .sub-tabs { padding: 10px 48px; } }
+
+.sub-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 14px; border-radius: 6px; flex-shrink: 0;
+  font-size: 12px; font-weight: 600;
+  background: rgba(0,0,0,.05);
+  border: none;
+  color: var(--muted);
+  cursor: pointer; white-space: nowrap;
+  transition: all .15s;
+}
+.sub-pill:hover { background: var(--teal-xl); color: var(--teal); }
+.sub-pill.active {
+  background: var(--teal);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── Pagination bar ───────────────────────────────────────── */
+.pagination-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 20px 16px 8px;
+}
+.pg-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 7px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  background: #fff; border: 1.5px solid var(--border);
+  color: var(--teal); cursor: pointer;
+  transition: all .15s;
+}
+.pg-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+.pg-btn.pg-disabled {
+  color: var(--muted-lt); border-color: var(--border);
+  pointer-events: none; opacity: .45; cursor: default;
+}
+.pg-info {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  min-width: 90px; text-align: center;
+}
+
+/* ── 19c. Quick links (kept for xs fallback, hidden via cat tabs) */
+.quick-links { display: none; }
+
+/* ── 20. Section header helper ────────────────────────────── */
+.section-hdr { display: flex; justify-content: space-between; align-items: center; }
+.section-hdr-title { font-weight: 700; font-size: 17px; color: var(--text); }
+.section-hdr-link  { font-size: 13px; color: var(--teal); font-weight: 600; }
+
+/* ── 22. Dashboard welcome banner ────────────────────────────── */
+.welcome-banner {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #04111a 0%, #003d45 45%, #005760 100%);
+  padding: 28px 20px 0;
+}
+@media (min-width: 768px) { .welcome-banner { padding: 36px 32px 0; } }
+
+/* mesh orbs */
+.wb-orb {
+  position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none;
+}
+.wb-orb-1 { width: 350px; height: 350px; background: rgba(0,201,177,.15);
+  top: -80px; right: -60px; }
+.wb-orb-2 { width: 250px; height: 250px; background: rgba(255,107,53,.1);
+  bottom: -60px; left: -40px; }
+
+/* grid overlay */
+.wb-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 90% 90% at 60% 30%, black 20%, transparent 100%);
+}
+
+/* top row: avatar + text + actions */
+.welcome-card {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+}
+.welcome-avatar {
+  width: 54px; height: 54px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #00C9B1, #009e8c);
+  border: 2.5px solid rgba(255,255,255,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 900; color: #fff;
+  box-shadow: 0 0 20px rgba(0,201,177,.4);
+}
+.welcome-text { flex: 1; min-width: 0; }
+.welcome-greeting {
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5);
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 2px;
+}
+.welcome-name { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: -.3px; line-height: 1.2; }
+.welcome-sub  { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 3px; }
+.welcome-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.btn-profile {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.18);
+  color: #fff; font-size: 16px; text-decoration: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.btn-profile:hover { background: rgba(255,255,255,.2); }
+.btn-logout {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 10px;
+  background: rgba(239,68,68,.15); border: 1.5px solid rgba(239,68,68,.3);
+  color: #fca5a5; font-size: 12px; font-weight: 700;
+  text-decoration: none; white-space: nowrap;
+  transition: all .15s;
+}
+.btn-logout:hover { background: rgba(239,68,68,.28); color: #fff; }
+
+/* status cards row (3 glassmorphism tiles) */
+.status-strip {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  padding-bottom: 24px;
+}
+.status-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 14px 8px; border-radius: 16px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  text-decoration: none; transition: background .18s, transform .18s;
+  gap: 2px;
+}
+.status-item:hover { background: rgba(0,201,177,.12); transform: translateY(-2px); }
+.status-num   { font-size: 22px; font-weight: 900; color: #00C9B1; line-height: 1; }
+.status-label { font-size: 10px; color: rgba(255,255,255,.5); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+.status-link  { font-size: 10px; color: rgba(255,255,255,.35); font-weight: 600; margin-top: 1px; }
+
+/* curved bottom edge of banner */
+.welcome-banner::after {
+  content: '';
+  display: block;
+  height: 20px;
+  background: var(--gegow-bg);
+  border-radius: 20px 20px 0 0;
+  margin: 0 -1px;
+  position: relative; z-index: 1;
+}
+
+/* guest strip */
+.guest-strip {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #04111a, #005760);
+  padding: 24px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+@media (min-width: 768px) { .guest-strip { padding: 28px 32px; } }
+.guest-text { font-size: 15px; font-weight: 700; color: #fff; }
+.guest-text span { color: #00C9B1; }
+.btn-signin {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 22px; border-radius: 12px;
+  background: linear-gradient(135deg, #00C9B1, #009e8c); color: #fff;
+  font-size: 14px; font-weight: 800; text-decoration: none; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,201,177,.4);
+  transition: all .18s;
+}
+.btn-signin:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,201,177,.5); }
+
+/* ── 21. Profile / User Dashboard ────────────────────────── */
+.profile-page { padding: 0 0 100px; background: var(--beige); }
+
+/* ── Hero ── */
+.profile-hero {
+  background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
+  padding: 44px 20px 68px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.profile-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size: 48px 48px;
+}
+.profile-hero::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 36px; background: var(--beige);
+  border-radius: 24px 24px 0 0;
+}
+.profile-avatar-wrap {
+  position: relative; display: inline-flex;
+  margin-bottom: 14px; z-index: 1;
+}
+.profile-avatar {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(135deg, #00C9B1, #006d77);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; font-weight: 900; color: #fff;
+  border: 4px solid rgba(255,255,255,.2);
+  box-shadow: 0 0 0 8px rgba(0,201,177,.14), 0 8px 32px rgba(0,0,0,.3);
+  position: relative; z-index: 1;
+}
+.profile-avatar-ring {
+  position: absolute; inset: -10px; border-radius: 50%;
+  border: 2px solid rgba(0,201,177,.35);
+  animation: profile-ring-pulse 2.8s ease-in-out infinite;
+}
+@keyframes profile-ring-pulse {
+  0%,100% { opacity: .5; transform: scale(1); }
+  50%      { opacity: 1;  transform: scale(1.06); }
+}
+.profile-name  {
+  position: relative; z-index: 1;
+  font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -.4px;
+  margin-bottom: 4px;
+}
+.profile-email {
+  position: relative; z-index: 1;
+  font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 12px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 280px; margin-left: auto; margin-right: auto;
+}
+.profile-badge {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(0,201,177,.18); color: #5eead4;
+  border: 1px solid rgba(0,201,177,.3);
+  font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px;
+  margin-bottom: 16px;
+}
+.profile-logout-btn {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border-radius: 12px;
+  background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.75); font-size: 13px; font-weight: 700;
+  text-decoration: none; transition: all .18s;
+}
+.profile-logout-btn:hover {
+  background: rgba(239,68,68,.3); border-color: rgba(239,68,68,.4);
+  color: #fca5a5;
+}
+
+.profile-section { padding: 18px 16px 0; }
+.profile-section-title {
+  font-size: 12px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted); margin-bottom: 12px;
+}
+
+/* ── Stats row ── */
+.profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat-card {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 16px 10px 14px; text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,109,119,.1); }
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.stat-card-trips::before  { background: linear-gradient(90deg, #0D9488, #06b6d4); }
+.stat-card-dest::before   { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.stat-card-spent::before  { background: linear-gradient(90deg, #8b5cf6, #ec4899); }
+.stat-icon  { font-size: 20px; margin-bottom: 5px; display: block; }
+.stat-num   { font-size: 22px; font-weight: 900; color: var(--text); line-height: 1; }
+.stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ── Booking list ── */
+.booking-list { display: flex; flex-direction: column; gap: 10px; }
+.booking-item {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  position: relative; overflow: hidden;
+  transition: box-shadow .15s;
+}
+.booking-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+.booking-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  border-radius: 4px 0 0 4px;
+}
+.booking-flight::before  { background: linear-gradient(to bottom, #0D9488, #1d4ed8); }
+.booking-hotel::before   { background: linear-gradient(to bottom, #f59e0b, #92400e); }
+.booking-tour::before    { background: linear-gradient(to bottom, #06b6d4, #0e7490); }
+.booking-default::before { background: #e2e8f0; }
+.booking-icon-wrap {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--teal-xl); display: flex; align-items: center;
+  justify-content: center; font-size: 22px; flex-shrink: 0;
+}
+.booking-info { flex: 1; min-width: 0; }
+.booking-title { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.booking-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.booking-badge {
+  font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  flex-shrink: 0; text-transform: uppercase; letter-spacing: .4px;
+}
+.badge-confirmed { background: #d1fae5; color: #065f46; }
+.badge-pending   { background: #fef3c7; color: #92400e; }
+.badge-upcoming  { background: #dbeafe; color: #1e40af; }
+.badge-empty     { background: #f1f5f9; color: #64748b; }
+
+/* ── Quick actions ── */
+.quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.qa-card {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 18px; padding: 18px 16px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  text-decoration: none; transition: box-shadow .15s, transform .15s, border-color .15s;
+}
+.qa-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  transform: translateY(-2px); border-color: var(--teal-lt);
+}
+.qa-icon-bubble {
+  width: 46px; height: 46px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.qa-flight  { background: rgba(13,148,136,.12); }
+.qa-hotel   { background: rgba(245,158,11,.12); }
+.qa-tour    { background: rgba(6,182,212,.12); }
+.qa-suitcase{ background: rgba(139,92,246,.12); }
+.qa-title { font-size: 14px; font-weight: 800; color: var(--text); }
+.qa-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* ── Preferences ── */
+.pref-list { display: flex; flex-direction: column; gap: 8px; }
+.pref-item {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 13px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: border-color .15s;
+}
+.pref-item:hover { border-color: var(--teal-lt); }
+.pref-left  { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); font-weight: 500; }
+.pref-icon  { font-size: 20px; }
+.pref-right { font-size: 12px; color: var(--teal); font-weight: 700; background: var(--teal-xl); padding: 3px 10px; border-radius: 8px; }
+"""
+
+COMBINED_CSS = CSS + "\n" + NAV_CSS + "\n" + WIZARD_CSS + "\n" + SUITCASE_CSS
+
+# ─────────────────────────────────────────────────────────────
+# PWA headers
+# ─────────────────────────────────────────────────────────────
+
+PWA_HEADERS = (
+    Meta(charset="utf-8"),
+    Meta(name="viewport", content="width=device-width, initial-scale=1, viewport-fit=cover"),
+    Meta(name="theme-color", content="#0D9488"),
+    Meta(name="apple-mobile-web-app-capable", content="yes"),
+    Meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent"),
+    Link(rel="manifest", href="/static/manifest.json"),
+    Style(COMBINED_CSS),
+    Script(src="/static/sw-register.js", defer=True),
+    Script(src="/static/app.js", defer=True),
+)
+
+from starlette.staticfiles import StaticFiles
+
+_STATIC_DIR = Path(__file__).parent.parent / "static"
+
+
+def _safe(s) -> str:
+    """Strip lone Unicode surrogates (U+D800–U+DFFF) that crash UTF-8 encoding.
+
+    Python's json.loads() can produce strings containing lone surrogates when
+    the source JSON has malformed \\uXXXX escape sequences (e.g. from Supabase
+    user-metadata).  Starlette's HTMLResponse then raises UnicodeEncodeError
+    when trying to encode the page as UTF-8.  This helper replaces any such
+    characters with the Unicode replacement character (U+FFFD) so the page
+    always renders safely.
+    """
+    if not isinstance(s, str):
+        return str(s) if s is not None else ""
+    return s.encode("utf-8", errors="replace").decode("utf-8")
+app, rt = fast_app(hdrs=PWA_HEADERS, live=False)
+app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
+
+# ─────────────────────────────────────────────────────────────
+# Page shell
+# ─────────────────────────────────────────────────────────────
+
+def page_shell(content, active: str = "/", title: str = "Gegow") -> Html:
+    return Html(
+        Head(Title(f"{title} · Gegow Travel"), *PWA_HEADERS),
+        Body(
+            Div(
+                sidebar(active=active),
+                Div(
+                    app_header(),
+                    Main(content),
+                    cls="main-area",
+                ),
+                cls="app-layout",
+            ),
+            bottom_nav(active=active),
+        ),
+    )
+
+# ─────────────────────────────────────────────────────────────
+# Hero search widget helpers
+# ─────────────────────────────────────────────────────────────
+
+def _flight_form(origins: list[str]) -> Div:
+    opts = [Option(o, value=o) for o in origins]
+    return Div(
+        Div(
+            Span("From", cls="sf-label"),
+            Select(*opts, name="origin", cls="sf-select"),
+            cls="sf-group",
+        ),
+        Div(
+            Span("To (IATA)", cls="sf-label"),
+            Input(type="text", name="destination", placeholder="e.g. CEB, SIN, NRT",
+                  cls="sf-input", maxlength="3"),
+            cls="sf-group",
+        ),
+        Div(
+            Span("Departure", cls="sf-label"),
+            Input(type="date", name="date_from", cls="sf-input"),
+            cls="sf-group",
+        ),
+        Button("Search Flights 🔍", type="submit", cls="search-submit",
+               formaction="/book", formmethod="get",
+               onclick=f"this.form.trip_type.value='flight'"),
+        cls="search-form",
+    )
+
+
+def _hotel_form(cities: list[str]) -> Div:
+    opts = [Option(c, value=c) for c in cities]
+    return Div(
+        Div(
+            Span("Destination", cls="sf-label"),
+            Select(*opts, name="city", cls="sf-select"),
+            cls="sf-group",
+        ),
+        Div(
+            Span("Check-in", cls="sf-label"),
+            Input(type="date", name="date_from", cls="sf-input"),
+            cls="sf-group",
+        ),
+        Div(
+            Span("Check-out", cls="sf-label"),
+            Input(type="date", name="date_to", cls="sf-input"),
+            cls="sf-group",
+        ),
+        Button("Search Hotels 🔍", type="submit", cls="search-submit",
+               onclick="this.form.trip_type.value='hotel'"),
+        cls="search-form",
+    )
+
+
+def _tour_form() -> Div:
+    return Div(
+        Div(
+            Span("Destination", cls="sf-label"),
+            Input(type="text", name="tour_dest", placeholder="e.g. Palawan, Tokyo...", cls="sf-input"),
+            cls="sf-group",
+        ),
+        Div(
+            Span("Type", cls="sf-label"),
+            Select(
+                Option("All Tours", value=""),
+                Option("Local / Domestic", value="domestic"),
+                Option("International", value="international"),
+                name="tour_type", cls="sf-select",
+            ),
+            cls="sf-group",
+        ),
+        Div(
+            Span("Travel Date", cls="sf-label"),
+            Input(type="date", name="date_from", cls="sf-input"),
+            cls="sf-group",
+        ),
+        Button("Search Tours 🔍", type="submit", cls="search-submit",
+               onclick="this.form.trip_type.value='tour'"),
+        cls="search-form",
+    )
+
+
+def _hero_widget() -> Div:
+    from app.logic.polars_engine import get_all_origins, get_hotel_cities
+    origins = get_all_origins()
+    cities  = get_hotel_cities()
+
+    return Div(
+        # Tabs
+        Div(
+            Button("✈️ Flights", cls="htab active", data_type="flight",
+                   hx_get="/hero-form/flight", hx_target="#hero-fields",
+                   hx_swap="innerHTML",
+                   onclick="switchHeroTab('flight')"),
+            Button("🏨 Hotels", cls="htab", data_type="hotel",
+                   hx_get="/hero-form/hotel", hx_target="#hero-fields",
+                   hx_swap="innerHTML",
+                   onclick="switchHeroTab('hotel')"),
+            Button("🗺️ Tours", cls="htab", data_type="tour",
+                   hx_get="/hero-form/tour", hx_target="#hero-fields",
+                   hx_swap="innerHTML",
+                   onclick="switchHeroTab('tour')"),
+            cls="htabs",
+        ),
+        # Form with a hidden trip_type we set before submit
+        Div(
+            Input(type="hidden", name="trip_type", value="flight"),
+            Div(_flight_form(origins), id="hero-fields"),
+            action="/book", method="get",
+            cls="",
+            # FastHTML doesn't have a Form with custom attrs easily, use the Div approach
+        ),
+        cls="search-widget",
+    )
+
+
+# ─────────────────────────────────────────────────────────────
+# Register sub-routes
+# ─────────────────────────────────────────────────────────────
+
+explore.setup(rt)
+booking.setup(rt)
+shop.setup(rt)
+b2b.setup(rt)
+
+
+# Hero form tab endpoints
+@rt('/hero-form/flight')
+def get():
+    from app.logic.polars_engine import get_all_origins
+    return _flight_form(get_all_origins())
+
+@rt('/hero-form/hotel')
+def get():
+    from app.logic.polars_engine import get_hotel_cities
+    return _hotel_form(get_hotel_cities())
+
+@rt('/hero-form/tour')
+def get():
+    return _tour_form()
+
+
+# ─────────────────────────────────────────────────────────────
+# Pages
+# ─────────────────────────────────────────────────────────────
+
+def sec_head(title: str, subtitle: str = "", href: str = "") -> Div:
+    left = Div(
+        Div(title, cls="sec-head-title"),
+        Div(subtitle, cls="sec-head-sub") if subtitle else Span(),
+        cls="sec-head-left",
+    )
+    link = A("See all →", href=href, cls="sec-head-link") if href else Span()
+    return Div(left, link, cls="sec-head")
+
+
+@rt('/dashboard')
+def get(request):
+    from app.logic.polars_engine import get_flights_page, get_hotels_page, get_tours_page
+    from app.components.cards import flight_card, hotel_card, tour_card
+    from app.routes.explore import _pagination_bar
+
+    def _section_content(section, result, card_fn):
+        cards = [card_fn(item) for item in result["items"]]
+        return Div(
+            Div(*cards, cls="card-row stagger") if cards else Div(),
+            _pagination_bar(section, result["page"], result["pages"], "all", result["total"]),
+            id=f"{section}-content",
+        )
+
+    fp = get_flights_page(page=1)
+    hp = get_hotels_page(page=1)
+    tp = get_tours_page(page=1)
+
+    search_banner = Div(
+        Div(
+            Div("Where do you want to go?", cls="dsb-heading"),
+            Div("Flights · Hotels · Tours — all in one place", cls="dsb-sub"),
+            Div(
+                Div(
+                    Span("🔍", cls="dsb-icon"),
+                    Input(
+                        placeholder="Search destinations, airlines, hotels…",
+                        cls="dsb-input", name="q", id="dash-search-input",
+                        autocomplete="off",
+                    ),
+                    cls="dsb-input-wrap",
+                ),
+                Button("Search →", cls="dsb-btn", type="button",
+                       onclick="const q=document.getElementById('dash-search-input').value.trim();"
+                               "if(q)window.location='/search?q='+encodeURIComponent(q);"),
+                cls="dsb-search-row",
+            ),
+            cls="dsb-inner",
+        ),
+        cls="dash-search-banner",
+    )
+
+    filter_bar = Div(
+        # Main category tabs — underline style
+        Div(
+            Span("🌐 All",       cls="cat-pill active", data_cat="all",     onclick="filterCat(this,'all')"),
+            Span("✈️ Flights",   cls="cat-pill",        data_cat="flights",  onclick="filterCat(this,'flights')"),
+            Span("🏨 Hotels",    cls="cat-pill",        data_cat="hotels",   onclick="filterCat(this,'hotels')"),
+            Span("🗺️ Tours",     cls="cat-pill",        data_cat="tours",    onclick="filterCat(this,'tours')"),
+            cls="cat-tabs",
+        ),
+        # Sub-category chips (shown per active category)
+        Div(
+            Div(
+                Span("All Flights",      cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'flights','all')"),
+                Span("🇵🇭 Domestic",     cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'flights','domestic')"),
+                Span("🌏 International", cls="sub-pill",        data_sub="international", onclick="filterSub(this,'flights','international')"),
+                cls="sub-tabs", id="sub-flights", style="display:none",
+            ),
+            Div(
+                Span("All Hotels",       cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'hotels','all')"),
+                Span("🇵🇭 Local",        cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'hotels','domestic')"),
+                Span("🌏 International", cls="sub-pill",        data_sub="international", onclick="filterSub(this,'hotels','international')"),
+                cls="sub-tabs", id="sub-hotels", style="display:none",
+            ),
+            Div(
+                Span("All Tours",        cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'tours','all')"),
+                Span("🌴 Local",         cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'tours','domestic')"),
+                Span("🌍 International", cls="sub-pill",        data_sub="international", onclick="filterSub(this,'tours','international')"),
+                cls="sub-tabs", id="sub-tours", style="display:none",
+            ),
+            cls="sub-tabs-wrap",
+        ),
+        cls="filter-bar",
+    )
+
+    content = Div(
+        search_banner,
+        filter_bar,
+        Div(
+            sec_head("✈️ Hot Flights", "Lowest fares across PH and beyond", "/book?type=flight"),
+            _section_content("flights", fp, flight_card),
+            id="cat-flights", data_section="flights",
+        ),
+        Div(
+            sec_head("🏨 Top Hotels", "Handpicked stays for every budget", "/book?type=hotel"),
+            _section_content("hotels", hp, hotel_card),
+            id="cat-hotels", data_section="hotels",
+        ),
+        Div(
+            sec_head("🗺️ Best Tours", "Curated adventures, local & international", "/book?type=tour"),
+            _section_content("tours", tp, tour_card),
+            id="cat-tours", data_section="tours",
+        ),
+        Div(style="height:40px"),
+        Script("""
+function filterCat(pill, cat) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  document.querySelectorAll('[data-section]').forEach(s => {
+    s.style.display = (cat === 'all' || s.dataset.section === cat) ? '' : 'none';
+  });
+  document.querySelectorAll('.sub-tabs').forEach(t => t.style.display = 'none');
+  if (cat !== 'all') {
+    const bar = document.getElementById('sub-' + cat);
+    if (bar) {
+      bar.style.display = '';
+      bar.querySelectorAll('.sub-pill').forEach(p => p.classList.remove('active'));
+      bar.querySelector('[data-sub="all"]').classList.add('active');
+      htmx.ajax('GET', '/dashboard/page/' + cat + '?page=1&sub=all',
+        {target: '#' + cat + '-content', swap: 'innerHTML'});
+    }
+  }
+}
+function filterSub(pill, cat, sub) {
+  document.querySelectorAll('#sub-' + cat + ' .sub-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  htmx.ajax('GET', '/dashboard/page/' + cat + '?page=1&sub=' + sub,
+    {target: '#' + cat + '-content', swap: 'innerHTML'});
+}
+document.getElementById('dash-search-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const q = e.target.value.trim();
+    if (q) window.location = '/search?q=' + encodeURIComponent(q);
+  }
+});
+"""),
+    )
+    return page_shell(content, active="/dashboard", title="Explore")
+
+
+# ─────────────────────────────────────────────────────────────
+# User Profile / Personal Dashboard
+# ─────────────────────────────────────────────────────────────
+
+@rt('/profile')
+def get(request):
+    from app.logic.supabase_db import get_user_from_token, get_itineraries
+
+    # Try to load user from session cookie
+    token = request.cookies.get("gegow_token")
+    user = get_user_from_token(token) if token else None
+
+    name  = ""
+    email = ""
+    if user:
+        meta  = user.get("user_metadata", {})
+        name  = _safe(meta.get("full_name") or meta.get("name") or "")
+        email = _safe(user.get("email", ""))
+
+    initials = (name[:1] or email[:1] or "?").upper()
+
+    # Saved itineraries as proxy for booking count
+    itineraries = get_itineraries(user["id"]) if user else []
+    booking_count = len(itineraries)
+
+    # ── Hero ─────────────────────────────────────────────────
+    hero = Div(
+        # Avatar with animated ring
+        Div(
+            Div(initials, cls="profile-avatar"),
+            Div(cls="profile-avatar-ring"),
+            cls="profile-avatar-wrap",
+        ),
+        Div(name or "Traveler", cls="profile-name"),
+        Div(email or "Not signed in", cls="profile-email"),
+        Div("✈ Gegow Member", cls="profile-badge"),
+        A("Log out", href="/auth/logout", cls="profile-logout-btn"),
+        cls="profile-hero",
+    )
+
+    # ── Stats row ────────────────────────────────────────────
+    stats = Div(
+        Div(
+            Span("🧳", cls="stat-icon"),
+            Div(str(booking_count), cls="stat-num"),
+            Div("Saved Trips", cls="stat-label"),
+            cls="stat-card stat-card-trips",
+        ),
+        Div(
+            Span("🗺️", cls="stat-icon"),
+            Div("0", cls="stat-num"),
+            Div("Destinations", cls="stat-label"),
+            cls="stat-card stat-card-dest",
+        ),
+        Div(
+            Span("💰", cls="stat-icon"),
+            Div("₱0", cls="stat-num"),
+            Div("Total Spent", cls="stat-label"),
+            cls="stat-card stat-card-spent",
+        ),
+        cls="profile-stats",
+    )
+
+    # ── Recent bookings ──────────────────────────────────────
+    TYPE_MAP = {"flight": ("✈️", "booking-flight"), "hotel": ("🏨", "booking-hotel"), "tour": ("🗺️", "booking-tour")}
+
+    def _booking_row(it):
+        typ   = it.get("type", "")
+        dest  = _safe(it.get("destination") or it.get("hotel") or it.get("tour") or "Booking")
+        date  = _safe((it.get("travel_date") or it.get("check_in") or ""))[:10]
+        icon, item_cls = TYPE_MAP.get(typ, ("🧳", "booking-default"))
+        return Div(
+            Div(icon, cls="booking-icon-wrap"),
+            Div(
+                Div(dest, cls="booking-title"),
+                Div(date or "Date TBD", cls="booking-sub"),
+                cls="booking-info",
+            ),
+            Span("Saved", cls="booking-badge badge-upcoming"),
+            cls=f"booking-item {item_cls}",
+        )
+
+    if itineraries:
+        booking_items = [_booking_row(it) for it in itineraries[:5]]
+    else:
+        booking_items = [
+            Div(
+                Div("🧳", cls="booking-icon-wrap"),
+                Div(
+                    Div("No trips yet", cls="booking-title"),
+                    Div("Start planning your first adventure!", cls="booking-sub"),
+                    cls="booking-info",
+                ),
+                Span("Get started", cls="booking-badge badge-empty"),
+                cls="booking-item booking-default",
+            )
+        ]
+
+    bookings_section = Div(
+        Div("My Bookings & Saved Trips", cls="profile-section-title"),
+        Div(*booking_items, cls="booking-list"),
+        cls="profile-section",
+    )
+
+    # ── Quick actions ─────────────────────────────────────────
+    def _qa(icon, bubble_cls, title, sub, href):
+        return A(
+            Div(icon, cls=f"qa-icon-bubble {bubble_cls}"),
+            Div(Div(title, cls="qa-title"), Div(sub, cls="qa-sub")),
+            href=href, cls="qa-card",
+        )
+
+    quick_actions = Div(
+        Div("Quick Actions", cls="profile-section-title"),
+        Div(
+            _qa("✈️", "qa-flight",   "Book Flight", "Domestic & international", "/book?type=flight"),
+            _qa("🏨", "qa-hotel",    "Book Hotel",  "Best rates guaranteed",    "/book?type=hotel"),
+            _qa("🗺️", "qa-tour",     "Book Tour",   "Curated adventures",       "/book?type=tour"),
+            _qa("🧳", "qa-suitcase", "My Suitcase", "Vouchers & itineraries",   "/suitcase"),
+            cls="quick-actions",
+        ),
+        cls="profile-section",
+    )
+
+    # ── Preferences ───────────────────────────────────────────
+    prefs = Div(
+        Div("Travel Preferences", cls="profile-section-title"),
+        Div(
+            Div(Div(Span("🌏", cls="pref-icon"), Span("Preferred destination"), cls="pref-left"), Span("Set →", cls="pref-right"), cls="pref-item"),
+            Div(Div(Span("💺", cls="pref-icon"), Span("Seat preference"),       cls="pref-left"), Span("Set →", cls="pref-right"), cls="pref-item"),
+            Div(Div(Span("🍽️", cls="pref-icon"), Span("Meal preference"),       cls="pref-left"), Span("Set →", cls="pref-right"), cls="pref-item"),
+            Div(Div(Span("🔔", cls="pref-icon"), Span("Price alerts"),          cls="pref-left"), Span("On ✓",  cls="pref-right"), cls="pref-item"),
+            cls="pref-list",
+        ),
+        cls="profile-section",
+    )
+
+    content = Div(
+        hero,
+        Div(stats, cls="profile-section", style="padding-top:20px"),
+        bookings_section,
+        quick_actions,
+        prefs,
+        Div(style="height:20px"),
+        cls="profile-page",
+    )
+    return page_shell(content, active="/profile", title="My Profile")
+
+
+@rt('/book')
+def get(trip_type: str = ""):
+    from app.components.wizard import wizard_step1
+    from app.routes.booking import _render_step2
+
+    content = _render_step2(trip_type) if trip_type else wizard_step1()
+    return page_shell(content, active="/book", title="Book a Trip")
+
+
+@rt('/gear')
+def get(category: str = "all"):
+    from app.routes.shop import GEAR_CATALOG, CATEGORIES
+    from app.components.cards import gear_card
+
+    items = GEAR_CATALOG if category == "all" else [i for i in GEAR_CATALOG if i["category"] == category]
+    tabs = [
+        A(label, href=f"/gear?category={cat}", cls=f"cat-tab {'active' if cat == category else ''}")
+        for cat, label in CATEGORIES.items()
+    ]
+    content = Div(
+        Div(
+            Div("🛍️ Gegow-Gear", cls="shop-banner-title"),
+            Div("Travel smarter. Premium essentials, delivered to your door.", cls="shop-banner-sub"),
+            cls="shop-banner",
+        ),
+        Div(*tabs, cls="category-tabs"),
+        Div(*[gear_card(i) for i in items], cls="gear-grid stagger"),
+        Button("🛒", Span("0", cls="cart-badge", id="cart-badge"), cls="cart-fab", onclick="showCart()"),
+    )
+    return page_shell(content, active="/gear", title="Gegow-Gear")
+
+
+@rt('/b2b')
+def get(tab: str = "manning"):
+    from app.routes.b2b import _manning_form, _corporate_form
+
+    content = Div(
+        Div(
+            Div("🏢 B2B Portal", cls="b2b-banner-badge"),
+            Div("Gegow B2B Portal", cls="b2b-banner-title"),
+            Div("Special rates for Manning Agencies and Corporate clients. "
+                "Book group flights, hotel blocks, and custom tour packages.",
+                cls="b2b-banner-sub"),
+            cls="b2b-banner",
+        ),
+        Div(
+            A("🚢 Manning Agency", href="/b2b?tab=manning",
+              cls=f"b2b-tab {'active' if tab == 'manning' else ''}"),
+            A("🏢 Corporate Travel", href="/b2b?tab=corporate",
+              cls=f"b2b-tab {'active' if tab == 'corporate' else ''}"),
+            cls="b2b-tabs",
+        ),
+        _manning_form() if tab == "manning" else _corporate_form(),
+    )
+    return page_shell(content, active="/b2b", title="B2B Portal")
+
+
+@rt('/suitcase')
+def get():
+    from app.components.suitcase import suitcase_page
+    return page_shell(suitcase_page(), active="/suitcase", title="My Suitcase")
+
+
+# ─────────────────────────────────────────────────────────────
+# Landing & Auth pages (standalone — no app shell)
+# ─────────────────────────────────────────────────────────────
+
+@rt('/')
+def get():
+    from app.pages.landing import landing_page
+    return landing_page()
+
+
+@rt('/login')
+def get():
+    from app.pages.auth import login_page
+    from app.logic.supabase_db import is_configured
+    return login_page(supabase_ok=is_configured())
+
+
+@rt('/signup')
+def get():
+    from app.pages.auth import login_page
+    from app.logic.supabase_db import is_configured
+    return login_page(supabase_ok=is_configured())
+
+
+# ─────────────────────────────────────────────────────────────
+# Google OAuth — PKCE flow via Supabase
+# ─────────────────────────────────────────────────────────────
+
+def _app_url() -> str:
+    return os.getenv("APP_URL", "http://localhost:8000").rstrip("/")
+
+
+def _set_session_cookies(response, access_token: str, refresh_token: str):
+    response.set_cookie("gegow_token",   access_token,  httponly=True, samesite="lax", max_age=60*60*24*7)
+    response.set_cookie("gegow_refresh", refresh_token, httponly=True, samesite="lax", max_age=60*60*24*30)
+
+
+@rt('/auth/google')
+def get():
+    from app.logic.supabase_db import get_google_oauth_url, is_configured
+    if not is_configured():
+        return StarletteRedirect('/login?error=supabase_not_configured', status_code=303)
+
+    oauth_url, code_verifier = get_google_oauth_url(_app_url())
+    if not oauth_url:
+        return StarletteRedirect('/login?error=oauth_failed', status_code=303)
+
+    resp = StarletteRedirect(oauth_url, status_code=302)
+    # Store verifier in short-lived httpOnly cookie (5 min)
+    resp.set_cookie("gegow_cv", code_verifier, httponly=True, samesite="lax", max_age=300, path="/")
+    return resp
+
+
+@rt('/auth/callback')
+def get(request):
+    code = request.query_params.get("code")
+    error = request.query_params.get("error")
+    error_desc = _safe(request.query_params.get("error_description", ""))
+
+    if error or not code:
+        from app.pages.auth_callback import error_page
+        return error_page(error_desc or _safe(error or "") or "No auth code received")
+
+    code_verifier = request.cookies.get("gegow_cv")
+    if not code_verifier:
+        from app.pages.auth_callback import error_page
+        return error_page("Session expired — please try signing in again.")
+
+    from app.logic.supabase_db import exchange_pkce_code, get_or_create_profile
+    session_data = exchange_pkce_code(code, code_verifier)
+
+    if not session_data or "access_token" not in session_data:
+        from app.pages.auth_callback import error_page
+        return error_page("Token exchange failed. Please try again.")
+
+    access_token  = session_data["access_token"]
+    refresh_token = session_data.get("refresh_token", "")
+    user          = session_data.get("user", {})
+
+    # Ensure profile row exists in Supabase
+    if user.get("id") and user.get("email"):
+        get_or_create_profile(user["id"], user["email"])
+
+    resp = StarletteRedirect('/dashboard', status_code=303)
+    _set_session_cookies(resp, access_token, refresh_token)
+    resp.delete_cookie("gegow_cv", path="/")
+    return resp
+
+
+@rt('/auth/logout')
+def get():
+    resp = StarletteRedirect('/login', status_code=303)
+    resp.delete_cookie("gegow_token")
+    resp.delete_cookie("gegow_refresh")
+    return resp
+
+
+# ─────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

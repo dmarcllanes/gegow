@@ -1,0 +1,44 @@
+{
+  "name": "Gegow Travel Agency",
+  "short_name": "Gegow",
+  "description": "Your digital-in-pocket travel agency for flights, hotels, tours, and gear.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0D9488",
+  "background_color": "#FAF7F2",
+  "scope": "/",
+  "lang": "en-PH",
+  "categories": ["travel", "lifestyle"],
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Book a Flight",
+      "url": "/book?type=flight",
+      "description": "Search and book flights"
+    },
+    {
+      "name": "Find Hotels",
+      "url": "/book?type=hotel",
+      "description": "Browse hotel stays"
+    },
+    {
+      "name": "My Suitcase",
+      "url": "/suitcase",
+      "description": "View saved itineraries"
+    }
+  ]
+}
