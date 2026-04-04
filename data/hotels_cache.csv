@@ -1,0 +1,16 @@
+id,name,city,location,stars,base_price_per_night,amenities,type
+HT001,Crimson Resort & Spa,Cebu,Mactan Island,5,8500,Pool|Spa|Beach|Restaurant|Gym,domestic
+HT002,Marco Polo Plaza,Cebu,Nivel Hills,4,4200,Pool|Restaurant|Bar|Gym,domestic
+HT003,Henann Resort Boracay,Boracay,Station 1,5,7800,Pool|Beach|Spa|Restaurant,domestic
+HT004,Henann Regency Resort,Boracay,Station 2,4,5200,Pool|Beach|Restaurant|Bar,domestic
+HT005,El Nido Resorts Miniloc,Palawan,El Nido Bay,5,15000,Beach|Snorkeling|Restaurant|Kayak,domestic
+HT006,Sheridan Beach Resort,Palawan,Puerto Princesa,3,3500,Pool|Restaurant|Tours,domestic
+HT007,Nay Palad Hideaway,Siargao,General Luna,5,18000,Beach|Pool|Surfing|Restaurant,domestic
+HT008,Harana Surf Resort,Siargao,Cloud 9,4,4500,Surfing|Restaurant|Beach,domestic
+HT009,Marco Polo Davao,Davao,Camus Street,4,4800,Pool|Restaurant|Bar|Gym,domestic
+HT010,Microtel by Wyndham Boracay,Boracay,Station 2,3,3200,Pool|Restaurant|Beach,domestic
+HT011,Marina Bay Sands,Singapore,Marina Bay,5,28000,Pool|Spa|Casino|Restaurant|Sky Park,international
+HT012,ibis Singapore on Bencoolen,Singapore,Bencoolen,3,5500,Restaurant|Gym|WiFi,international
+HT013,Park Hyatt Tokyo,Tokyo,Shinjuku,5,35000,Pool|Spa|Restaurant|Bar,international
+HT014,Dormy Inn Tokyo Ginza,Tokyo,Ginza,3,6800,Hot Spring|Restaurant|WiFi,international
+HT015,Avani+ Riverside Bangkok,Bangkok,Charoen Krung,4,7200,Pool|Spa|River View|Restaurant,international

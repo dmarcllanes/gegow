@@ -11,8 +11,8 @@ __pycache__/
 dist/
 build/
 
-# Data (large files)
-data/*.csv
+# Data (large files — add specific filenames here if needed)
+# data/*.csv
 
 # OS
 .DS_Store

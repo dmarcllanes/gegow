@@ -1,0 +1,15 @@
+id,name,destination,duration_days,duration_nights,type,base_price,includes,highlights,pax_min,pax_max
+TR001,El Nido Island Hopping Tour A,Palawan,1,0,domestic,4500,Boat|Lunch|Snorkel gear|Guide,Shimizu Island|Secret Lagoon|Seven Commandos,1,20
+TR002,Coron Palawan Discovery,Palawan,4,3,domestic,18500,Hotel|Boat|Meals|Guide|Airport transfer,Kayangan Lake|Twin Lagoon|Barracuda Lake,2,16
+TR003,Siargao Surf & Island Tour,Siargao,3,2,domestic,12000,Hotel|Surfing lesson|Island hopping|Meals,Cloud 9|Naked Island|Sugba Lagoon,1,12
+TR004,Boracay Beach Holiday,Boracay,4,3,domestic,15000,Hotel|Breakfast|Island hopping|Transfers,White Beach|Helmet Diving|Sunset Sail,1,20
+TR005,Bohol Heritage & Beach,Cebu-Bohol,3,2,domestic,9500,Hotel|Breakfast|Tours|Transfers,Chocolate Hills|Tarsier|Loboc River|Panglao Beach,1,16
+TR006,Cebu City & Oslob Whale Shark,Cebu,2,1,domestic,6500,Hotel|Breakfast|Whale shark swim|Tours,Whale Shark|Tumalog Falls|Simala Church,1,12
+TR007,Manila Heritage & Culture Day Tour,Manila,1,0,domestic,2500,Lunch|Guide|Transfers,Intramuros|Rizal Park|Chinatown|BGC,1,20
+TR008,Davao Explore: Eagle & Durian,Davao,3,2,domestic,8500,Hotel|Breakfast|Tours|Transfers,Philippine Eagle|Eden Nature Park|People's Park,1,15
+TR009,Singapore Marvel World 4D3N,Singapore,4,3,international,38500,Hotel|Breakfast|Universal Studios|Gardens by the Bay|SkyPark,1,20
+TR010,Tokyo Cherry Blossom & Culture 6D5N,Tokyo,6,5,international,85000,Hotel|Breakfast|City tour|Day trips|Airport transfers,Mt Fuji|Shibuya|Shinjuku|Asakusa,1,16
+TR011,Bangkok Temple & Street Food 4D3N,Bangkok,4,3,international,28500,Hotel|Breakfast|City tour|Floating market|Transfers,Grand Palace|Wat Pho|Chatuchak|Chao Phraya,1,20
+TR012,Dubai Wonders & Desert Safari 5D4N,Dubai,5,4,international,52000,Hotel|Breakfast|Desert safari|City tour|Burj Khalifa,Burj Khalifa|Desert Camp|Gold Souk|Palm Jumeirah,1,16
+TR013,Seoul K-Drama & Food 5D4N,Seoul,5,4,international,48000,Hotel|Breakfast|City tour|DMZ|Transfers,Gyeongbokgung|N Seoul Tower|Myeongdong|Nami Island,1,20
+TR014,Hong Kong Disneyland & City 4D3N,Hong Kong,4,3,international,35000,Hotel|Breakfast|Disneyland|City tour|Transfers,Disneyland|Victoria Peak|Temple Street|Avenue of Stars,1,20

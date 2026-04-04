@@ -1,0 +1,21 @@
+id,origin,destination,airline,departure,arrival,duration_min,base_price,type,origin_city,destination_city
+FL001,MNL,CEB,Cebu Pacific,06:00,07:10,70,1199,domestic,Manila,Cebu
+FL002,MNL,CEB,Philippine Airlines,08:30,09:40,70,1599,domestic,Manila,Cebu
+FL003,MNL,DVO,Cebu Pacific,07:00,08:35,95,1499,domestic,Manila,Davao
+FL004,MNL,DVO,Philippine Airlines,10:00,11:35,95,1899,domestic,Manila,Davao
+FL005,MNL,KLO,AirAsia,06:30,07:45,75,1299,domestic,Manila,Kalibo (Boracay)
+FL006,MNL,MPH,Cebu Pacific,09:00,10:10,70,1399,domestic,Manila,Caticlan (Boracay)
+FL007,MNL,PPS,Philippine Airlines,07:30,09:00,90,1799,domestic,Manila,Puerto Princesa (Palawan)
+FL008,MNL,IAO,Cebu Pacific,06:00,07:35,95,2199,domestic,Manila,Siargao
+FL009,CEB,KLO,Cebu Pacific,08:00,09:05,65,999,domestic,Cebu,Kalibo (Boracay)
+FL010,CEB,DVO,Philippine Airlines,10:30,11:30,60,1299,domestic,Cebu,Davao
+FL011,MNL,SIN,Singapore Airlines,08:00,12:05,245,4500,international,Manila,Singapore
+FL012,MNL,SIN,Cebu Pacific,14:00,18:00,240,3200,international,Manila,Singapore
+FL013,MNL,HKG,Cathay Pacific,07:30,10:45,195,5800,international,Manila,Hong Kong
+FL014,MNL,NRT,Philippine Airlines,20:30,06:00,270,12500,international,Manila,Tokyo
+FL015,MNL,KUL,AirAsia,06:00,09:20,200,2800,international,Manila,Kuala Lumpur
+FL016,MNL,DXB,Emirates,23:00,05:30,390,18500,international,Manila,Dubai
+FL017,MNL,ICN,Korean Air,09:00,16:30,270,9800,international,Manila,Seoul
+FL018,MNL,BKK,Thai Airways,08:30,11:30,180,6500,international,Manila,Bangkok
+FL019,MNL,SYD,Philippine Airlines,22:00,10:45,525,22000,international,Manila,Sydney
+FL020,MNL,HKG,Philippine Airlines,06:00,09:10,190,6200,international,Manila,Hong Kong
