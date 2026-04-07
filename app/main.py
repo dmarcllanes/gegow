@@ -1155,26 +1155,28 @@ img { display: block; max-width: 100%; }
 
 /* ── 19. Search banner (hero) ─────────────────────────────── */
 .dash-search-banner {
-  background: linear-gradient(160deg, #03141f 0%, #005c66 55%, #0a9aa8 100%);
-  padding: 28px 16px 20px;
+  background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
+  padding: 28px 16px 36px;
   position: relative; overflow: hidden;
 }
-@media (min-width: 480px) { .dash-search-banner { padding: 36px 20px 24px; } }
-@media (min-width: 768px) { .dash-search-banner { padding: 48px 32px 30px; } }
-@media (min-width: 1200px){ .dash-search-banner { padding: 56px 48px 36px; } }
-.dash-search-banner::before,
-.dash-search-banner::after {
-  content: ''; position: absolute; border-radius: 50%; pointer-events: none;
-}
+@media (min-width: 480px) { .dash-search-banner { padding: 36px 20px 42px; } }
+@media (min-width: 768px) { .dash-search-banner { padding: 48px 32px 48px; } }
+@media (min-width: 1200px){ .dash-search-banner { padding: 56px 48px 52px; } }
 .dash-search-banner::before {
-  width: 260px; height: 260px;
-  background: rgba(0,201,177,.12);
-  top: -80px; right: -60px;
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
 }
 .dash-search-banner::after {
-  width: 180px; height: 180px;
-  background: rgba(255,255,255,.05);
-  bottom: -60px; left: -30px;
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 28px; background: var(--beige);
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
 }
 .dsb-inner {
   max-width: 620px; margin: 0 auto;
@@ -1259,7 +1261,7 @@ img { display: block; max-width: 100%; }
 
 /* ── 19b. Unified filter bar ──────────────────────────────── */
 .filter-bar {
-  background: #fff;
+  background: var(--beige);
   border-bottom: 1px solid var(--border);
   padding: 14px 16px 0;
 }
@@ -1282,11 +1284,12 @@ img { display: block; max-width: 100%; }
   padding: 8px 14px;
   font-size: 12px; font-weight: 700;
   color: var(--muted);
-  background: var(--beige);
+  background: #fff;
   border: 1.5px solid var(--border);
   border-radius: 10px;
   cursor: pointer; white-space: nowrap; flex-shrink: 0;
   transition: all .18s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
 @media (min-width: 480px) { .cat-pill { padding: 9px 16px; font-size: 13px; border-radius: 11px; } }
 .cat-pill:hover {
@@ -1300,7 +1303,7 @@ img { display: block; max-width: 100%; }
 
 /* Sub-category chips */
 .sub-tabs-wrap {
-  background: #fff;
+  background: var(--beige);
   border-bottom: 1px solid var(--border);
 }
 .sub-tabs {
@@ -1318,11 +1321,12 @@ img { display: block; max-width: 100%; }
   display: inline-flex; align-items: center; gap: 5px;
   padding: 6px 14px; border-radius: 20px; flex-shrink: 0;
   font-size: 12px; font-weight: 600;
-  background: var(--beige);
+  background: #fff;
   border: 1.5px solid var(--border);
   color: var(--muted);
   cursor: pointer; white-space: nowrap;
   transition: all .15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 .sub-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-xl); }
 .sub-pill.active {
