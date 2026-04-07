@@ -44,10 +44,33 @@ WIZARD_CSS = """
   border-bottom: 1px solid var(--border);
   background: var(--beige);
 }
+.wizard-progress-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.wizard-back-btn {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.wizard-back-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: rgba(0,109,119,.05);
+}
 .wizard-progress-label {
   font-size: 10px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 1.6px;
-  color: var(--muted-lt); margin-bottom: 14px;
+  color: var(--muted-lt);
 }
 .wizard-steps {
   display: flex; align-items: center; margin-bottom: 10px;
@@ -440,7 +463,16 @@ def _step_indicator(current: int) -> Div:
         labels.append(Span(STEP_LABELS[i - 1], cls=lbl_cls))
 
     return Div(
-        Div("Gegow Path — Book Your Trip", cls="wizard-progress-label"),
+        Div(
+            Button(
+                "← Back",
+                cls="wizard-back-btn",
+                type="button",
+                onclick="history.length > 1 ? history.back() : (window.location='/dashboard')",
+            ),
+            Div("Gegow Path — Book Your Trip", cls="wizard-progress-label"),
+            cls="wizard-progress-top",
+        ),
         Div(*dots, cls="wizard-steps"),
         Div(*labels, cls="step-labels-row"),
         cls="wizard-progress",

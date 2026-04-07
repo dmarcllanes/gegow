@@ -19,6 +19,7 @@ from app.components.navigation import app_header, bottom_nav, sidebar, NAV_CSS
 from app.components.wizard import WIZARD_CSS
 from app.components.suitcase import SUITCASE_CSS
 from app.routes.monitoring import MONITORING_CSS
+from app.routes.b2b import B2B_CSS
 from app.routes import explore, booking, shop, b2b, monitoring
 
 # ─────────────────────────────────────────────────────────────
@@ -1654,9 +1655,298 @@ img { display: block; max-width: 100%; }
   color: #fff; font-size: 12px; font-weight: 800; border: none;
   cursor: pointer; white-space: nowrap;
 }
+
+/* ── App Splash Screen ────────────────────────────────────── */
+.app-splash {
+  position: fixed; inset: 0; z-index: 99999;
+  background: linear-gradient(155deg, #03111A 0%, #00404A 45%, #006D77 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.app-splash.splash-exit {
+  opacity: 0; pointer-events: none; transform: scale(1.05);
+}
+/* Expanding ring pulses */
+.splash-rings {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.splash-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.07);
+  animation: spl-ring 3.2s ease-out infinite;
+}
+.splash-ring:nth-child(1) { width: 160px; height: 160px; animation-delay: 0s; }
+.splash-ring:nth-child(2) { width: 310px; height: 310px; animation-delay: .65s; }
+.splash-ring:nth-child(3) { width: 480px; height: 480px; animation-delay: 1.3s; }
+.splash-ring:nth-child(4) { width: 680px; height: 680px; animation-delay: 1.95s; }
+@keyframes spl-ring {
+  0%   { transform: scale(.75); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+/* Brand */
+.splash-brand {
+  position: relative; z-index: 1;
+  text-align: center; margin-bottom: 36px;
+}
+.splash-logo-wrap {
+  width: 90px; height: 90px; border-radius: 26px;
+  background: rgba(255,255,255,.13);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255,255,255,.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46px; margin: 0 auto 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.28);
+  animation: spl-logo .7s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes spl-logo {
+  from { transform: scale(.55) rotate(-12deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0);        opacity: 1; }
+}
+.splash-wordmark {
+  font-size: 38px; font-weight: 900; color: #fff;
+  letter-spacing: -.8px;
+  animation: spl-up .5s .18s ease both;
+}
+.splash-tagline {
+  font-size: 11px; color: rgba(255,255,255,.55);
+  letter-spacing: 2.5px; text-transform: uppercase; margin-top: 4px;
+  animation: spl-up .5s .28s ease both;
+}
+@keyframes spl-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Promo strip */
+.splash-promos-wrap {
+  position: relative; z-index: 1;
+  width: 100%; overflow: hidden; padding-bottom: 4px;
+  margin-bottom: 32px;
+  animation: spl-up .5s .38s ease both;
+}
+.splash-promos-track {
+  display: flex; gap: 12px; padding: 4px 20px;
+  width: max-content;
+  animation: spl-scroll 16s linear infinite;
+}
+@keyframes spl-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.spl-promo {
+  flex-shrink: 0; width: 168px; border-radius: 16px; overflow: hidden;
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.14);
+  cursor: pointer;
+  transition: transform .2s;
+}
+.spl-promo:hover { transform: translateY(-3px); }
+.spl-promo-img {
+  height: 92px; background-size: cover; background-position: center;
+  position: relative;
+}
+.spl-promo-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 60%);
+}
+.spl-promo-dest {
+  position: absolute; bottom: 8px; left: 10px; z-index: 1;
+  font-size: 13px; font-weight: 800; color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+.spl-promo-body { padding: 8px 10px 10px; }
+.spl-promo-badge {
+  font-size: 9px; font-weight: 800; color: #FF7043;
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px;
+}
+.spl-promo-title {
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.85);
+  line-height: 1.35; margin-bottom: 5px;
+}
+.spl-promo-price {
+  font-size: 16px; font-weight: 900;
+  color: #00C9B1;
+}
+.spl-promo-unit { font-size: 10px; color: rgba(255,255,255,.45); }
+/* Loading dots */
+.splash-dots {
+  position: relative; z-index: 1; display: flex; gap: 8px;
+  animation: spl-up .4s .5s ease both;
+}
+.spl-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  animation: spl-dot 1.3s ease infinite;
+}
+.spl-dot:nth-child(2) { animation-delay: .22s; }
+.spl-dot:nth-child(3) { animation-delay: .44s; }
+@keyframes spl-dot {
+  0%, 100% { background: rgba(255,255,255,.25); transform: scale(1); }
+  50%       { background: #fff; transform: scale(1.4); }
+}
+/* Tap hint */
+.splash-tap-hint {
+  position: absolute; bottom: 32px; z-index: 1;
+  font-size: 11px; color: rgba(255,255,255,.3);
+  letter-spacing: 1px;
+  animation: spl-up .4s .7s ease both;
+}
+
+/* ── Quick-Book Modal ─────────────────────────────────────── */
+.qb-modal-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: flex-end;
+}
+.qb-modal-sheet {
+  width: 100%; max-width: 540px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  padding: 12px 20px 32px;
+  transform: translateY(100%);
+  transition: transform .32s cubic-bezier(.32,0,.4,1);
+  max-height: 92dvh;
+  overflow-y: auto;
+}
+.qb-modal-sheet.open { transform: translateY(0); }
+.qb-handle {
+  width: 40px; height: 5px; border-radius: 3px;
+  background: var(--border); margin: 0 auto 16px;
+}
+.qb-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px;
+  margin-bottom: 14px;
+}
+.qb-header-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.qb-icon { font-size: 32px; flex-shrink: 0; }
+.qb-header-text { flex: 1; min-width: 0; }
+.qb-name {
+  font-size: 16px; font-weight: 800; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.qb-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.qb-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: transparent;
+  color: var(--muted); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.qb-close:hover { background: var(--beige); color: var(--text); }
+.qb-divider { height: 1px; background: var(--border); margin: 0 0 14px; }
+.qb-price-strip {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--beige); border-radius: 12px;
+  padding: 10px 14px; margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+.qb-price-label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--muted); }
+.qb-price-value { font-size: 15px; font-weight: 900; color: var(--teal); }
+.qb-field { margin-bottom: 14px; }
+.qb-field-label {
+  display: block; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted); margin-bottom: 6px;
+}
+.qb-field-input {
+  width: 100%; padding: 13px 14px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  font-size: 15px; background: #fff; color: var(--text);
+  outline: none;
+  transition: border-color .18s, box-shadow .18s;
+}
+.qb-field-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(0,109,119,.1);
+}
+.qb-pax-row {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--beige); border-radius: 12px;
+  padding: 10px 14px; border: 1.5px solid var(--border);
+}
+.qb-pax-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 2px solid var(--teal); background: #fff; color: var(--teal);
+  font-size: 22px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+}
+.qb-pax-btn:hover { background: var(--teal); color: #fff; }
+.qb-pax-count {
+  flex: 1; text-align: center;
+  font-size: 24px; font-weight: 900; color: var(--text);
+}
+.qb-total-strip {
+  display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(135deg, var(--teal-xl) 0%, #E8F7F5 100%);
+  border: 1.5px solid var(--teal-lt); border-radius: 14px;
+  padding: 12px 16px; margin-bottom: 18px;
+}
+.qb-total-label { font-size: 12px; font-weight: 700; color: var(--teal-dk); }
+.qb-total-value { font-size: 20px; font-weight: 900; color: var(--teal); }
+.qb-confirm-btn {
+  display: block; width: 100%; padding: 15px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dk) 100%);
+  border: none; border-radius: 14px;
+  color: #fff; font-size: 16px; font-weight: 700;
+  cursor: pointer; text-align: center;
+  box-shadow: 0 6px 20px rgba(0,109,119,.25);
+  transition: transform .15s, box-shadow .15s;
+}
+.qb-confirm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,109,119,.35);
+}
+/* Success view */
+.qb-success-icon { font-size: 56px; text-align: center; margin: 16px 0 12px; }
+.qb-success-title {
+  font-size: 22px; font-weight: 900; color: var(--text);
+  text-align: center; margin-bottom: 6px;
+}
+.qb-success-sub { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 12px; }
+.qb-success-ref {
+  font-size: 12px; font-weight: 800; color: var(--teal);
+  text-align: center; letter-spacing: 1px;
+  background: var(--teal-xl); border: 1px solid var(--teal-lt);
+  border-radius: 10px; padding: 8px 16px; margin: 0 auto 20px;
+  display: inline-block; width: 100%; box-sizing: border-box;
+}
+.qb-success-actions { display: flex; flex-direction: column; gap: 10px; }
+.qb-suitcase-btn {
+  display: block; width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dk) 100%);
+  border: none; border-radius: 14px; color: #fff;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: transform .15s;
+}
+.qb-suitcase-btn:hover { transform: translateY(-2px); }
+.qb-again-btn {
+  display: block; width: 100%; padding: 12px;
+  background: transparent; border: 1.5px solid var(--border);
+  border-radius: 14px; color: var(--muted);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.qb-again-btn:hover { border-color: var(--text); color: var(--text); }
+@media (min-width: 540px) {
+  .qb-modal-overlay { align-items: center; }
+  .qb-modal-sheet {
+    border-radius: 28px; max-height: 85vh;
+    margin-bottom: 0;
+  }
+}
 """
 
-COMBINED_CSS = CSS + "\n" + NAV_CSS + "\n" + WIZARD_CSS + "\n" + SUITCASE_CSS + "\n" + MONITORING_CSS
+COMBINED_CSS = CSS + "\n" + NAV_CSS + "\n" + WIZARD_CSS + "\n" + SUITCASE_CSS + "\n" + MONITORING_CSS + "\n" + B2B_CSS
 
 # ─────────────────────────────────────────────────────────────
 # PWA headers
@@ -1737,10 +2027,77 @@ async def service_worker(request):
 # Page shell
 # ─────────────────────────────────────────────────────────────
 
+_UNS = "https://images.unsplash.com/photo-"
+_SPLASH_PROMOS = [
+    {"dest": "Boracay",   "badge": "🔥 PROMO",    "title": "Boracay 3D2N Package", "price": "₱4,500", "unit": "/ person", "img": _UNS + "1507525428034-b723cf961d3e?w=360&q=75&fit=crop"},
+    {"dest": "Singapore", "badge": "✈️ FLIGHTS",  "title": "Manila → Singapore",   "price": "₱7,800", "unit": "/ way",    "img": _UNS + "1565967511849-76a60a516170?w=360&q=75&fit=crop"},
+    {"dest": "Siargao",   "badge": "🌊 SURF DEAL", "title": "Siargao Surf 5D4N",   "price": "₱9,500", "unit": "/ person", "img": _UNS + "1455218873509-8097305ee378?w=360&q=75&fit=crop"},
+    {"dest": "Tokyo",     "badge": "🌸 LIMITED",   "title": "Tokyo Explorer 7D6N", "price": "₱28,000","unit": "/ person", "img": _UNS + "1540959733332-eab4deabeeaf?w=360&q=75&fit=crop"},
+    {"dest": "Cebu",      "badge": "💸 CHEAP",     "title": "Manila → Cebu Flight", "price": "₱1,299", "unit": "/ way",   "img": _UNS + "1559128010-7c1ad6e1b6a5?w=360&q=75&fit=crop"},
+    {"dest": "Palawan",   "badge": "🏝️ PARADISE",  "title": "El Nido Discovery 4D3N","price": "₱12,500","unit": "/ person","img": _UNS + "1501854140801-50d01698950b?w=360&q=75&fit=crop"},
+]
+
+def _splash_promo_card(p: dict) -> Div:
+    return Div(
+        Div(
+            Span(p["dest"], cls="spl-promo-dest"),
+            cls="spl-promo-img",
+            style=f"background-image:url('{p['img']}')",
+        ),
+        Div(
+            Div(p["badge"], cls="spl-promo-badge"),
+            Div(p["title"], cls="spl-promo-title"),
+            Div(
+                Span(p["price"], cls="spl-promo-price"),
+                Span(" " + p["unit"], cls="spl-promo-unit"),
+            ),
+            cls="spl-promo-body",
+        ),
+        cls="spl-promo",
+    )
+
+def _splash_overlay() -> Div:
+    cards = [_splash_promo_card(p) for p in _SPLASH_PROMOS]
+    # Duplicate for seamless infinite scroll
+    cards_dup = [_splash_promo_card(p) for p in _SPLASH_PROMOS]
+    return Div(
+        # Expanding rings
+        Div(
+            Div(cls="splash-ring"),
+            Div(cls="splash-ring"),
+            Div(cls="splash-ring"),
+            Div(cls="splash-ring"),
+            cls="splash-rings",
+        ),
+        # Brand
+        Div(
+            Div("✈️", cls="splash-logo-wrap"),
+            Div("Gegow", cls="splash-wordmark"),
+            Div("Your Digital Travel Agency", cls="splash-tagline"),
+            cls="splash-brand",
+        ),
+        # Promo strip
+        Div(
+            Div(*cards, *cards_dup, cls="splash-promos-track"),
+            cls="splash-promos-wrap",
+        ),
+        # Loading dots
+        Div(
+            Div(cls="spl-dot"),
+            Div(cls="spl-dot"),
+            Div(cls="spl-dot"),
+            cls="splash-dots",
+        ),
+        Div("Tap to skip", cls="splash-tap-hint"),
+        id="app-splash", cls="app-splash",
+    )
+
+
 def page_shell(content, active: str = "/", title: str = "Gegow") -> Html:
     return Html(
         Head(Title(f"{title} · Gegow Travel"), *PWA_HEADERS),
         Body(
+            _splash_overlay(),
             Div(
                 sidebar(active=active),
                 Div(
@@ -2006,7 +2363,165 @@ def get(request):
             id="cat-tours", data_section="tours",
         ),
         Div(style="height:40px"),
+        # ── Quick-Book Modal ────────────────────────────────────
+        Div(
+            Div(
+                # ── Sheet ────────────────────────────────────────
+                Div(
+                    # Drag handle
+                    Div(cls="qb-handle"),
+                    # Form view
+                    Div(
+                        # Header
+                        Div(
+                            Div(
+                                Span("✈️", id="qb-icon", cls="qb-icon"),
+                                Div(
+                                    Div("", id="qb-name", cls="qb-name"),
+                                    Div("", id="qb-detail", cls="qb-detail"),
+                                    cls="qb-header-text",
+                                ),
+                                cls="qb-header-left",
+                            ),
+                            Button("✕", cls="qb-close", type="button", onclick="closeQuickBook()"),
+                            cls="qb-header",
+                        ),
+                        Div(cls="qb-divider"),
+                        # Price strip
+                        Div(
+                            Span("Price", cls="qb-price-label"),
+                            Span("", id="qb-price", cls="qb-price-value"),
+                            cls="qb-price-strip",
+                        ),
+                        # Date field
+                        Div(
+                            Div("", id="qb-date-label", cls="qb-field-label"),
+                            Input(type="date", id="qb-date", cls="qb-field-input"),
+                            cls="qb-field",
+                        ),
+                        # Travelers stepper
+                        Div(
+                            Div("", id="qb-pax-label", cls="qb-field-label"),
+                            Div(
+                                Button("−", type="button", cls="qb-pax-btn", onclick="qbPax(-1)"),
+                                Span("1", id="qb-pax-count", cls="qb-pax-count"),
+                                Button("+", type="button", cls="qb-pax-btn", onclick="qbPax(1)"),
+                                cls="qb-pax-row",
+                            ),
+                            cls="qb-field",
+                        ),
+                        # Total
+                        Div(
+                            Span("Estimated Total", cls="qb-total-label"),
+                            Span("", id="qb-total", cls="qb-total-value"),
+                            cls="qb-total-strip",
+                        ),
+                        # Confirm
+                        Button("Confirm Booking →", type="button", cls="qb-confirm-btn",
+                               onclick="qbConfirm()"),
+                        id="qb-form-view",
+                    ),
+                    # Success view (hidden initially)
+                    Div(
+                        Div("🎉", cls="qb-success-icon"),
+                        Div("Added to Suitcase!", cls="qb-success-title"),
+                        Div("Your booking is saved offline.", cls="qb-success-sub"),
+                        Div("", id="qb-success-ref", cls="qb-success-ref"),
+                        Div(
+                            Button("View Suitcase", type="button", cls="qb-suitcase-btn",
+                                   onclick="window.location='/suitcase'"),
+                            Button("Book Another", type="button", cls="qb-again-btn",
+                                   onclick="closeQuickBook()"),
+                            cls="qb-success-actions",
+                        ),
+                        id="qb-success-view", style="display:none",
+                    ),
+                    id="qb-modal-sheet", cls="qb-modal-sheet",
+                    onclick="event.stopPropagation()",
+                ),
+                id="qb-modal", cls="qb-modal-overlay",
+                onclick="closeQuickBook()", style="display:none",
+            ),
+        ),
         Script("""
+// ── Quick-Book Modal ────────────────────────────────────────
+var _qbItem = null, _qbPax = 1;
+
+function openQuickBook(item) {
+  _qbItem = item;
+  _qbPax = 1;
+  document.getElementById('qb-icon').textContent   = item.icon;
+  document.getElementById('qb-name').textContent   = item.name;
+  document.getElementById('qb-detail').textContent = item.detail;
+  document.getElementById('qb-price').textContent  = item.priceLabel;
+  document.getElementById('qb-date-label').textContent = item.dateLabel;
+  document.getElementById('qb-pax-label').textContent  = item.paxLabel;
+  document.getElementById('qb-pax-count').textContent  = '1';
+  document.getElementById('qb-total').textContent  = item.priceLabel;
+  document.getElementById('qb-date').value = '';
+  document.getElementById('qb-form-view').style.display    = '';
+  document.getElementById('qb-success-view').style.display = 'none';
+  var modal = document.getElementById('qb-modal');
+  modal.style.display = '';
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() {
+    document.getElementById('qb-modal-sheet').classList.add('open');
+  }, 10);
+}
+
+function closeQuickBook() {
+  document.getElementById('qb-modal-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(function() {
+    document.getElementById('qb-modal').style.display = 'none';
+  }, 320);
+}
+
+function qbPax(delta) {
+  _qbPax = Math.max(1, Math.min(9, _qbPax + delta));
+  document.getElementById('qb-pax-count').textContent = _qbPax;
+  var total = _qbItem.price * _qbPax;
+  document.getElementById('qb-total').textContent = '₱' + total.toLocaleString();
+}
+
+function qbConfirm() {
+  var date = document.getElementById('qb-date').value;
+  if (!date) {
+    var inp = document.getElementById('qb-date');
+    inp.style.borderColor = '#ef4444';
+    inp.focus();
+    setTimeout(function() { inp.style.borderColor = ''; }, 1800);
+    return;
+  }
+  var ref = 'GGW-' + Date.now().toString(36).toUpperCase().slice(-6);
+  var booking = {
+    ref: ref,
+    type: _qbItem.type,
+    name: _qbItem.name,
+    date: date,
+    pax: _qbPax,
+    price: _qbItem.price * _qbPax,
+    status: 'Pending',
+    createdAt: new Date().toISOString(),
+  };
+  if (_qbItem.origin)      booking.origin      = _qbItem.origin;
+  if (_qbItem.destination) booking.destination = _qbItem.destination;
+  if (_qbItem.city)        booking.city        = _qbItem.city;
+
+  var trips = JSON.parse(localStorage.getItem('gegow_trips') || '[]');
+  trips.unshift(booking);
+  localStorage.setItem('gegow_trips', JSON.stringify(trips));
+
+  document.getElementById('qb-form-view').style.display    = 'none';
+  document.getElementById('qb-success-view').style.display = '';
+  document.getElementById('qb-success-ref').textContent    = 'Ref: ' + ref;
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeQuickBook();
+});
+
+// ── Filter / search ─────────────────────────────────────────
 function filterCat(pill, cat) {
   document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
   pill.classList.add('active');
@@ -2471,21 +2986,56 @@ def get(tab: str = "manning"):
     from app.routes.b2b import _manning_form, _corporate_form
 
     content = Div(
+        # ── Hero ─────────────────────────────────────────────────
         Div(
-            Div("🏢 B2B Portal", cls="b2b-banner-badge"),
-            Div("Gegow B2B Portal", cls="b2b-banner-title"),
-            Div("Special rates for Manning Agencies and Corporate clients. "
-                "Book group flights, hotel blocks, and custom tour packages.",
-                cls="b2b-banner-sub"),
-            cls="b2b-banner",
+            Div(
+                Div("🏢 Partnership Portal", cls="b2b-hero-eyebrow"),
+                Div("Grow Your Business with Gegow", cls="b2b-hero-title"),
+                Div(
+                    "Exclusive group rates for Manning Agencies and Corporate accounts. "
+                    "Flights · Hotels · Tours — all with dedicated support.",
+                    cls="b2b-hero-sub",
+                ),
+                Div(
+                    Div(
+                        Div("🤝", cls="b2b-stat-icon"),
+                        Div(
+                            Div("500+", cls="b2b-stat-val"),
+                            Div("Partner Companies", cls="b2b-stat-lbl"),
+                        ),
+                        cls="b2b-stat",
+                    ),
+                    Div(
+                        Div("✈️", cls="b2b-stat-icon"),
+                        Div(
+                            Div("₱1M+", cls="b2b-stat-val"),
+                            Div("Monthly Bookings", cls="b2b-stat-lbl"),
+                        ),
+                        cls="b2b-stat",
+                    ),
+                    Div(
+                        Div("⚡", cls="b2b-stat-icon"),
+                        Div(
+                            Div("24h", cls="b2b-stat-val"),
+                            Div("Response Time", cls="b2b-stat-lbl"),
+                        ),
+                        cls="b2b-stat",
+                    ),
+                    cls="b2b-stats",
+                ),
+                cls="b2b-hero-inner",
+            ),
+            cls="b2b-hero",
         ),
+        # ── Tabs ─────────────────────────────────────────────────
         Div(
-            A("🚢 Manning Agency", href="/b2b?tab=manning",
-              cls=f"b2b-tab {'active' if tab == 'manning' else ''}"),
+            A("🚢 Manning Agency",  href="/b2b?tab=manning",
+              cls=f"b2b-tab-pill {'active' if tab == 'manning' else ''}"),
             A("🏢 Corporate Travel", href="/b2b?tab=corporate",
-              cls=f"b2b-tab {'active' if tab == 'corporate' else ''}"),
-            cls="b2b-tabs",
+              cls=f"b2b-tab-pill {'active' if tab == 'corporate' else ''}"),
+            cls="b2b-tabs-wrap",
         ),
+        # ── Body ─────────────────────────────────────────────────
         _manning_form() if tab == "manning" else _corporate_form(),
     )
     return page_shell(content, active="/b2b", title="B2B Portal")

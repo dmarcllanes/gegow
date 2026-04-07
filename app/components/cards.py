@@ -4,6 +4,8 @@ Each card has a real destination photo header with gradient overlay,
 deal badges, and polished price display.
 """
 
+import json as _json
+
 from fasthtml.common import Div, Span, A, Button
 
 CARDS_CSS = ""  # All styles in main.py CSS block
@@ -114,20 +116,27 @@ def flight_card(flight: dict, book_href: str = "") -> Div:
     grad = DEST_GRAD.get(flight['destination'], DEST_GRAD['MNL'])
     img  = DEST_IMG.get(flight['destination'], DEST_IMG.get('MNL', ''))
     badge_text, badge_cls = _flight_badge(flight)
-    if not book_href:
-        book_href = f"/book?type=flight&origin={flight['origin']}&destination={flight['destination']}"
 
     img_style = (
         f"background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.65) 100%),"
         f"url('{img}') center/cover no-repeat,{grad}"
     )
+    _item = _json.dumps({
+        "type": "flight",
+        "icon": "✈️",
+        "name": f"{flight['origin_city']} → {flight['destination_city']}",
+        "detail": f"{flight['airline']}  {flight['departure']} – {flight['arrival']}",
+        "priceLabel": f"₱{int(flight['selling_price']):,} / way",
+        "price": int(flight['selling_price']),
+        "origin": flight['origin'],
+        "destination": flight['destination'],
+        "dateLabel": "Departure Date",
+        "paxLabel": "Passengers",
+    })
 
     return Div(
-        # Visual header with photo
         Div(
-            # Badge overlaid top-left
             Span(badge_text, cls=f'vc-badge-img {badge_cls}'),
-            # Route codes
             Div(
                 Span(flight['origin'], cls='vc-code'),
                 Div(cls='vc-line'),
@@ -137,7 +146,6 @@ def flight_card(flight: dict, book_href: str = "") -> Div:
             Div(f"{flight['origin_city']} → {flight['destination_city']}", cls='vc-cities'),
             cls='card-visual', style=img_style,
         ),
-        # Details
         Div(
             Div(
                 Span(flight['airline'], cls='c-airline'),
@@ -151,7 +159,8 @@ def flight_card(flight: dict, book_href: str = "") -> Div:
                     Span(_peso(flight['selling_price']), cls='price-big'),
                     Span('/ way', cls='price-unit'),
                 ),
-                A('Book Now →', href=book_href, cls='btn-book'),
+                Button('Book Now →', cls='btn-book', type='button',
+                       onclick=f"openQuickBook({_item})"),
                 cls='c-footer',
             ),
             cls='card-body',
@@ -165,14 +174,23 @@ def hotel_card(hotel: dict, book_href: str = "") -> Div:
     img  = CITY_IMG.get(hotel['city'], '')
     stars_filled = '★' * hotel['stars']
     stars_empty  = '☆' * (5 - hotel['stars'])
-    if not book_href:
-        book_href = f"/book?type=hotel&city={hotel['city']}"
     amenities = hotel.get('amenities', '').split('|')[:3]
 
     img_style = (
         f"background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.6) 100%),"
         f"url('{img}') center/cover no-repeat,{grad}" if img else f"background:{grad}"
     )
+    _item = _json.dumps({
+        "type": "hotel",
+        "icon": "🏨",
+        "name": hotel['name'],
+        "detail": f"{hotel['stars']}★  {hotel['location']}",
+        "priceLabel": f"₱{int(hotel['selling_price']):,} / night",
+        "price": int(hotel['selling_price']),
+        "city": hotel['city'],
+        "dateLabel": "Check-in Date",
+        "paxLabel": "Guests",
+    })
 
     return Div(
         Div(
@@ -197,7 +215,8 @@ def hotel_card(hotel: dict, book_href: str = "") -> Div:
                     Span(_peso(hotel['selling_price']), cls='price-big'),
                     Span('/ night', cls='price-unit'),
                 ),
-                A('Book Now →', href=book_href, cls='btn-book'),
+                Button('Book Now →', cls='btn-book', type='button',
+                       onclick=f"openQuickBook({_item})"),
                 cls='c-footer',
             ),
             cls='card-body',
@@ -211,14 +230,23 @@ def tour_card(tour: dict, book_href: str = "") -> Div:
     img  = TOUR_IMG.get(tour['type'], TOUR_IMG['domestic'])
     badge_text = '🌴 Local Tour' if tour['type'] == 'domestic' else '🌍 International'
     badge_cls  = 'badge-dom' if tour['type'] == 'domestic' else 'badge-intl'
-    if not book_href:
-        book_href = f"/book?type=tour&id={tour['id']}"
     includes = tour.get('includes', '').split('|')[:3]
 
     img_style = (
         f"background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.6) 100%),"
         f"url('{img}') center/cover no-repeat,{grad}"
     )
+    _item = _json.dumps({
+        "type": "tour",
+        "icon": "🗺️" if tour['type'] == 'domestic' else "🌍",
+        "name": tour['name'],
+        "detail": f"{tour['duration_days']}D {tour['duration_nights']}N  ·  {tour['destination']}",
+        "priceLabel": f"₱{int(tour['selling_price']):,} / person",
+        "price": int(tour['selling_price']),
+        "destination": tour['destination'],
+        "dateLabel": "Start Date",
+        "paxLabel": "Travelers",
+    })
 
     return Div(
         Div(
@@ -239,7 +267,8 @@ def tour_card(tour: dict, book_href: str = "") -> Div:
                     Span(_peso(tour['selling_price']), cls='price-big'),
                     Span('/ person', cls='price-unit'),
                 ),
-                A('Book Now →', href=book_href, cls='btn-book'),
+                Button('Book Now →', cls='btn-book', type='button',
+                       onclick=f"openQuickBook({_item})"),
                 cls='c-footer',
             ),
             cls='card-body',

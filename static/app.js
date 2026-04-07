@@ -1,5 +1,30 @@
 /* Gegow — App interactions & animations */
 
+/* ── Splash screen ───────────────────────────────────────── */
+(function () {
+  var splash = document.getElementById('app-splash');
+  if (!splash) return;
+
+  function dismiss() {
+    splash.classList.add('splash-exit');
+    setTimeout(function () { splash.style.display = 'none'; }, 520);
+    sessionStorage.setItem('gegow_splashed', '1');
+  }
+
+  // Already seen this session — remove immediately (no flash)
+  if (sessionStorage.getItem('gegow_splashed')) {
+    splash.style.display = 'none';
+    return;
+  }
+
+  // Auto-dismiss after 3 s, or on tap/click
+  var timer = setTimeout(dismiss, 3000);
+  splash.addEventListener('click', function () {
+    clearTimeout(timer);
+    dismiss();
+  });
+})();
+
 /* ── Enable JS-driven animations ────────────────────────── */
 document.documentElement.classList.add('js-loaded');
 document.body.classList.add('js-loaded');

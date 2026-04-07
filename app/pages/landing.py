@@ -4,7 +4,7 @@ Gegow — Landing page. Modern, animated, scroll-driven.
 import json as _json
 
 from fasthtml.common import (
-    Html, Head, Body, Title, Meta, Style, Script,
+    Html, Head, Body, Title, Meta, Style, Script, Link,
     Div, Nav, Footer, Section, Span, A, Button, P, H1, H2, H3,
 )
 
@@ -1030,41 +1030,32 @@ document.addEventListener('DOMContentLoaded', () => {
   statEls.forEach(el => statIO.observe(el));
 
   // ── PWA Install ──────────────────────────────────────────
-  let deferredPrompt = null;
-  const btnNav      = document.getElementById('btn-install-nav');
-  const btnDrawer   = document.getElementById('btn-install-drawer');
-  const btnHero     = document.getElementById('btn-install-hero');
-  const btnIos      = document.getElementById('btn-install-ios');
-  const iosModal    = document.getElementById('ios-modal');
-  const iosClose    = document.getElementById('ios-close');
+  const btnNav    = document.getElementById('btn-install-nav');
+  const btnDrawer = document.getElementById('btn-install-drawer');
+  const btnHero   = document.getElementById('btn-install-hero');
+  const btnIos    = document.getElementById('btn-install-ios');
+  const iosModal  = document.getElementById('ios-modal');
+  const iosClose  = document.getElementById('ios-close');
 
   const isIOS        = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 
-  // Hide iOS button on non-iOS, hide Android button on iOS
+  // Platform visibility
   if (!isIOS && btnIos)  btnIos.style.display  = 'none';
   if (isIOS  && btnHero) btnHero.style.display = 'none';
 
-  // Already installed
+  // Already installed — update UI immediately
   if (isStandalone) {
     if (btnHero) { btnHero.textContent = '✓ Installed'; btnHero.classList.add('installed'); }
     [btnNav, btnDrawer].forEach(b => b && b.classList.add('hide'));
   }
 
-  // Chrome / Edge / Android — capture the deferred prompt
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-  });
+  const guideModal = document.getElementById('install-guide-modal');
+  const guideClose = document.getElementById('install-guide-close');
 
-  const guideModal  = document.getElementById('install-guide-modal');
-  const guideClose  = document.getElementById('install-guide-close');
-
-  // Show the right guide tab based on platform
   function showInstallGuide() {
     if (!guideModal) return;
     const isAndroid = /android/i.test(navigator.userAgent);
-    const isDesktop = !isIOS && !isAndroid;
     guideModal.querySelectorAll('.ig-tab-btn').forEach(b => b.classList.remove('active'));
     guideModal.querySelectorAll('.ig-panel').forEach(p => p.classList.remove('active'));
     const tab = isIOS ? 'ios' : isAndroid ? 'android' : 'desktop';
@@ -1075,18 +1066,17 @@ document.addEventListener('DOMContentLoaded', () => {
     guideModal.classList.add('open');
   }
 
-  async function triggerAndroidInstall() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      if (outcome === 'accepted') {
-        if (btnHero) { btnHero.textContent = '✓ Installing…'; btnHero.classList.add('installed'); }
-        [btnNav, btnDrawer].forEach(b => b && b.classList.add('hide'));
-      }
-    } else {
-      showInstallGuide();
+  function onInstallAccepted(outcome) {
+    if (outcome === 'accepted') {
+      if (btnHero) { btnHero.textContent = '✓ Installing…'; btnHero.classList.add('installed'); }
+      [btnNav, btnDrawer].forEach(b => b && b.classList.add('hide'));
     }
+  }
+
+  function triggerAndroidInstall() {
+    // Use the global handler from sw-register.js
+    const triggered = window.triggerPWAInstall && window.triggerPWAInstall(onInstallAccepted);
+    if (!triggered) showInstallGuide();  // fallback: show manual guide
   }
 
   function triggerIOSInstall() {
@@ -1094,12 +1084,22 @@ document.addEventListener('DOMContentLoaded', () => {
     else showInstallGuide();
   }
 
+  // When sw-register.js fires pwa-install-ready, enable the Android button
+  window.addEventListener('pwa-install-ready', () => {
+    if (btnHero && !isIOS) {
+      btnHero.textContent = '📲 Install App';
+      btnHero.classList.remove('installed');
+    }
+    [btnNav, btnDrawer].forEach(b => b && b.classList.remove('hide'));
+  });
+
   if (btnHero)   btnHero.addEventListener('click',   triggerAndroidInstall);
   if (btnIos)    btnIos.addEventListener('click',    triggerIOSInstall);
   if (btnNav)    btnNav.addEventListener('click',    triggerAndroidInstall);
   if (btnDrawer) btnDrawer.addEventListener('click', triggerAndroidInstall);
   if (iosClose)  iosClose.addEventListener('click',  () => iosModal && iosModal.classList.remove('open'));
   if (iosModal)  iosModal.addEventListener('click',  (e) => { if (e.target === iosModal) iosModal.classList.remove('open'); });
+
   const closeGuide = () => guideModal && guideModal.classList.remove('open');
   if (guideClose) guideClose.addEventListener('click', closeGuide);
   const guideCloseBottom = document.getElementById('install-guide-close-bottom');
@@ -1115,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  window.addEventListener('appinstalled', () => {
+  window.addEventListener('pwa-installed', () => {
     if (btnHero) { btnHero.textContent = '✓ Installed'; btnHero.classList.add('installed'); }
     [btnNav, btnDrawer].forEach(b => b && b.classList.add('hide'));
   });
@@ -1483,9 +1483,17 @@ def landing_page():
         Head(
             Title("Gegow — Your Digital Travel Agency"),
             Meta(charset="utf-8"),
-            Meta(name="viewport", content="width=device-width, initial-scale=1"),
+            Meta(name="viewport", content="width=device-width, initial-scale=1, viewport-fit=cover"),
             Meta(name="description", content="Book flights, hotels and tours in the Philippines and Asia. Best prices, instant vouchers, offline access."),
+            Meta(name="theme-color", content="#006D77"),
+            Meta(name="apple-mobile-web-app-capable", content="yes"),
+            Meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent"),
+            Meta(name="apple-mobile-web-app-title", content="Gegow"),
+            Link(rel="manifest", href="/static/manifest.json"),
+            Link(rel="apple-touch-icon", href="/static/icons/icon-192.png"),
+            Link(rel="icon", type="image/png", sizes="192x192", href="/static/icons/icon-192.png"),
             Style(CSS),
+            Script(src="/static/sw-register.js", defer=True),
         ),
         Body(
             *_nav(),
