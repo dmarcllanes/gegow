@@ -82,11 +82,15 @@ img { display: block; max-width: 100%; }
 .main-area  {
   flex: 1;
   min-width: 0;
-  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  /* floating nav height ~70px + safe area + breathing room */
+  padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px));
 }
 @media (min-width: 768px) { .main-area { padding-bottom: 40px; } }
 @media (min-width: 1200px) {
-  .main-area { max-width: calc(100vw - var(--sidebar, 240px)); }
+  .main-area { max-width: calc(100vw - var(--sidebar, 260px)); }
+}
+@media (orientation: landscape) and (max-width: 767px) {
+  .main-area { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ── 4. Animations ────────────────────────────────────────── */

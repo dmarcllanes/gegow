@@ -582,6 +582,13 @@ def wizard_step1() -> Div:
                   "Guided local & abroad",    "tour"),
             cls="type-grid-new",
         ),
+        Button(
+            "← Back to Explore",
+            cls="btn-back",
+            type="button",
+            onclick="window.location='/dashboard'",
+            style="margin-top:18px",
+        ),
     )
 
 
