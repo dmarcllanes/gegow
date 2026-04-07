@@ -163,6 +163,11 @@ NAV_CSS = """
     position: relative; z-index: 1;
     margin-top: auto; padding: 10px 10px 22px;
   }
+}
+
+@media (min-width: 1200px) {
+  .sidebar { width: 260px; }
+}
   .sidebar-logout {
     display: flex; align-items: center; gap: 9px;
     padding: 10px 14px; border-radius: 10px;
@@ -259,12 +264,13 @@ NAV_CSS = """
 .bottom-nav .nav-item {
   flex: 1;
   display: flex; flex-direction: column; align-items: center;
-  padding: 9px 4px 7px; gap: 3px;
+  padding: 8px 2px 6px; gap: 2px;
   color: rgba(255,255,255,.28);
-  font-size: 10px; font-weight: 500;
+  font-size: 9px; font-weight: 500;
   text-decoration: none; position: relative;
   transition: color .15s;
 }
+@media (min-width: 360px) { .bottom-nav .nav-item { padding: 9px 4px 7px; gap: 3px; font-size: 10px; } }
 .bottom-nav .nav-item.active {
   color: #00C9B1; font-weight: 700;
 }
@@ -275,7 +281,12 @@ NAV_CSS = """
   background: linear-gradient(90deg, transparent, #00C9B1, transparent);
   box-shadow: 0 0 6px rgba(0,201,177,.8);
 }
-.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.bottom-nav .nav-icon { font-size: 17px; line-height: 1; }
+@media (min-width: 360px) { .bottom-nav .nav-icon { font-size: 18px; } }
+@media (orientation: landscape) and (max-width: 767px) {
+  .bottom-nav .nav-item { padding: 5px 2px 4px; }
+  .bottom-nav .nav-icon { font-size: 15px; }
+}
 """
 
 

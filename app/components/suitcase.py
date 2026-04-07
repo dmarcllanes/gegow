@@ -15,9 +15,12 @@ SUITCASE_CSS = """
 /* ── Hero ── */
 .sc-hero {
   background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
-  padding: 28px 18px 26px;
+  padding: 22px 16px 24px;
   position: relative; overflow: hidden;
 }
+@media (min-width: 480px) { .sc-hero { padding: 28px 18px 26px; } }
+@media (min-width: 768px) { .sc-hero { padding: 36px 32px 32px; } }
+@media (min-width: 1200px){ .sc-hero { padding: 44px 48px 40px; } }
 .sc-hero::before {
   content: '';
   position: absolute; inset: 0;
@@ -50,7 +53,7 @@ SUITCASE_CSS = """
   50%      { opacity: .6; transform: scale(1.4); }
 }
 .sc-hero-title {
-  font-size: 28px; font-weight: 900; letter-spacing: -.5px;
+  font-size: clamp(22px, 5vw, 28px); font-weight: 900; letter-spacing: -.5px;
   line-height: 1.1; color: #fff; margin-bottom: 4px;
 }
 .sc-hero-sub { font-size: 12px; color: rgba(255,255,255,.45); }
@@ -58,8 +61,10 @@ SUITCASE_CSS = """
 /* ── Stats ── */
 .sc-stats {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px; margin-top: 22px; position: relative; z-index: 1;
+  gap: 8px; margin-top: 18px; position: relative; z-index: 1;
 }
+@media (min-width: 480px) { .sc-stats { gap: 10px; margin-top: 22px; } }
+@media (max-width: 300px) { .sc-stats { grid-template-columns: 1fr; } }
 .sc-stat {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
@@ -69,11 +74,11 @@ SUITCASE_CSS = """
 }
 .sc-stat:hover { background: rgba(255,255,255,.14); }
 .sc-stat-val {
-  font-size: 20px; font-weight: 900; color: #fff; line-height: 1;
+  font-size: clamp(16px, 4vw, 20px); font-weight: 900; color: #fff; line-height: 1;
 }
 .sc-stat-lbl {
-  font-size: 9px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1px; color: rgba(255,255,255,.4); margin-top: 4px;
+  font-size: clamp(8px, 2vw, 9px); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: rgba(255,255,255,.4); margin-top: 4px;
 }
 
 /* ── Active trip strip ── */
@@ -116,16 +121,17 @@ SUITCASE_CSS = """
 }
 .sc-tabs::-webkit-scrollbar { display: none; }
 .sc-tab {
-  flex: 1; padding: 13px 6px 12px;
+  flex: 1; padding: 11px 4px 10px;
   text-align: center;
-  font-size: 12px; font-weight: 600;
+  font-size: 11px; font-weight: 600;
   color: var(--muted);
   border-bottom: 2px solid transparent;
   margin-bottom: -1.5px;
   cursor: pointer; white-space: nowrap;
   transition: color .15s, border-color .15s;
-  min-width: 72px; user-select: none;
+  min-width: 60px; user-select: none;
 }
+@media (min-width: 380px) { .sc-tab { padding: 13px 6px 12px; font-size: 12px; min-width: 72px; } }
 .sc-tab:hover { color: var(--text); }
 .sc-tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 700; }
 .sc-count-badge {
@@ -138,10 +144,13 @@ SUITCASE_CSS = """
 
 /* ── List area ── */
 .sc-list-wrap {
-  padding: 16px 16px 110px;
+  padding: 14px 12px 100px;
   background: var(--beige);
   min-height: 60vh;
 }
+@media (min-width: 480px) { .sc-list-wrap { padding: 16px 16px 110px; } }
+@media (min-width: 768px) { .sc-list-wrap { padding: 20px 28px 80px; } }
+@media (min-width: 1200px){ .sc-list-wrap { padding: 24px 48px 60px; } }
 
 /* ── Trip card (minimal) ── */
 .sc-card {
@@ -175,9 +184,10 @@ SUITCASE_CSS = """
 
 /* ── Card inner row ── */
 .sc-card-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 16px 16px 20px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 14px 14px 18px;
 }
+@media (min-width: 480px) { .sc-card-row { gap: 14px; padding: 16px 16px 16px 20px; } }
 .sc-type-icon {
   width: 46px; height: 46px; border-radius: 13px;
   display: flex; align-items: center; justify-content: center;

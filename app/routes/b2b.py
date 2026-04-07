@@ -15,11 +15,14 @@ B2B_CSS = """
 /* ── B2B Hero ─────────────────────────────────────────────── */
 .b2b-hero {
   background: linear-gradient(155deg, #03111A 0%, #00404A 45%, #006D77 100%);
-  padding: 32px 20px 28px;
+  padding: 22px 16px 20px;
   color: #fff;
   position: relative;
   overflow: hidden;
 }
+@media (min-width: 480px) { .b2b-hero { padding: 28px 20px 24px; } }
+@media (min-width: 768px) { .b2b-hero { padding: 40px 32px 36px; } }
+@media (min-width: 1200px){ .b2b-hero { padding: 52px 48px 44px; } }
 .b2b-hero::after {
   content: '';
   position: absolute; inset: 0;
@@ -40,17 +43,21 @@ B2B_CSS = """
   margin-bottom: 14px; letter-spacing: .5px;
 }
 .b2b-hero-title {
-  font-size: clamp(22px, 5vw, 32px);
+  font-size: clamp(20px, 5vw, 32px);
   font-weight: 900; color: #fff;
   line-height: 1.15; letter-spacing: -.4px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .b2b-hero-sub {
   font-size: 14px; color: rgba(255,255,255,.72);
   line-height: 1.6; max-width: 480px; margin-bottom: 22px;
 }
 .b2b-stats {
-  display: flex; gap: 12px; flex-wrap: wrap;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+@media (min-width: 480px) { .b2b-stats { gap: 10px; } }
+@media (min-width: 768px) {
+  .b2b-stats { gap: 12px; flex-wrap: nowrap; }
 }
 .b2b-stat {
   background: rgba(255,255,255,.1);
@@ -93,14 +100,30 @@ B2B_CSS = """
 .b2b-tab-pill:hover { color: var(--teal-dk); }
 
 /* ── Layout ───────────────────────────────────────────────── */
-.b2b-body { padding: 20px 16px 32px; }
+.b2b-body { padding: 16px 14px 32px; }
+@media (min-width: 480px) { .b2b-body { padding: 20px 16px 32px; } }
 @media (min-width: 768px) {
   .b2b-body {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 24px;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
     padding: 28px 24px 40px;
-    max-width: 860px;
+    max-width: 900px;
+  }
+}
+@media (min-width: 1024px) {
+  .b2b-body {
+    grid-template-columns: 300px 1fr;
+    gap: 28px;
+    padding: 32px 32px 48px;
+    max-width: 980px;
+  }
+}
+@media (min-width: 1200px) {
+  .b2b-body {
+    grid-template-columns: 340px 1fr;
+    padding: 36px 48px 56px;
+    max-width: 1100px;
   }
 }
 
@@ -204,9 +227,9 @@ B2B_CSS = """
   box-shadow: 0 0 0 3px rgba(0,109,119,.1);
 }
 .b2b-row {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  display: grid; grid-template-columns: 1fr; gap: 0;
 }
-@media (max-width: 420px) { .b2b-row { grid-template-columns: 1fr; } }
+@media (min-width: 400px) { .b2b-row { grid-template-columns: 1fr 1fr; gap: 12px; } }
 
 .b2b-submit {
   display: block; width: 100%; padding: 15px;

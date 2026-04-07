@@ -21,14 +21,16 @@ WIZARD_CSS = """
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 16px 80px;
+  padding: 16px 12px 80px;
   background: var(--beige);
 }
+@media (min-width: 480px) { .wizard-page { padding: 24px 16px 80px; } }
+@media (min-width: 768px) { .wizard-page { padding: 36px 24px 80px; } }
 
 /* ── Wizard card ─────────────────────────────────────── */
 .wizard-card {
   background: #fff;
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow:
     0 2px 4px rgba(15,23,42,.04),
     0 8px 32px rgba(15,23,42,.08),
@@ -37,13 +39,16 @@ WIZARD_CSS = """
   max-width: 540px;
   overflow: hidden;
 }
+@media (min-width: 480px) { .wizard-card { border-radius: 24px; } }
 
 /* ── Progress header ─────────────────────────────────── */
 .wizard-progress {
-  padding: 22px 24px 18px;
+  padding: 16px 16px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--beige);
 }
+@media (min-width: 480px) { .wizard-progress { padding: 20px 20px 16px; } }
+@media (min-width: 768px) { .wizard-progress { padding: 22px 24px 18px; } }
 .wizard-progress-top {
   display: flex;
   align-items: center;
@@ -111,7 +116,9 @@ WIZARD_CSS = """
 .step-lbl.active { color: var(--teal); font-weight: 800; }
 
 /* ── Step body ───────────────────────────────────────── */
-.wizard-body { padding: 28px 24px 24px; }
+.wizard-body { padding: 20px 16px 20px; }
+@media (min-width: 480px) { .wizard-body { padding: 24px 20px 22px; } }
+@media (min-width: 768px) { .wizard-body { padding: 28px 28px 26px; } }
 .wizard-eyebrow {
   font-size: 11px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 1.4px;
@@ -128,18 +135,20 @@ WIZARD_CSS = """
 
 /* ── Trip type cards ─────────────────────────────────── */
 .type-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  display: grid; grid-template-columns: 1fr;
   gap: 10px; margin-bottom: 0;
 }
+@media (min-width: 360px) { .type-grid { grid-template-columns: 1fr 1fr 1fr; } }
 .type-card {
   position: relative; overflow: hidden;
-  border-radius: 16px; cursor: pointer;
+  border-radius: 14px; cursor: pointer;
   border: 2.5px solid transparent;
-  aspect-ratio: 2/3;
+  aspect-ratio: 3/2;
   display: flex; flex-direction: column; justify-content: flex-end;
   transition: border-color .2s, transform .2s, box-shadow .2s;
   text-decoration: none;
 }
+@media (min-width: 360px) { .type-card { aspect-ratio: 2/3; border-radius: 16px; } }
 .type-card:hover {
   border-color: var(--teal);
   transform: translateY(-4px);
@@ -169,11 +178,11 @@ WIZARD_CSS = """
 }
 
 /* ── Form elements ───────────────────────────────────── */
-.form-group { margin-bottom: 16px; }
+.form-group { margin-bottom: 14px; }
 .form-row {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  display: grid; grid-template-columns: 1fr; gap: 0;
 }
-@media (max-width: 400px) { .form-row { grid-template-columns: 1fr; } }
+@media (min-width: 380px) { .form-row { grid-template-columns: 1fr 1fr; gap: 12px; } }
 .form-label {
   display: block; font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .8px;
