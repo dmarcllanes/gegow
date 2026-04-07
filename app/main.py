@@ -1153,143 +1153,182 @@ img { display: block; max-width: 100%; }
 }
 .btn-view:hover { background: var(--teal-lt); }
 
-/* ── 19. Search banner ────────────────────────────────────── */
+/* ── 19. Search banner (hero) ─────────────────────────────── */
 .dash-search-banner {
-  background: var(--beige);
-  padding: 24px 16px 0;
-  text-align: center;
+  background: linear-gradient(160deg, #03141f 0%, #005c66 55%, #0a9aa8 100%);
+  padding: 28px 16px 20px;
+  position: relative; overflow: hidden;
 }
-@media (min-width: 480px) { .dash-search-banner { padding: 32px 20px 0; } }
-@media (min-width: 768px) { .dash-search-banner { padding: 44px 32px 0; } }
-@media (min-width: 1200px){ .dash-search-banner { padding: 52px 48px 0; } }
+@media (min-width: 480px) { .dash-search-banner { padding: 36px 20px 24px; } }
+@media (min-width: 768px) { .dash-search-banner { padding: 48px 32px 30px; } }
+@media (min-width: 1200px){ .dash-search-banner { padding: 56px 48px 36px; } }
+.dash-search-banner::before,
+.dash-search-banner::after {
+  content: ''; position: absolute; border-radius: 50%; pointer-events: none;
+}
+.dash-search-banner::before {
+  width: 260px; height: 260px;
+  background: rgba(0,201,177,.12);
+  top: -80px; right: -60px;
+}
+.dash-search-banner::after {
+  width: 180px; height: 180px;
+  background: rgba(255,255,255,.05);
+  bottom: -60px; left: -30px;
+}
 .dsb-inner {
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
+  max-width: 620px; margin: 0 auto;
+  width: 100%; position: relative; z-index: 1;
 }
 
 /* headline */
 .dsb-heading {
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 900; color: var(--text);
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 900; color: #fff;
   letter-spacing: -.5px; line-height: 1.2;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 .dsb-sub {
-  font-size: 13px; color: var(--muted);
-  margin-bottom: 20px;
+  font-size: 13px; color: rgba(255,255,255,.72);
+  margin-bottom: 18px;
 }
+@media (min-width: 480px) { .dsb-sub { font-size: 14px; margin-bottom: 20px; } }
 
-/* search row */
+/* search row — glassmorphism pill */
 .dsb-search-row {
-  position: relative; z-index: 1;
-  display: flex; gap: 10px; align-items: stretch;
-  margin-bottom: 20px;
+  display: flex; gap: 0; align-items: stretch;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  margin-bottom: 16px;
 }
 .dsb-input-wrap {
   flex: 1; position: relative;
 }
 .dsb-icon {
   position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  font-size: 16px; color: var(--muted); pointer-events: none; line-height: 1;
+  font-size: 16px; color: rgba(255,255,255,.55); pointer-events: none; line-height: 1;
 }
 .dsb-input {
-  width: 100%; height: 48px;
-  background: #fff;
-  border: 1.5px solid var(--border-dk);
-  border-radius: 12px;
-  color: var(--text); font-size: 14px; font-weight: 500;
-  padding: 0 14px 0 44px;
-  outline: none;
-  box-shadow: var(--shadow-md);
-  transition: border-color .18s, box-shadow .18s;
+  width: 100%; height: 52px;
+  background: transparent; border: none;
+  color: #fff; font-size: 14px; font-weight: 500;
+  padding: 0 14px 0 44px; outline: none;
 }
-.dsb-input::placeholder { color: var(--muted-lt); }
-.dsb-input:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(0,109,119,.12);
-}
+@media (min-width: 480px) { .dsb-input { height: 54px; font-size: 15px; } }
+.dsb-input::placeholder { color: rgba(255,255,255,.42); }
 .dsb-btn {
-  height: 48px; padding: 0 14px;
-  background: var(--teal);
-  border: none; border-radius: 12px;
+  padding: 0 18px;
+  background: linear-gradient(135deg, #00c9b1 0%, #006d77 100%);
+  border: none; border-radius: 0;
   color: #fff; font-size: 13px; font-weight: 700;
   cursor: pointer; white-space: nowrap; flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(0,109,119,.25);
-  transition: transform .15s, box-shadow .15s, background .15s;
-  text-decoration: none; display: flex; align-items: center; gap: 7px;
+  transition: opacity .15s, transform .15s;
+  display: flex; align-items: center; gap: 6px;
 }
 @media (min-width: 480px) { .dsb-btn { padding: 0 22px; font-size: 14px; } }
-.dsb-btn:hover { background: var(--teal-dk); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,109,119,.35); }
+.dsb-btn:hover { opacity: .88; }
 .dsb-btn:active { transform: scale(.97); }
+
+/* quick-dest chips */
+.dsb-quick {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.dsb-quick::-webkit-scrollbar { display: none; }
+.dsb-quick-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 20px;
+  color: rgba(255,255,255,.85);
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap; flex-shrink: 0;
+  cursor: pointer; text-decoration: none;
+  transition: background .15s, border-color .15s;
+}
+.dsb-quick-chip:hover {
+  background: rgba(0,201,177,.22);
+  border-color: rgba(0,201,177,.45);
+  color: #fff;
+}
 
 /* ── 19b. Unified filter bar ──────────────────────────────── */
 .filter-bar {
-  background: var(--beige);
+  background: #fff;
   border-bottom: 1px solid var(--border);
+  padding: 14px 16px 0;
 }
+@media (min-width: 480px) { .filter-bar { padding: 16px 20px 0; } }
+@media (min-width: 768px) { .filter-bar { padding: 18px 32px 0; } }
+@media (min-width: 1200px){ .filter-bar { padding: 20px 48px 0; } }
 
-/* Main category tabs — underline style */
+/* Main category tabs — card-pill style */
 .cat-tabs {
-  display: flex; gap: 0;
-  justify-content: center;
+  display: flex; gap: 8px;
   overflow-x: auto; scrollbar-width: none;
-  padding: 0 20px;
-  border-bottom: 1px solid var(--border);
   -webkit-overflow-scrolling: touch;
+  margin-bottom: 14px;
 }
+@media (min-width: 480px) { .cat-tabs { gap: 10px; } }
 .cat-tabs::-webkit-scrollbar { display: none; }
-@media (min-width: 768px) { .cat-tabs { padding: 0 32px; } }
-@media (min-width: 1200px){ .cat-tabs { padding: 0 48px; } }
 
 .cat-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 10px 12px;
-  font-size: 12px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  font-size: 12px; font-weight: 700;
   color: var(--muted);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  background: var(--beige);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
   cursor: pointer; white-space: nowrap; flex-shrink: 0;
-  transition: color .15s, border-color .15s;
-  background: none; border-top: none; border-left: none; border-right: none;
+  transition: all .18s;
 }
-@media (min-width: 480px) { .cat-pill { padding: 12px 16px; font-size: 13px; gap: 6px; } }
-@media (min-width: 768px) { .cat-pill { padding: 12px 18px; } }
-.cat-pill:hover { color: var(--text); }
+@media (min-width: 480px) { .cat-pill { padding: 9px 16px; font-size: 13px; border-radius: 11px; } }
+.cat-pill:hover {
+  border-color: var(--teal); color: var(--teal); background: var(--teal-xl);
+}
 .cat-pill.active {
-  color: var(--teal);
-  border-bottom-color: var(--teal);
-  font-weight: 700;
+  background: var(--teal); color: #fff;
+  border-color: var(--teal);
+  box-shadow: 0 4px 14px rgba(0,109,119,.28);
 }
 
 /* Sub-category chips */
-.sub-tabs-wrap { background: var(--beige); }
+.sub-tabs-wrap {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
 .sub-tabs {
   display: flex; gap: 8px;
-  justify-content: center;
   overflow-x: auto; scrollbar-width: none;
-  padding: 10px 20px;
+  padding: 10px 16px 12px;
   -webkit-overflow-scrolling: touch;
 }
 .sub-tabs::-webkit-scrollbar { display: none; }
-@media (min-width: 768px) { .sub-tabs { padding: 10px 32px; } }
-@media (min-width: 1200px){ .sub-tabs { padding: 10px 48px; } }
+@media (min-width: 480px) { .sub-tabs { padding: 10px 20px 12px; } }
+@media (min-width: 768px) { .sub-tabs { padding: 10px 32px 12px; } }
+@media (min-width: 1200px){ .sub-tabs { padding: 10px 48px 12px; } }
 
 .sub-pill {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 14px; border-radius: 6px; flex-shrink: 0;
+  padding: 6px 14px; border-radius: 20px; flex-shrink: 0;
   font-size: 12px; font-weight: 600;
-  background: rgba(0,0,0,.05);
-  border: none;
+  background: var(--beige);
+  border: 1.5px solid var(--border);
   color: var(--muted);
   cursor: pointer; white-space: nowrap;
   transition: all .15s;
 }
-.sub-pill:hover { background: var(--teal-xl); color: var(--teal); }
+.sub-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-xl); }
 .sub-pill.active {
-  background: var(--teal);
-  color: #fff;
-  font-weight: 700;
+  background: var(--teal); border-color: var(--teal);
+  color: #fff; font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0,109,119,.25);
 }
 
 /* ── Pagination bar ───────────────────────────────────────── */
@@ -2334,16 +2373,26 @@ def get(request):
                 Div(
                     Span("🔍", cls="dsb-icon"),
                     Input(
-                        placeholder="Search destinations, airlines, hotels…",
+                        placeholder="Cebu, Boracay, Tokyo…",
                         cls="dsb-input", name="q", id="dash-search-input",
                         autocomplete="off",
+                        onkeydown="if(event.key==='Enter'){var q=this.value.trim();if(q)window.location='/search?q='+encodeURIComponent(q);}",
                     ),
                     cls="dsb-input-wrap",
                 ),
                 Button("Search →", cls="dsb-btn", type="button",
-                       onclick="const q=document.getElementById('dash-search-input').value.trim();"
+                       onclick="var q=document.getElementById('dash-search-input').value.trim();"
                                "if(q)window.location='/search?q='+encodeURIComponent(q);"),
                 cls="dsb-search-row",
+            ),
+            Div(
+                A("✈️ Cebu",        cls="dsb-quick-chip", href="/search?q=Cebu"),
+                A("🏖️ Boracay",     cls="dsb-quick-chip", href="/search?q=Boracay"),
+                A("🌊 Siargao",     cls="dsb-quick-chip", href="/search?q=Siargao"),
+                A("🗼 Tokyo",       cls="dsb-quick-chip", href="/search?q=Tokyo"),
+                A("🇸🇬 Singapore",  cls="dsb-quick-chip", href="/search?q=Singapore"),
+                A("🌸 Baguio",      cls="dsb-quick-chip", href="/search?q=Baguio"),
+                cls="dsb-quick",
             ),
             cls="dsb-inner",
         ),
@@ -2351,32 +2400,32 @@ def get(request):
     )
 
     filter_bar = Div(
-        # Main category tabs — underline style
+        # Main category tabs — card-pill style
         Div(
-            Span("🌐 All",       cls="cat-pill active", data_cat="all",     onclick="filterCat(this,'all')"),
-            Span("✈️ Flights",   cls="cat-pill",        data_cat="flights",  onclick="filterCat(this,'flights')"),
-            Span("🏨 Hotels",    cls="cat-pill",        data_cat="hotels",   onclick="filterCat(this,'hotels')"),
-            Span("🗺️ Tours",     cls="cat-pill",        data_cat="tours",    onclick="filterCat(this,'tours')"),
+            Span("🌐 All",        cls="cat-pill active", data_cat="all",     onclick="filterCat(this,'all')"),
+            Span("✈️ Flights",    cls="cat-pill",        data_cat="flights",  onclick="filterCat(this,'flights')"),
+            Span("🏨 Hotels",     cls="cat-pill",        data_cat="hotels",   onclick="filterCat(this,'hotels')"),
+            Span("🗺️ Tours",      cls="cat-pill",        data_cat="tours",    onclick="filterCat(this,'tours')"),
             cls="cat-tabs",
         ),
         # Sub-category chips (shown per active category)
         Div(
             Div(
-                Span("All Flights",      cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'flights','all')"),
-                Span("🇵🇭 Domestic",     cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'flights','domestic')"),
-                Span("🌏 International", cls="sub-pill",        data_sub="international", onclick="filterSub(this,'flights','international')"),
+                Span("✈️ All Flights",    cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'flights','all')"),
+                Span("🇵🇭 Domestic",      cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'flights','domestic')"),
+                Span("🌏 International",  cls="sub-pill",        data_sub="international", onclick="filterSub(this,'flights','international')"),
                 cls="sub-tabs", id="sub-flights", style="display:none",
             ),
             Div(
-                Span("All Hotels",       cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'hotels','all')"),
-                Span("🇵🇭 Local",        cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'hotels','domestic')"),
-                Span("🌏 International", cls="sub-pill",        data_sub="international", onclick="filterSub(this,'hotels','international')"),
+                Span("🏨 All Hotels",     cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'hotels','all')"),
+                Span("🇵🇭 Local",         cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'hotels','domestic')"),
+                Span("🌏 International",  cls="sub-pill",        data_sub="international", onclick="filterSub(this,'hotels','international')"),
                 cls="sub-tabs", id="sub-hotels", style="display:none",
             ),
             Div(
-                Span("All Tours",        cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'tours','all')"),
-                Span("🌴 Local",         cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'tours','domestic')"),
-                Span("🌍 International", cls="sub-pill",        data_sub="international", onclick="filterSub(this,'tours','international')"),
+                Span("🗺️ All Tours",      cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'tours','all')"),
+                Span("🌴 Domestic",       cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'tours','domestic')"),
+                Span("🌍 International",  cls="sub-pill",        data_sub="international", onclick="filterSub(this,'tours','international')"),
                 cls="sub-tabs", id="sub-tours", style="display:none",
             ),
             cls="sub-tabs-wrap",
