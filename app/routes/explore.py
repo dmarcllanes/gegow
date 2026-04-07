@@ -36,7 +36,7 @@ def _pagination_bar(section: str, page: int, pages: int, sub: str, total: int) -
 
 EXPLORE_CSS = """
 .hero {
-    background: linear-gradient(135deg, #0D9488 0%, #0F766E 60%, #134E4A 100%);
+    background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
     padding: 24px 16px 28px;
     color: #fff;
 }
@@ -55,11 +55,11 @@ EXPLORE_CSS = """
     padding: 13px 14px;
     font-size: 15px;
     outline: none;
-    color: #1C1917;
+    color: var(--text);
     background: transparent;
 }
 .search-btn {
-    background: #F59E0B;
+    background: var(--amber);
     border: none;
     padding: 13px 18px;
     font-size: 20px;
@@ -84,11 +84,11 @@ EXPLORE_CSS = """
     min-width: 72px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.07);
     text-decoration: none;
-    color: #1C1917;
+    color: var(--text);
     font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
-    border: 1px solid #F0EBE3;
+    border: 1px solid var(--border);
 }
 .quick-link .ql-icon { font-size: 22px; }
 .section-scroll {
@@ -124,7 +124,7 @@ def setup(rt):
         if not flights and not tours:
             return Div(
                 P(f'No results for "{q}". Try "Cebu", "Boracay", or "Tokyo".',
-                  style="padding:16px;color:#78716C;font-size:14px"),
+                  style="padding:16px;color:var(--muted);font-size:14px"),
             )
 
         from app.logic.polars_engine import MARKUP
@@ -142,7 +142,7 @@ def setup(rt):
 
         return Div(
             Div(f'Results for "{q}"',
-                style="padding:12px 16px 4px;font-weight:700;font-size:15px;color:#1C1917"),
+                style="padding:12px 16px 4px;font-weight:700;font-size:15px;color:var(--text)"),
             *items,
             style="padding:0 16px 16px",
         )

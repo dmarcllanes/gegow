@@ -8,7 +8,7 @@ NAV_ITEMS = [
     ('🧭', 'Explore',     '/dashboard'),
     ('✈️', 'Book a Trip', '/book'),
     ('🧳', 'My Suitcase', '/suitcase'),
-    ('🛍️', 'Gear Shop',   '/gear'),
+    ('🛍️', 'Shop',        '/gear'),
     ('🏢', 'B2B Portal',  '/b2b'),
 ]
 
@@ -341,7 +341,7 @@ def app_header() -> Header:
 
 
 def bottom_nav(active: str = '/') -> Nav:
-    short = {'Book a Trip': 'Book', 'My Suitcase': 'Suitcase', 'Gear Shop': 'Gear', 'B2B Portal': 'B2B'}
+    short = {'Book a Trip': 'Book', 'My Suitcase': 'Suitcase', 'Shop': 'Shop', 'B2B Portal': 'B2B'}
     items = []
     for icon, label, href in NAV_ITEMS:
         cls = 'nav-item' + (' active' if href == active else '')

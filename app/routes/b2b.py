@@ -13,7 +13,7 @@ from app.logic.supabase_db import save_b2b_lead
 
 B2B_CSS = """
 .b2b-banner {
-    background: linear-gradient(135deg, #1C1917 0%, #292524 100%);
+    background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
     padding: 24px 16px;
     color: #fff;
 }
@@ -21,7 +21,7 @@ B2B_CSS = """
 .b2b-banner-sub { font-size: 13px; opacity: 0.8; line-height: 1.5; }
 .b2b-tabs {
     display: flex;
-    border-bottom: 2px solid #E8E0D0;
+    border-bottom: 2px solid var(--border);
     background: #fff;
 }
 .b2b-tab {
@@ -30,52 +30,52 @@ B2B_CSS = """
     text-align: center;
     font-size: 14px;
     font-weight: 600;
-    color: #78716C;
+    color: var(--muted);
     text-decoration: none;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 }
-.b2b-tab.active { color: #0D9488; border-bottom-color: #0D9488; }
+.b2b-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
 .b2b-form-wrap { padding: 20px 16px; }
-.b2b-section-title { font-size: 16px; font-weight: 700; color: #1C1917; margin-bottom: 14px; }
+.b2b-section-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
 .form-group { margin-bottom: 14px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: #44403C; margin-bottom: 5px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
 .form-input {
     width: 100%;
     padding: 11px 12px;
-    border: 1.5px solid #E8E0D0;
+    border: 1.5px solid var(--border);
     border-radius: 8px;
     font-size: 15px;
     background: #fff;
-    color: #1C1917;
+    color: var(--text);
     outline: none;
 }
-.form-input:focus { border-color: #0D9488; }
+.form-input:focus { border-color: var(--teal); }
 .form-select {
     width: 100%;
     padding: 11px 12px;
-    border: 1.5px solid #E8E0D0;
+    border: 1.5px solid var(--border);
     border-radius: 8px;
     font-size: 15px;
     background: #fff;
-    color: #1C1917;
+    color: var(--text);
     outline: none;
 }
 .form-textarea {
     width: 100%;
     padding: 11px 12px;
-    border: 1.5px solid #E8E0D0;
+    border: 1.5px solid var(--border);
     border-radius: 8px;
     font-size: 15px;
     background: #fff;
-    color: #1C1917;
+    color: var(--text);
     outline: none;
     resize: vertical;
     min-height: 90px;
 }
 .btn-submit {
     width: 100%;
-    background: #0D9488;
+    background: var(--teal);
     color: #fff;
     border: none;
     padding: 14px;
@@ -85,16 +85,16 @@ B2B_CSS = """
     cursor: pointer;
     margin-top: 8px;
 }
-.btn-submit:hover { background: #0F766E; }
+.btn-submit:hover { background: var(--teal-dk); }
 .benefit-card {
-    background: #F0FDFB;
-    border: 1px solid #CCFBF1;
+    background: var(--teal-xl);
+    border: 1px solid var(--teal-lt);
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 10px;
 }
-.benefit-title { font-weight: 700; font-size: 14px; color: #0F766E; margin-bottom: 3px; }
-.benefit-desc { font-size: 13px; color: #44403C; }
+.benefit-title { font-weight: 700; font-size: 14px; color: var(--teal-dk); margin-bottom: 3px; }
+.benefit-desc { font-size: 13px; color: var(--muted); }
 .success-banner {
     text-align: center;
     padding: 40px 24px;
@@ -144,19 +144,19 @@ def setup(rt):
             Div(
                 Div("✅", cls="success-icon"),
                 H3("Inquiry Received!",
-                   style="font-size:20px;font-weight:800;color:#1C1917;margin-bottom:8px"),
+                   style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px"),
                 P(
                     f"Thank you, {contact_person or company_name}! "
                     "Our B2B team will contact you within 24 hours with a custom quote.",
-                    style="font-size:14px;color:#78716C;margin-bottom:20px;line-height:1.6",
+                    style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6",
                 ),
                 Div(
                     Span("Reference: ", style="font-weight:600"),
                     Span(f"B2B-{email[:3].upper()}-{len(company_name):02d}"),
-                    style="font-size:14px;color:#44403C;margin-bottom:20px",
+                    style="font-size:14px;color:var(--muted);margin-bottom:20px",
                 ),
                 A("← Back to B2B Portal", href="/b2b",
-                  style="color:#0D9488;font-weight:700;text-decoration:none;font-size:14px"),
+                  style="color:var(--teal);font-weight:700;text-decoration:none;font-size:14px"),
                 cls="success-banner",
             ),
             style="padding:16px",

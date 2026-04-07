@@ -248,27 +248,50 @@ def tour_card(tour: dict, book_href: str = "") -> Div:
     )
 
 
+_CAT_VIS_CLS = {
+    "souvenir": "gv-souvenir",
+    "food":     "gv-food",
+    "beach":    "gv-beach",
+    "clothing": "gv-clothing",
+    "gear":     "gv-gear",
+}
+_BADGE_CLS = {
+    "Bestseller": "gb-bestseller",
+    "New":        "gb-new",
+    "Sale":       "gb-sale",
+}
+
+
 def gear_card(item: dict) -> Div:
+    cat      = item.get('category', 'gear')
+    vis_cls  = _CAT_VIS_CLS.get(cat, 'gv-gear')
+    badge    = item.get('badge', '')
+    badge_el = Span(badge, cls=f'gear-badge {_BADGE_CLS.get(badge, "")}') if badge else Span()
+    hx_vals  = f'{{"item_id":"{item["id"]}","name":"{item["name"]}","price":{item["price"]},"emoji":"{item.get("emoji","")}" }}'
+
     return Div(
+        # Visual header
         Div(
             Span(item.get('emoji', '🧳'), cls='gear-emoji'),
-            cls='gear-visual',
+            badge_el,
+            cls=f'gear-visual {vis_cls}',
         ),
+        # Body
         Div(
-            Div(item['name'], cls='card-title'),
-            Div(item.get('description', ''), cls='c-meta', style='margin-top:4px'),
+            Div(item['name'], cls='gear-name'),
+            Div(item.get('description', ''), cls='gear-desc'),
             Div(
-                Span(_peso(item['price']), cls='price-big'),
-                cls='c-footer', style='margin-top:12px;justify-content:flex-start',
+                Span(_peso(item['price']), cls='gear-price'),
+                A('Add to Cart', href='#', cls='gear-add-btn',
+                  hx_post='/gear/cart',
+                  hx_vals=hx_vals,
+                  hx_swap='none',
+                  onclick='addToCart(this);return false;'),
+                cls='gear-foot',
             ),
-            A('Add to Cart', href='#', cls='btn-outline',
-              hx_post='/gear/cart',
-              hx_vals=f'{{"item_id":"{item["id"]}","name":"{item["name"]}","price":{item["price"]}}}',
-              hx_swap='none',
-              onclick='addToCart(this);return false;'),
-            cls='card-body',
+            cls='gear-body',
         ),
-        cls='card fade-up',
+        cls='gear-card fade-up',
     )
 
 

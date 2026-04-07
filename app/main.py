@@ -18,7 +18,8 @@ from starlette.responses import RedirectResponse as StarletteRedirect
 from app.components.navigation import app_header, bottom_nav, sidebar, NAV_CSS
 from app.components.wizard import WIZARD_CSS
 from app.components.suitcase import SUITCASE_CSS
-from app.routes import explore, booking, shop, b2b
+from app.routes.monitoring import MONITORING_CSS
+from app.routes import explore, booking, shop, b2b, monitoring
 
 # ─────────────────────────────────────────────────────────────
 # DESIGN SYSTEM CSS
@@ -621,64 +622,186 @@ img { display: block; max-width: 100%; }
   max-width: 520px; margin: 0 auto;
 }
 
-/* ── 15. Gear shop ────────────────────────────────────────── */
-.shop-banner {
-  background: var(--beige);
-  padding: 36px 20px 28px;
-  text-align: center;
-}
-@media (min-width: 768px) { .shop-banner { padding: 44px 48px 32px; } }
-.shop-banner-title { font-size: clamp(20px, 3vw, 30px); font-weight: 800; color: var(--text); margin-bottom: 5px; }
-.shop-banner-sub   { font-size: 14px; color: var(--muted); max-width: 500px; margin: 0 auto; }
+/* ── 15. Shop ─────────────────────────────────────────────── */
 
+/* ── Hero banner ── */
+.shop-hero {
+  background: linear-gradient(135deg, #006D77 0%, #004d55 60%, #0a1628 100%);
+  padding: 32px 20px 30px;
+  position: relative; overflow: hidden;
+}
+.shop-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 0%, black 20%, transparent 100%);
+}
+.shop-hero-inner { position: relative; z-index: 1; }
+.shop-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.9); font-size: 11px; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
+  letter-spacing: .3px;
+}
+.shop-hero-title {
+  font-size: clamp(22px, 4vw, 32px); font-weight: 900;
+  color: #fff; margin-bottom: 6px; letter-spacing: -.5px;
+}
+.shop-hero-sub { font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 20px; }
+
+/* ── Shop search ── */
+.shop-search-row {
+  display: flex; gap: 8px; max-width: 520px;
+}
+.shop-search-input {
+  flex: 1;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: #fff; border-radius: 12px; padding: 11px 16px;
+  font-size: 14px; outline: none;
+  transition: border-color .2s, background .2s;
+}
+.shop-search-input::placeholder { color: rgba(255,255,255,.4); }
+.shop-search-input:focus {
+  border-color: rgba(0,201,177,.6); background: rgba(255,255,255,.14);
+}
+.shop-search-btn {
+  background: linear-gradient(135deg, #00C9B1, #009e8c);
+  color: #fff; border: none; border-radius: 12px;
+  padding: 11px 20px; font-size: 14px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: opacity .15s;
+}
+.shop-search-btn:hover { opacity: .9; }
+
+/* ── Category tabs ── */
 .category-tabs {
-  display: flex;
-  gap: 8px;
-  padding: 14px 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  display: flex; gap: 8px; padding: 12px 16px;
+  overflow-x: auto; scrollbar-width: none;
+  background: #fff; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+  -webkit-overflow-scrolling: touch;
 }
 .category-tabs::-webkit-scrollbar { display: none; }
-@media (min-width: 768px) { .category-tabs { padding: 14px 32px; } }
-
+@media (min-width: 768px) { .category-tabs { padding: 12px 28px; } }
 .cat-tab {
-  padding: 7px 18px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  transition: all .15s;
+  padding: 7px 16px; border-radius: 20px;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+  cursor: pointer; border: 1.5px solid var(--border);
+  background: transparent; color: var(--muted);
+  text-decoration: none; transition: all .15s;
 }
 .cat-tab.active { background: var(--teal); color: #fff; border-color: var(--teal); }
 .cat-tab:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
 
+/* ── Shop body ── */
+.shop-body { padding: 0 0 100px; background: var(--beige); }
+
+/* ── Section header ── */
+.shop-section-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 22px 16px 10px;
+}
+@media (min-width: 768px) { .shop-section-head { padding: 24px 28px 12px; } }
+.shop-section-left { display: flex; flex-direction: column; gap: 2px; }
+.shop-section-icon { font-size: 22px; margin-bottom: 4px; }
+.shop-section-title {
+  font-size: 18px; font-weight: 900; color: var(--text); letter-spacing: -.3px;
+}
+.shop-section-sub { font-size: 12px; color: var(--muted); }
+.shop-section-see-all {
+  font-size: 12px; font-weight: 700; color: var(--teal);
+  text-decoration: none; white-space: nowrap; margin-top: 6px;
+}
+
+/* ── Product grid ── */
 .gear-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 16px;
-  padding: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px; padding: 0 12px 4px;
 }
-@media (min-width: 768px) { .gear-grid { padding: 24px 32px; gap: 18px; } }
-@media (min-width: 1200px){ .gear-grid { padding: 28px 48px; } }
+@media (min-width: 520px) { .gear-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 768px) { .gear-grid { padding: 0 24px 4px; gap: 14px; grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px){ .gear-grid { grid-template-columns: repeat(4, 1fr); padding: 0 28px 4px; } }
+@media (min-width: 1280px){ .gear-grid { grid-template-columns: repeat(5, 1fr); } }
 
-.gear-visual {
-  height: 110px;
-  background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.shop-divider {
+  height: 1px; background: var(--border); margin: 6px 16px 0;
 }
-.gear-emoji { font-size: 48px; }
+
+/* ── Product card ── */
+.gear-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: box-shadow .15s, transform .15s, border-color .15s;
+}
+.gear-card:hover {
+  box-shadow: var(--shadow-md); transform: translateY(-3px);
+  border-color: var(--teal-lt);
+}
+
+/* Visual header — category tinted */
+.gear-visual {
+  height: 104px;
+  border-radius: 14px 14px 0 0;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.gear-emoji { font-size: 44px; line-height: 1; }
+
+/* Category color themes */
+.gv-souvenir { background: linear-gradient(135deg, rgba(249,115,22,.12), rgba(234,88,12,.06)); }
+.gv-food     { background: linear-gradient(135deg, rgba(245,158,11,.14), rgba(217,119,6,.06)); }
+.gv-beach    { background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(3,105,161,.06)); }
+.gv-clothing { background: linear-gradient(135deg, rgba(168,85,247,.13), rgba(109,40,217,.06)); }
+.gv-gear     { background: linear-gradient(135deg, rgba(13,148,136,.13), rgba(15,118,110,.06)); }
+
+/* Badge */
+.gear-badge {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 9px; font-weight: 900; letter-spacing: .6px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 6px;
+}
+.gb-bestseller { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+.gb-new        { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
+.gb-sale       { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+/* Card body */
+.gear-body { padding: 12px 12px 14px; flex: 1; display: flex; flex-direction: column; }
+.gear-name {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  line-height: 1.35; margin-bottom: 4px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.gear-desc {
+  font-size: 11px; color: var(--muted); line-height: 1.45; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 10px;
+}
+.gear-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  margin-top: auto;
+}
+.gear-price { font-size: 16px; font-weight: 900; color: var(--teal); flex-shrink: 0; }
+.gear-add-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--teal); color: #fff;
+  border: none; border-radius: 8px;
+  padding: 7px 12px; font-size: 11px; font-weight: 700;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background .15s, transform .15s;
+}
+.gear-add-btn:hover { background: var(--teal-dk); }
+.gear-add-btn.added {
+  background: #16a34a;
+}
+
+/* ── Cart FAB ── */
 
 .cart-fab {
   position: fixed;
@@ -707,6 +830,106 @@ img { display: block; max-width: 100%; }
   display: none; align-items: center; justify-content: center;
   border: 2px solid #fff;
 }
+
+/* ── Cart Drawer ── */
+.cart-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 400;
+  backdrop-filter: blur(3px);
+}
+.cart-overlay.open { display: block; }
+
+.cart-drawer {
+  position: fixed; top: 0; right: -360px; bottom: 0;
+  width: 340px; max-width: 100vw;
+  background: #fff; z-index: 401;
+  display: flex; flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,.18);
+  transition: right .3s cubic-bezier(.4,0,.2,1);
+}
+.cart-drawer.open { right: 0; }
+
+.cart-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.cart-drawer-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.cart-drawer-count { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.cart-close-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: transparent; border: 1.5px solid var(--border);
+  color: var(--muted); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.cart-close-btn:hover { background: #FEE2E2; border-color: #FECACA; color: #DC2626; }
+
+.cart-items { flex: 1; overflow-y: auto; padding: 12px 14px; }
+
+.cart-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.cart-row:last-child { border-bottom: none; }
+.cart-row-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--teal-xl); display: flex; align-items: center;
+  justify-content: center; font-size: 24px; flex-shrink: 0;
+}
+.cart-row-info { flex: 1; min-width: 0; }
+.cart-row-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cart-row-price { font-size: 12px; color: var(--teal); font-weight: 700; margin-top: 1px; }
+.cart-qty-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.cart-qty-btn {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: var(--teal-xl); border: none; font-size: 14px; font-weight: 700;
+  color: var(--teal); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.cart-qty-btn:hover { background: var(--teal-lt); }
+.cart-qty-num { font-size: 12px; font-weight: 800; min-width: 16px; text-align: center; }
+.cart-rm-btn {
+  background: transparent; border: none; color: var(--muted-lt);
+  font-size: 14px; cursor: pointer; padding: 4px;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.cart-rm-btn:hover { color: #DC2626; }
+
+.cart-empty {
+  padding: 48px 20px; text-align: center; color: var(--muted);
+}
+.cart-empty-icon { font-size: 52px; margin-bottom: 14px; opacity: .4; }
+.cart-empty-txt { font-size: 14px; font-weight: 600; }
+
+.cart-footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 18px 20px;
+}
+.cart-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.cart-total-lbl { font-size: 13px; font-weight: 700; color: var(--muted); }
+.cart-total-val { font-size: 22px; font-weight: 900; color: var(--teal); }
+.cart-checkout-btn {
+  display: block; width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-dk));
+  color: #fff; font-size: 15px; font-weight: 800;
+  border: none; border-radius: 14px; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,109,119,.35);
+  transition: opacity .15s; margin-bottom: 8px;
+}
+.cart-checkout-btn:hover { opacity: .9; }
+.cart-continue-btn {
+  display: block; width: 100%; padding: 11px;
+  background: transparent; border: 1.5px solid var(--border);
+  color: var(--muted); font-size: 13px; font-weight: 700;
+  border-radius: 12px; cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.cart-continue-btn:hover { border-color: var(--teal); color: var(--teal); }
 
 /* ── 16. B2B portal ───────────────────────────────────────── */
 .b2b-banner {
@@ -1193,7 +1416,7 @@ img { display: block; max-width: 100%; }
 /* ── Hero ── */
 .profile-hero {
   background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
-  padding: 44px 20px 68px;
+  padding: 44px 20px 56px;
   text-align: center;
   position: relative; overflow: hidden;
 }
@@ -1360,9 +1583,80 @@ img { display: block; max-width: 100%; }
 .pref-left  { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); font-weight: 500; }
 .pref-icon  { font-size: 20px; }
 .pref-right { font-size: 12px; color: var(--teal); font-weight: 700; background: var(--teal-xl); padding: 3px 10px; border-radius: 8px; }
+
+/* ── Quick-Book Strip ──────────────────────────────────────── */
+.quick-book-strip {
+  padding: 0 16px;
+  margin: -24px 0 0;
+  position: relative; z-index: 2;
+}
+.quick-book-strip-title {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted); margin-bottom: 10px;
+}
+.quick-book-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin-bottom: 10px;
+}
+.qb-card {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 14px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  text-decoration: none; text-align: center;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+  position: relative; overflow: hidden;
+}
+.qb-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+.qb-flight::before  { background: linear-gradient(90deg, #0D9488, #0891b2); }
+.qb-hotel::before   { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.qb-tour::before    { background: linear-gradient(90deg, #06b6d4, #8b5cf6); }
+.qb-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--teal-lt); }
+.qb-icon  { font-size: 26px; line-height: 1; }
+.qb-label { font-size: 12px; font-weight: 800; color: var(--text); }
+.qb-sub   { font-size: 10px; color: var(--muted); }
+
+.suitcase-shortcut {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, rgba(0,109,119,.07), rgba(0,109,119,.03));
+  border: 1.5px solid rgba(0,109,119,.15);
+  border-radius: 14px; padding: 13px 16px;
+  text-decoration: none;
+  transition: box-shadow .15s, border-color .15s;
+}
+.suitcase-shortcut:hover { box-shadow: var(--shadow-sm); border-color: var(--teal-lt); }
+.suitcase-sc-icon { font-size: 22px; flex-shrink: 0; }
+.suitcase-sc-info { flex: 1; min-width: 0; }
+.suitcase-sc-title { font-size: 14px; font-weight: 800; color: var(--teal); }
+.suitcase-sc-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.suitcase-sc-arrow { font-size: 18px; color: var(--teal); opacity: .6; }
+
+/* ── PWA Install nudge ─────────────────────────────────────── */
+.pwa-nudge {
+  margin: 0 16px;
+  background: linear-gradient(135deg, #04111a, #005760);
+  border: 1.5px solid rgba(0,201,177,.25);
+  border-radius: 16px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+  transition: box-shadow .15s;
+}
+.pwa-nudge:hover { box-shadow: 0 4px 20px rgba(0,201,177,.2); }
+.pwa-nudge-icon { font-size: 26px; flex-shrink: 0; }
+.pwa-nudge-info { flex: 1; min-width: 0; }
+.pwa-nudge-title { font-size: 13px; font-weight: 800; color: #fff; }
+.pwa-nudge-sub   { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 2px; }
+.pwa-nudge-btn {
+  flex-shrink: 0; padding: 8px 14px; border-radius: 10px;
+  background: linear-gradient(135deg, #00C9B1, #009e8c);
+  color: #fff; font-size: 12px; font-weight: 800; border: none;
+  cursor: pointer; white-space: nowrap;
+}
 """
 
-COMBINED_CSS = CSS + "\n" + NAV_CSS + "\n" + WIZARD_CSS + "\n" + SUITCASE_CSS
+COMBINED_CSS = CSS + "\n" + NAV_CSS + "\n" + WIZARD_CSS + "\n" + SUITCASE_CSS + "\n" + MONITORING_CSS
 
 # ─────────────────────────────────────────────────────────────
 # PWA headers
@@ -1398,7 +1692,28 @@ def _safe(s) -> str:
     if not isinstance(s, str):
         return str(s) if s is not None else ""
     return s.encode("utf-8", errors="replace").decode("utf-8")
+import traceback as _tb
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import HTMLResponse as _HTMLResponse
+
+class _ErrorLoggerMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        try:
+            return await call_next(request)
+        except Exception as exc:
+            stack = _tb.format_exc()
+            # In prod: persist stack to Supabase error_logs table or file
+            print(f"[Gegow ERROR] {exc}\n{stack}")
+            return _HTMLResponse(
+                "<html><body style='font-family:sans-serif;padding:40px'>"
+                "<h2>Under Maintenance</h2>"
+                "<p>We're fixing a minor issue. Please try again soon.</p>"
+                "</body></html>",
+                status_code=500,
+            )
+
 app, rt = fast_app(hdrs=PWA_HEADERS, live=False)
+app.add_middleware(_ErrorLoggerMiddleware)
 app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
 
 from starlette.responses import FileResponse
@@ -1551,6 +1866,7 @@ explore.setup(rt)
 booking.setup(rt)
 shop.setup(rt)
 b2b.setup(rt)
+monitoring.setup(rt, page_shell)
 
 
 # Hero form tab endpoints
@@ -1754,6 +2070,46 @@ def get(request):
         cls="profile-hero",
     )
 
+    # ── Quick-Book Strip (always first — reduce booking friction) ─
+    quick_book = Div(
+        Div("Book a Trip", cls="quick-book-strip-title"),
+        Div(
+            A(
+                Span("✈️", cls="qb-icon"),
+                Div("Flights", cls="qb-label"),
+                Div("Domestic & intl", cls="qb-sub"),
+                href="/book?type=flight", cls="qb-card qb-flight fade-up",
+            ),
+            A(
+                Span("🏨", cls="qb-icon"),
+                Div("Hotels", cls="qb-label"),
+                Div("Best rates", cls="qb-sub"),
+                href="/book?type=hotel", cls="qb-card qb-hotel fade-up",
+                **{"data-delay": "70"},
+            ),
+            A(
+                Span("🗺️", cls="qb-icon"),
+                Div("Tours", cls="qb-label"),
+                Div("Curated trips", cls="qb-sub"),
+                href="/book?type=tour", cls="qb-card qb-tour fade-up",
+                **{"data-delay": "140"},
+            ),
+            cls="quick-book-row",
+        ),
+        A(
+            Span("🧳", cls="suitcase-sc-icon"),
+            Div(
+                Div("My Suitcase", cls="suitcase-sc-title"),
+                Div("Vouchers, itineraries & offline access", cls="suitcase-sc-sub"),
+                cls="suitcase-sc-info",
+            ),
+            Span("›", cls="suitcase-sc-arrow"),
+            href="/suitcase", cls="suitcase-shortcut fade-up",
+            **{"data-delay": "210"},
+        ),
+        cls="quick-book-strip",
+    )
+
     # ── Stats row ────────────────────────────────────────────
     stats = Div(
         Div(
@@ -1800,67 +2156,92 @@ def get(request):
         booking_items = [_booking_row(it) for it in itineraries[:5]]
     else:
         booking_items = [
-            Div(
-                Div("🧳", cls="booking-icon-wrap"),
+            A(
+                Div("✈️", cls="booking-icon-wrap"),
                 Div(
                     Div("No trips yet", cls="booking-title"),
-                    Div("Start planning your first adventure!", cls="booking-sub"),
+                    Div("Tap a booking button above to start planning!", cls="booking-sub"),
                     cls="booking-info",
                 ),
-                Span("Get started", cls="booking-badge badge-empty"),
-                cls="booking-item booking-default",
+                Span("Book now →", cls="booking-badge badge-empty"),
+                href="/book", cls="booking-item booking-default",
+                style="text-decoration:none;cursor:pointer;",
             )
         ]
 
     bookings_section = Div(
-        Div("My Bookings & Saved Trips", cls="profile-section-title"),
+        Div("Saved Trips", cls="profile-section-title"),
         Div(*booking_items, cls="booking-list"),
         cls="profile-section",
     )
 
-    # ── Quick actions ─────────────────────────────────────────
-    def _qa(icon, bubble_cls, title, sub, href):
-        return A(
-            Div(icon, cls=f"qa-icon-bubble {bubble_cls}"),
-            Div(Div(title, cls="qa-title"), Div(sub, cls="qa-sub")),
-            href=href, cls="qa-card",
-        )
-
-    quick_actions = Div(
-        Div("Quick Actions", cls="profile-section-title"),
+    # ── PWA install nudge (shown only if not already installed via JS) ─
+    pwa_nudge = Div(
+        Span("📲", cls="pwa-nudge-icon"),
         Div(
-            _qa("✈️", "qa-flight",   "Book Flight", "Domestic & international", "/book?type=flight"),
-            _qa("🏨", "qa-hotel",    "Book Hotel",  "Best rates guaranteed",    "/book?type=hotel"),
-            _qa("🗺️", "qa-tour",     "Book Tour",   "Curated adventures",       "/book?type=tour"),
-            _qa("🧳", "qa-suitcase", "My Suitcase", "Vouchers & itineraries",   "/suitcase"),
-            cls="quick-actions",
+            Div("Install Gegow App", cls="pwa-nudge-title"),
+            Div("Works offline · No app store · Free", cls="pwa-nudge-sub"),
+            cls="pwa-nudge-info",
         ),
-        cls="profile-section",
-    )
-
-    # ── Preferences ───────────────────────────────────────────
-    prefs = Div(
-        Div("Travel Preferences", cls="profile-section-title"),
-        Div(
-            Div(Div(Span("🌏", cls="pref-icon"), Span("Preferred destination"), cls="pref-left"), Span("Set →", cls="pref-right"), cls="pref-item"),
-            Div(Div(Span("💺", cls="pref-icon"), Span("Seat preference"),       cls="pref-left"), Span("Set →", cls="pref-right"), cls="pref-item"),
-            Div(Div(Span("🍽️", cls="pref-icon"), Span("Meal preference"),       cls="pref-left"), Span("Set →", cls="pref-right"), cls="pref-item"),
-            Div(Div(Span("🔔", cls="pref-icon"), Span("Price alerts"),          cls="pref-left"), Span("On ✓",  cls="pref-right"), cls="pref-item"),
-            cls="pref-list",
-        ),
-        cls="profile-section",
+        Button("Install", cls="pwa-nudge-btn", id="profile-install-btn"),
+        cls="pwa-nudge fade-up",
+        id="profile-pwa-nudge",
+        **{"data-delay": "100"},
     )
 
     content = Div(
         hero,
-        Div(stats, cls="profile-section", style="padding-top:20px"),
+        quick_book,
+        Div(stats, cls="profile-section", style="padding-top:18px"),
         bookings_section,
-        quick_actions,
-        prefs,
-        Div(style="height:20px"),
+        Div(style="height:16px"),
+        pwa_nudge,
+        Div(style="height:24px"),
         cls="profile-page",
+        id="profile-page-root",
     )
-    return page_shell(content, active="/profile", title="My Profile")
+
+    install_js = Script("""
+(function(){
+  const nudge = document.getElementById('profile-pwa-nudge');
+  const installBtn = document.getElementById('profile-install-btn');
+  let deferredPrompt = null;
+
+  // Hide nudge if already installed
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    if (nudge) nudge.style.display = 'none';
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (nudge) nudge.style.display = 'flex';
+  });
+
+  window.addEventListener('appinstalled', () => {
+    if (nudge) nudge.style.display = 'none';
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        if (outcome === 'accepted' && nudge) nudge.style.display = 'none';
+      } else {
+        // Redirect to landing where full install guide modal is
+        window.location.href = '/#install';
+      }
+    });
+  }
+})();
+""")
+
+    return page_shell(
+        Div(content, install_js),
+        active="/profile", title="My Profile"
+    )
 
 
 @rt('/book')
@@ -1874,25 +2255,228 @@ def get(trip_type: str = ""):
 
 @rt('/gear')
 def get(category: str = "all"):
-    from app.routes.shop import GEAR_CATALOG, CATEGORIES
+    from app.routes.shop import SHOP_CATALOG, CATEGORIES, SECTION_META
     from app.components.cards import gear_card
 
-    items = GEAR_CATALOG if category == "all" else [i for i in GEAR_CATALOG if i["category"] == category]
+    # ── Category tabs ─────────────────────────────────────────
     tabs = [
-        A(label, href=f"/gear?category={cat}", cls=f"cat-tab {'active' if cat == category else ''}")
+        A(label, href=f"/gear?category={cat}",
+          cls=f"cat-tab {'active' if cat == category else ''}")
         for cat, label in CATEGORIES.items()
     ]
-    content = Div(
+
+    # ── Hero banner ───────────────────────────────────────────
+    hero = Div(
         Div(
-            Div("🛍️ Gegow-Gear", cls="shop-banner-title"),
-            Div("Travel smarter. Premium essentials, delivered to your door.", cls="shop-banner-sub"),
-            cls="shop-banner",
+            Div("🛍️ Gegow Shop", cls="shop-hero-badge"),
+            Div("Souvenirs · Food · Gear · Clothing", cls="shop-hero-title"),
+            Div("Philippine pasalubong, beach essentials & travel accessories — delivered.",
+                cls="shop-hero-sub"),
+            cls="shop-hero-inner",
         ),
-        Div(*tabs, cls="category-tabs"),
-        Div(*[gear_card(i) for i in items], cls="gear-grid stagger"),
-        Button("🛒", Span("0", cls="cart-badge", id="cart-badge"), cls="cart-fab", onclick="showCart()"),
+        cls="shop-hero",
     )
-    return page_shell(content, active="/gear", title="Gegow-Gear")
+
+    # ── Build sections ────────────────────────────────────────
+    if category == "all":
+        # Show all categories with section headers
+        sections = []
+        for cat_key, (icon, title, sub) in SECTION_META.items():
+            cat_items = [i for i in SHOP_CATALOG if i["category"] == cat_key]
+            if not cat_items:
+                continue
+            sections.append(
+                Div(
+                    Div(
+                        Div(
+                            Div(icon, cls="shop-section-icon"),
+                            Div(title, cls="shop-section-title"),
+                            Div(sub, cls="shop-section-sub"),
+                            cls="shop-section-left",
+                        ),
+                        A("See all →", href=f"/gear?category={cat_key}", cls="shop-section-see-all"),
+                        cls="shop-section-head",
+                    ),
+                    Div(*[gear_card(i) for i in cat_items], cls="gear-grid stagger"),
+                    Div(cls="shop-divider"),
+                )
+            )
+        body = Div(*sections, cls="shop-body")
+    else:
+        # Single category
+        items = [i for i in SHOP_CATALOG if i["category"] == category]
+        icon, title, sub = SECTION_META.get(category, ("🛍️", category.title(), ""))
+        body = Div(
+            Div(
+                Div(
+                    Div(icon, cls="shop-section-icon"),
+                    Div(title, cls="shop-section-title"),
+                    Div(sub, cls="shop-section-sub"),
+                    cls="shop-section-left",
+                ),
+                cls="shop-section-head",
+            ),
+            Div(*[gear_card(i) for i in items], cls="gear-grid stagger"),
+            Div(style="height:16px"),
+            cls="shop-body",
+        )
+
+    # ── Cart FAB + Drawer ─────────────────────────────────────
+    cart_fab = Button(
+        "🛒", Span("0", cls="cart-badge", id="cart-badge"),
+        cls="cart-fab", onclick="showCart()",
+    )
+
+    cart_drawer = Div(
+        # Overlay
+        Div(cls="cart-overlay", id="cart-overlay", onclick="closeCart()"),
+        # Drawer
+        Div(
+            # Head
+            Div(
+                Div(
+                    Div("My Cart", cls="cart-drawer-title"),
+                    Div("0 items", cls="cart-drawer-count", id="cart-drawer-count"),
+                ),
+                Button("✕", cls="cart-close-btn", onclick="closeCart()"),
+                cls="cart-drawer-head",
+            ),
+            # Items
+            Div(id="cart-items-list", cls="cart-items"),
+            # Footer
+            Div(
+                Div(
+                    Span("Total", cls="cart-total-lbl"),
+                    Span("₱0", cls="cart-total-val", id="cart-total-val"),
+                    cls="cart-total-row",
+                ),
+                Button("Checkout (COD) →", cls="cart-checkout-btn", id="cart-checkout-btn"),
+                Button("Continue Shopping", cls="cart-continue-btn", onclick="closeCart()"),
+                cls="cart-footer",
+            ),
+            cls="cart-drawer", id="cart-drawer",
+        ),
+    )
+
+    cart_js = Script(r"""
+(function(){
+  var KEY = 'gegow_cart';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+  function save(cart) { localStorage.setItem(KEY, JSON.stringify(cart)); }
+
+  function peso(n) {
+    return '\u20b1' + (parseInt(n)||0).toLocaleString();
+  }
+
+  function renderCart() {
+    var cart  = load();
+    var list  = document.getElementById('cart-items-list');
+    var total = cart.reduce(function(s,i){ return s + (parseInt(i.price)||0) * (parseInt(i.qty)||1); }, 0);
+    var count = cart.reduce(function(s,i){ return s + (parseInt(i.qty)||1); }, 0);
+
+    var badge = document.getElementById('cart-badge');
+    if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+
+    var countEl = document.getElementById('cart-drawer-count');
+    if (countEl) countEl.textContent = count + ' item' + (count !== 1 ? 's' : '');
+
+    var totalEl = document.getElementById('cart-total-val');
+    if (totalEl) totalEl.textContent = peso(total);
+
+    if (!list) return;
+
+    if (!cart.length) {
+      list.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div class="cart-empty-txt">Your cart is empty</div></div>';
+      return;
+    }
+
+    list.innerHTML = cart.map(function(item, idx) {
+      var subtotal = (parseInt(item.price)||0) * (parseInt(item.qty)||1);
+      return '<div class="cart-row">'
+        + '<div class="cart-row-icon">' + (item.emoji || '\ud83d\udecb') + '</div>'
+        + '<div class="cart-row-info">'
+          + '<div class="cart-row-name">' + item.name + '</div>'
+          + '<div class="cart-row-price">' + peso(subtotal) + '</div>'
+          + '<div class="cart-qty-row">'
+            + '<button class="cart-qty-btn" onclick="cartQty(' + idx + ',-1)">\u2212</button>'
+            + '<span class="cart-qty-num">' + (item.qty||1) + '</span>'
+            + '<button class="cart-qty-btn" onclick="cartQty(' + idx + ',1)">+</button>'
+          + '</div>'
+        + '</div>'
+        + '<button class="cart-rm-btn" onclick="cartRemove(' + idx + ')">\u2715</button>'
+      + '</div>';
+    }).join('');
+  }
+
+  window.showCart = function() {
+    renderCart();
+    document.getElementById('cart-overlay').classList.add('open');
+    document.getElementById('cart-drawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeCart = function() {
+    document.getElementById('cart-overlay').classList.remove('open');
+    document.getElementById('cart-drawer').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.cartQty = function(idx, delta) {
+    var cart = load();
+    if (!cart[idx]) return;
+    cart[idx].qty = Math.max(1, (parseInt(cart[idx].qty)||1) + delta);
+    save(cart);
+    renderCart();
+  };
+
+  window.cartRemove = function(idx) {
+    var cart = load();
+    cart.splice(idx, 1);
+    save(cart);
+    renderCart();
+    updateCartBadge && updateCartBadge();
+  };
+
+  /* Override addToCart after app.js has loaded (deferred scripts run before DOMContentLoaded) */
+  document.addEventListener('DOMContentLoaded', function() {
+    window.addToCart = function(btn) {
+      try {
+        var vals = JSON.parse(btn.getAttribute('hx-vals') || '{}');
+        var cart = load();
+        var existing = cart.find(function(i){ return i.item_id === vals.item_id; });
+        if (existing) {
+          existing.qty = (parseInt(existing.qty)||1) + 1;
+        } else {
+          cart.push({ item_id: vals.item_id, name: vals.name, price: vals.price, emoji: vals.emoji||'', qty: 1 });
+        }
+        save(cart);
+        /* Visual feedback */
+        var orig = btn.textContent;
+        btn.textContent = '\u2713 Added!';
+        btn.classList.add('added');
+        setTimeout(function(){ btn.textContent = orig; btn.classList.remove('added'); }, 1400);
+        renderCart();
+      } catch(e) { console.warn('addToCart error', e); }
+    };
+
+    document.getElementById('cart-checkout-btn')?.addEventListener('click', function(){
+      var cart = load();
+      if (!cart.length) { alert('Your cart is empty!'); return; }
+      alert('Checkout coming soon!\nOur team will contact you via WhatsApp to confirm your order. \ud83d\udcf2');
+    });
+  });
+
+  /* Init badge immediately (before DOMContentLoaded) */
+  renderCart();
+})();
+""")
+
+    content = Div(hero, Div(*tabs, cls="category-tabs"), body, cart_fab, cart_drawer, cart_js)
+    return page_shell(content, active="/gear", title="Gegow Shop")
 
 
 @rt('/b2b')

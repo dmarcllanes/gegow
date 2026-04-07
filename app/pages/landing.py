@@ -327,6 +327,56 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   font-size:15px;font-weight:800;color:#fff;cursor:pointer;
 }
 .ios-close:hover{background:var(--gdk)}
+
+/* ── Generic Install Guide Modal ─────────────────────────── */
+.install-guide-modal{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(8px);
+  align-items:flex-end;justify-content:center;padding:16px;
+}
+.install-guide-modal.open{display:flex}
+.ig-sheet{
+  background:var(--bg-2,#071d29);border:1px solid var(--border);
+  border-radius:24px;padding:28px 24px 24px;max-width:440px;width:100%;
+  animation:slideUp .35s ease both;
+}
+.ig-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ig-title{font-size:18px;font-weight:900;color:var(--txt,#fff)}
+.ig-close-btn{
+  width:32px;height:32px;border-radius:8px;border:none;
+  background:rgba(255,255,255,.1);color:var(--muted,#9ca3af);
+  font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.ig-close-btn:hover{background:rgba(255,255,255,.18)}
+.ig-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.ig-tabs{display:flex;gap:6px;margin-bottom:18px}
+.ig-tab-btn{
+  flex:1;padding:8px 6px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);
+  background:transparent;font-size:12px;font-weight:700;color:var(--muted,#9ca3af);
+  cursor:pointer;transition:all .15s;
+}
+.ig-tab-btn.active{
+  background:rgba(0,201,177,.15);border-color:rgba(0,201,177,.4);color:var(--g,#00c9b1);
+}
+.ig-panel{display:none}
+.ig-panel.active{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.ig-step{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--txt,#fff)}
+.ig-step-num{
+  width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  background:rgba(0,201,177,.15);border:1px solid rgba(0,201,177,.3);
+  font-size:13px;font-weight:800;color:var(--g,#00c9b1);
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.ig-step-text{line-height:1.45}
+.ig-step-hint{display:block;font-size:11px;color:var(--muted,#9ca3af);margin-top:2px}
+.ig-got-it{
+  width:100%;padding:13px;border-radius:12px;
+  background:var(--g,#00c9b1);border:none;
+  font-size:15px;font-weight:800;color:#fff;cursor:pointer;
+}
+.ig-got-it:hover{background:var(--gdk,#00a896)}
+
 .btn-nav-solid{
   padding:8px 20px;border-radius:10px;
   font-size:13px;font-weight:700;color:#fff;
@@ -1007,6 +1057,24 @@ document.addEventListener('DOMContentLoaded', () => {
     deferredPrompt = e;
   });
 
+  const guideModal  = document.getElementById('install-guide-modal');
+  const guideClose  = document.getElementById('install-guide-close');
+
+  // Show the right guide tab based on platform
+  function showInstallGuide() {
+    if (!guideModal) return;
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const isDesktop = !isIOS && !isAndroid;
+    guideModal.querySelectorAll('.ig-tab-btn').forEach(b => b.classList.remove('active'));
+    guideModal.querySelectorAll('.ig-panel').forEach(p => p.classList.remove('active'));
+    const tab = isIOS ? 'ios' : isAndroid ? 'android' : 'desktop';
+    const btn = guideModal.querySelector('[data-tab="' + tab + '"]');
+    const panel = document.getElementById('ig-' + tab);
+    if (btn)   btn.classList.add('active');
+    if (panel) panel.classList.add('active');
+    guideModal.classList.add('open');
+  }
+
   async function triggerAndroidInstall() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -1017,12 +1085,13 @@ document.addEventListener('DOMContentLoaded', () => {
         [btnNav, btnDrawer].forEach(b => b && b.classList.add('hide'));
       }
     } else {
-      if (iosModal) iosModal.classList.add('open');
+      showInstallGuide();
     }
   }
 
   function triggerIOSInstall() {
     if (iosModal) iosModal.classList.add('open');
+    else showInstallGuide();
   }
 
   if (btnHero)   btnHero.addEventListener('click',   triggerAndroidInstall);
@@ -1031,6 +1100,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnDrawer) btnDrawer.addEventListener('click', triggerAndroidInstall);
   if (iosClose)  iosClose.addEventListener('click',  () => iosModal && iosModal.classList.remove('open'));
   if (iosModal)  iosModal.addEventListener('click',  (e) => { if (e.target === iosModal) iosModal.classList.remove('open'); });
+  const closeGuide = () => guideModal && guideModal.classList.remove('open');
+  if (guideClose) guideClose.addEventListener('click', closeGuide);
+  const guideCloseBottom = document.getElementById('install-guide-close-bottom');
+  if (guideCloseBottom) guideCloseBottom.addEventListener('click', closeGuide);
+  if (guideModal) guideModal.addEventListener('click', (e) => { if (e.target === guideModal) closeGuide(); });
+  guideModal && guideModal.querySelectorAll('.ig-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      guideModal.querySelectorAll('.ig-tab-btn').forEach(b => b.classList.remove('active'));
+      guideModal.querySelectorAll('.ig-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById('ig-' + btn.dataset.tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
 
   window.addEventListener('appinstalled', () => {
     if (btnHero) { btnHero.textContent = '✓ Installed'; btnHero.classList.add('installed'); }
@@ -1418,12 +1501,12 @@ def landing_page():
             # iOS install modal
             Div(
                 Div(
-                    Div("Install Gegow", cls="ios-sheet-title"),
+                    Div("Install Gegow on iPhone", cls="ios-sheet-title"),
                     Div("Add Gegow to your home screen for the best experience — works offline too.", cls="ios-sheet-sub"),
                     Div(
                         Div(Div("1", cls="ios-step-num"), Span("Tap the Share button (□↑) at the bottom of Safari"), cls="ios-step"),
                         Div(Div("2", cls="ios-step-num"), Span('Scroll down and tap "Add to Home Screen"'), cls="ios-step"),
-                        Div(Div("3", cls="ios-step-num"), Span('Tap "Add" — Gegow appears on your home screen'), cls="ios-step"),
+                        Div(Div("3", cls="ios-step-num"), Span('Tap "Add" — Gegow appears on your home screen!'), cls="ios-step"),
                         cls="ios-steps",
                     ),
                     Button("Got it!", cls="ios-close", id="ios-close"),
@@ -1431,6 +1514,48 @@ def landing_page():
                 ),
                 cls="ios-modal",
                 id="ios-modal",
+            ),
+            # Generic Install Guide modal (Android / Desktop fallback)
+            Div(
+                Div(
+                    Div(
+                        Div("Install Gegow", cls="ig-title"),
+                        Button("✕", cls="ig-close-btn", id="install-guide-close"),
+                        cls="ig-header",
+                    ),
+                    Div("Add Gegow to your home screen — no app store needed.", cls="ig-sub"),
+                    Div(
+                        Button("📱 Android", cls="ig-tab-btn active", **{"data-tab": "android"}),
+                        Button("🍎 iPhone", cls="ig-tab-btn", **{"data-tab": "ios"}),
+                        Button("💻 Desktop", cls="ig-tab-btn", **{"data-tab": "desktop"}),
+                        cls="ig-tabs",
+                    ),
+                    # Android panel
+                    Div(
+                        Div(Div("1", cls="ig-step-num"), Div(Span("Open Gegow in Chrome"), Span("(this browser)", cls="ig-step-hint"), cls="ig-step-text"), cls="ig-step"),
+                        Div(Div("2", cls="ig-step-num"), Div(Span("Tap the 3-dot menu ⋮ at the top right"), cls="ig-step-text"), cls="ig-step"),
+                        Div(Div("3", cls="ig-step-num"), Div(Span('"Add to Home Screen" or "Install app"'), Span("Then tap Add/Install to confirm", cls="ig-step-hint"), cls="ig-step-text"), cls="ig-step"),
+                        id="ig-android", cls="ig-panel active",
+                    ),
+                    # iOS panel
+                    Div(
+                        Div(Div("1", cls="ig-step-num"), Div(Span("Open Gegow in Safari"), Span("Must use Safari on iPhone/iPad", cls="ig-step-hint"), cls="ig-step-text"), cls="ig-step"),
+                        Div(Div("2", cls="ig-step-num"), Div(Span("Tap the Share button □↑ at the bottom"), cls="ig-step-text"), cls="ig-step"),
+                        Div(Div("3", cls="ig-step-num"), Div(Span('"Add to Home Screen" then tap "Add"'), cls="ig-step-text"), cls="ig-step"),
+                        id="ig-ios", cls="ig-panel",
+                    ),
+                    # Desktop panel
+                    Div(
+                        Div(Div("1", cls="ig-step-num"), Div(Span("Open Gegow in Chrome or Edge"), cls="ig-step-text"), cls="ig-step"),
+                        Div(Div("2", cls="ig-step-num"), Div(Span("Look for the install icon ⊕ in the address bar"), Span("Or click ⋮ menu → Cast, save, share → Install", cls="ig-step-hint"), cls="ig-step-text"), cls="ig-step"),
+                        Div(Div("3", cls="ig-step-num"), Div(Span("Click Install — Gegow opens like a native app!"), cls="ig-step-text"), cls="ig-step"),
+                        id="ig-desktop", cls="ig-panel",
+                    ),
+                    Button("Got it!", cls="ig-got-it", id="install-guide-close-bottom"),
+                    cls="ig-sheet",
+                ),
+                cls="install-guide-modal",
+                id="install-guide-modal",
             ),
             Script(JS),
         ),

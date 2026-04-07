@@ -41,8 +41,8 @@ WIZARD_CSS = """
 /* ── Progress header ─────────────────────────────────── */
 .wizard-progress {
   padding: 22px 24px 18px;
-  border-bottom: 1px solid #F1EDE6;
-  background: #FAFAF8;
+  border-bottom: 1px solid var(--border);
+  background: var(--beige);
 }
 .wizard-progress-label {
   font-size: 10px; font-weight: 800;
@@ -56,7 +56,7 @@ WIZARD_CSS = """
   width: 30px; height: 30px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 800; flex-shrink: 0;
-  background: #EAE6DE; color: #B0AEAD;
+  background: var(--border); color: var(--muted-lt);
   transition: all .2s;
 }
 .step-dot.done {
@@ -70,7 +70,7 @@ WIZARD_CSS = """
 }
 .step-line {
   flex: 1; height: 2px;
-  background: #EAE6DE; margin: 0 5px;
+  background: var(--border); margin: 0 5px;
   border-radius: 2px; transition: background .3s;
 }
 .step-line.done { background: var(--teal); }
@@ -81,7 +81,7 @@ WIZARD_CSS = """
 .step-lbl {
   flex: 1; text-align: center;
   font-size: 10px; font-weight: 600;
-  color: #C0BBB5;
+  color: var(--muted-lt);
   white-space: nowrap;
 }
 .step-lbl.done  { color: var(--teal-dk); }
@@ -190,9 +190,9 @@ WIZARD_CSS = """
 /* ── Pax stepper ─────────────────────────────────────── */
 .pax-card {
   display: flex; align-items: center; justify-content: space-between;
-  background: #F8F7F3; border-radius: 14px;
+  background: var(--beige); border-radius: 14px;
   padding: 16px 18px; margin-bottom: 12px;
-  border: 1.5px solid #EAE6DE;
+  border: 1.5px solid var(--border);
 }
 .pax-info {}
 .pax-label { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -334,8 +334,8 @@ WIZARD_CSS = """
   gap: 16px;
   padding: 16px 18px;
   border-radius: 20px;
-  border: 2px solid #EAE6DE;
-  background: #FAFAF8;
+  border: 2px solid var(--border);
+  background: var(--beige);
   cursor: pointer;
   text-decoration: none;
   transition: border-color .2s, transform .18s, box-shadow .2s, background .2s;
