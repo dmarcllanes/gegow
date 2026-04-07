@@ -1234,30 +1234,6 @@ img { display: block; max-width: 100%; }
 .dsb-btn:hover { opacity: .88; }
 .dsb-btn:active { transform: scale(.97); }
 
-/* quick-dest chips */
-.dsb-quick {
-  display: flex; gap: 8px;
-  overflow-x: auto; scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-.dsb-quick::-webkit-scrollbar { display: none; }
-.dsb-quick-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 12px;
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 20px;
-  color: rgba(255,255,255,.85);
-  font-size: 12px; font-weight: 600;
-  white-space: nowrap; flex-shrink: 0;
-  cursor: pointer; text-decoration: none;
-  transition: background .15s, border-color .15s;
-}
-.dsb-quick-chip:hover {
-  background: rgba(0,201,177,.22);
-  border-color: rgba(0,201,177,.45);
-  color: #fff;
-}
 
 /* ── 19b. Unified filter bar ──────────────────────────────── */
 .filter-bar {
@@ -1317,6 +1293,12 @@ img { display: block; max-width: 100%; }
 @media (min-width: 768px) { .sub-tabs { padding: 10px 32px 12px; } }
 @media (min-width: 1200px){ .sub-tabs { padding: 10px 48px 12px; } }
 
+.dest-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.2px; color: var(--muted-lt);
+  white-space: nowrap; flex-shrink: 0;
+  align-self: center; padding-right: 4px;
+}
 .sub-pill {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 6px 14px; border-radius: 20px; flex-shrink: 0;
@@ -1327,6 +1309,7 @@ img { display: block; max-width: 100%; }
   cursor: pointer; white-space: nowrap;
   transition: all .15s;
   box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  text-decoration: none;
 }
 .sub-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-xl); }
 .sub-pill.active {
@@ -2389,15 +2372,6 @@ def get(request):
                                "if(q)window.location='/search?q='+encodeURIComponent(q);"),
                 cls="dsb-search-row",
             ),
-            Div(
-                A("✈️ Cebu",        cls="dsb-quick-chip", href="/search?q=Cebu"),
-                A("🏖️ Boracay",     cls="dsb-quick-chip", href="/search?q=Boracay"),
-                A("🌊 Siargao",     cls="dsb-quick-chip", href="/search?q=Siargao"),
-                A("🗼 Tokyo",       cls="dsb-quick-chip", href="/search?q=Tokyo"),
-                A("🇸🇬 Singapore",  cls="dsb-quick-chip", href="/search?q=Singapore"),
-                A("🌸 Baguio",      cls="dsb-quick-chip", href="/search?q=Baguio"),
-                cls="dsb-quick",
-            ),
             cls="dsb-inner",
         ),
         cls="dash-search-banner",
@@ -2412,8 +2386,21 @@ def get(request):
             Span("🗺️ Tours",      cls="cat-pill",        data_cat="tours",    onclick="filterCat(this,'tours')"),
             cls="cat-tabs",
         ),
-        # Sub-category chips (shown per active category)
+        # Sub-rows: destinations (all) + domestic/intl per category
         Div(
+            # Popular destinations — visible when "All" is active
+            Div(
+                Span("Popular", cls="dest-label"),
+                A("✈️ Cebu",        cls="sub-pill", href="/search?q=Cebu"),
+                A("🏖️ Boracay",     cls="sub-pill", href="/search?q=Boracay"),
+                A("🌊 Siargao",     cls="sub-pill", href="/search?q=Siargao"),
+                A("🌸 Baguio",      cls="sub-pill", href="/search?q=Baguio"),
+                A("🗼 Tokyo",       cls="sub-pill", href="/search?q=Tokyo"),
+                A("🇸🇬 Singapore",  cls="sub-pill", href="/search?q=Singapore"),
+                A("🌍 Abroad",      cls="sub-pill", href="/search?q=international"),
+                cls="sub-tabs", id="sub-all",
+            ),
+            # Per-category sub-filters
             Div(
                 Span("✈️ All Flights",    cls="sub-pill active", data_sub="all",           onclick="filterSub(this,'flights','all')"),
                 Span("🇵🇭 Domestic",      cls="sub-pill",        data_sub="domestic",      onclick="filterSub(this,'flights','domestic')"),
@@ -2622,7 +2609,11 @@ function filterCat(pill, cat) {
     s.style.display = (cat === 'all' || s.dataset.section === cat) ? '' : 'none';
   });
   document.querySelectorAll('.sub-tabs').forEach(t => t.style.display = 'none');
-  if (cat !== 'all') {
+  const destRow = document.getElementById('sub-all');
+  if (cat === 'all') {
+    if (destRow) destRow.style.display = '';
+  } else {
+    if (destRow) destRow.style.display = 'none';
     const bar = document.getElementById('sub-' + cat);
     if (bar) {
       bar.style.display = '';

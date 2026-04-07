@@ -251,43 +251,75 @@ WIZARD_CSS = """
 
 /* ── Action buttons ──────────────────────────────────── */
 .btn-next {
-  display: block; width: 100%; padding: 15px;
-  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dk) 100%);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, #00c9b1 0%, #005c66 100%);
   border: none; border-radius: 14px;
   color: #fff; font-size: 16px; font-weight: 700;
   cursor: pointer; margin-top: 20px; text-align: center;
   text-decoration: none;
-  box-shadow: 0 6px 20px rgba(0,109,119,.25);
+  box-shadow: 0 6px 22px rgba(0,109,119,.3), inset 0 1px 0 rgba(255,255,255,.15);
   transition: transform .15s, box-shadow .15s;
+  position: relative; overflow: hidden;
 }
+.btn-next::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  transition: left .55s ease;
+}
+.btn-next:hover::before { left: 150%; }
 .btn-next:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(0,109,119,.35);
+  box-shadow: 0 12px 32px rgba(0,109,119,.4), inset 0 1px 0 rgba(255,255,255,.15);
 }
-.btn-next:active { transform: scale(.98); }
+.btn-next:active { transform: scale(.98); opacity: .92; }
+
 .btn-confirm {
-  display: block; width: 100%; padding: 15px;
-  background: linear-gradient(135deg, #FF7043 0%, #F4511E 100%);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, #FF7043 0%, #d44020 100%);
   border: none; border-radius: 14px;
   color: #fff; font-size: 16px; font-weight: 700;
   cursor: pointer; margin-top: 14px; text-align: center;
   text-decoration: none;
-  box-shadow: 0 6px 20px rgba(244,81,30,.3);
+  box-shadow: 0 6px 22px rgba(244,81,30,.32), inset 0 1px 0 rgba(255,255,255,.15);
   transition: transform .15s, box-shadow .15s;
+  position: relative; overflow: hidden;
 }
+.btn-confirm::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  transition: left .55s ease;
+}
+.btn-confirm:hover::before { left: 150%; }
 .btn-confirm:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(244,81,30,.4);
+  box-shadow: 0 12px 32px rgba(244,81,30,.44), inset 0 1px 0 rgba(255,255,255,.15);
 }
+.btn-confirm:active { transform: scale(.98); opacity: .92; }
+
 .btn-back {
-  display: block; width: 100%; padding: 12px;
-  background: transparent; border: none;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%; padding: 13px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
   color: var(--muted); font-size: 14px; font-weight: 600;
-  cursor: pointer; margin-top: 6px; text-align: center;
-  border-radius: 12px;
-  transition: color .15s, background .15s;
+  cursor: pointer; margin-top: 10px; text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  transition: all .18s;
+  text-decoration: none;
 }
-.btn-back:hover { color: var(--text); background: rgba(0,0,0,.04); }
+.btn-back:hover {
+  border-color: var(--border-dk);
+  color: var(--text);
+  background: var(--beige);
+  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+  transform: translateY(-1px);
+}
+.btn-back:active { transform: scale(.98); }
 
 /* ── Confirmation ────────────────────────────────────── */
 .confirm-wrap { padding: 40px 24px 32px; text-align: center; }
@@ -315,21 +347,44 @@ WIZARD_CSS = """
 }
 .confirm-actions { display: flex; flex-direction: column; gap: 10px; }
 .btn-suitcase {
-  display: block; padding: 14px;
-  background: var(--teal-xl); border: 1.5px solid var(--teal-lt);
-  border-radius: 14px; color: var(--teal);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, #00c9b1 0%, #005c66 100%);
+  border: none; border-radius: 14px; color: #fff;
   font-size: 15px; font-weight: 700; text-decoration: none;
-  transition: background .15s;
+  box-shadow: 0 6px 20px rgba(0,109,119,.28), inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .15s, box-shadow .15s;
+  position: relative; overflow: hidden;
 }
-.btn-suitcase:hover { background: var(--teal-lt); }
+.btn-suitcase::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  transition: left .55s ease;
+}
+.btn-suitcase:hover::before { left: 150%; }
+.btn-suitcase:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,109,119,.38), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.btn-suitcase:active { transform: scale(.98); }
+
 .btn-again {
-  display: block; padding: 12px;
-  background: transparent; border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 13px;
+  background: #fff; border: 1.5px solid var(--border);
   border-radius: 14px; color: var(--muted);
   font-size: 14px; font-weight: 600; text-decoration: none;
-  transition: border-color .15s, color .15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  transition: all .18s;
 }
-.btn-again:hover { border-color: var(--text); color: var(--text); }
+.btn-again:hover {
+  border-color: var(--border-dk); color: var(--text);
+  background: var(--beige);
+  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+  transform: translateY(-1px);
+}
+.btn-again:active { transform: scale(.98); }
 
 /* ── Step 1 — animated type selection cards ──────────── */
 .type-grid-new {
@@ -555,7 +610,6 @@ def wizard_step1() -> Div:
             cls="btn-back",
             type="button",
             onclick="window.location='/dashboard'",
-            style="margin-top:18px",
         ),
     )
 
@@ -901,8 +955,8 @@ def wizard_confirmed(booking: dict) -> Div:
                     cls="confirm-total",
                 ),
                 Div(
-                    A("🧳 View My Suitcase", href="/suitcase", cls="btn-suitcase"),
-                    A("Book Another Trip", href="/book", cls="btn-again"),
+                    A("🧳  View My Suitcase", href="/suitcase", cls="btn-suitcase"),
+                    A("↩  Book Another Trip", href="/book", cls="btn-again"),
                     cls="confirm-actions",
                 ),
                 cls="confirm-wrap",
