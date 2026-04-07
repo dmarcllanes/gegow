@@ -1,58 +1,91 @@
-const CACHE_NAME = 'gegow-v1';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'gegow-v3';
+
+const PRECACHE = [
   '/',
+  '/dashboard',
   '/suitcase',
   '/static/manifest.json',
+  '/static/app.js',
+  '/static/sw-register.js',
+  '/static/icons/icon-192.png',
+  '/static/icons/icon-512.png',
 ];
 
-// Install: cache static shell
+// ── Install: pre-cache shell assets ──────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(PRECACHE);
+    }).then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-// Activate: clean up old caches
+// ── Activate: wipe old caches ─────────────────────────────────
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+      Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Fetch: network-first for API routes, cache-first for static assets
+// ── Fetch strategy ────────────────────────────────────────────
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const req = event.request;
+  const url = new URL(req.url);
 
-  // Skip non-GET and cross-origin
-  if (event.request.method !== 'GET' || url.origin !== location.origin) return;
+  // Skip non-GET, cross-origin, chrome-extension, and monitoring
+  if (req.method !== 'GET') return;
+  if (url.origin !== location.origin) return;
+  if (url.pathname === '/monitoring') return;
+  if (url.protocol === 'chrome-extension:') return;
 
-  // API / dynamic routes — network first, fallback to cache
-  if (url.pathname.startsWith('/book') || url.pathname.startsWith('/b2b') || url.pathname.startsWith('/gear')) {
+  // Static assets — cache first, fall back to network
+  if (url.pathname.startsWith('/static/')) {
     event.respondWith(
-      fetch(event.request)
-        .then((res) => {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+      caches.match(req).then((cached) => {
+        if (cached) return cached;
+        return fetch(req).then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+          }
           return res;
-        })
-        .catch(() => caches.match(event.request))
+        });
+      })
     );
     return;
   }
 
-  // Suitcase + explore — cache first (offline support)
+  // Suitcase — cache first (offline itinerary access)
+  if (url.pathname === '/suitcase') {
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        const network = fetch(req).then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+          }
+          return res;
+        });
+        return cached || network;
+      })
+    );
+    return;
+  }
+
+  // Dynamic routes (book, gear, b2b, explore) — network first, cache fallback
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((res) => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+    fetch(req)
+      .then((res) => {
+        if (res.ok) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+        }
         return res;
-      });
-    })
+      })
+      .catch(() => caches.match(req))
   );
 });

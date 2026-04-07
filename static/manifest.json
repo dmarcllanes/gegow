@@ -1,13 +1,15 @@
 {
+  "id": "/",
   "name": "Gegow Travel Agency",
   "short_name": "Gegow",
   "description": "Your digital-in-pocket travel agency for flights, hotels, tours, and gear.",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#0D9488",
-  "background_color": "#FAF7F2",
+  "start_url": "/?source=pwa",
   "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "theme_color": "#006D77",
+  "background_color": "#F1F1E6",
   "lang": "en-PH",
   "categories": ["travel", "lifestyle"],
   "icons": [
@@ -36,21 +38,37 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Gegow Travel — Home"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Book a Flight",
-      "url": "/book?type=flight",
-      "description": "Search and book flights"
+      "short_name": "Flights",
+      "url": "/book?type=flight&source=shortcut",
+      "description": "Search and book flights",
+      "icons": [{ "src": "/static/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Find Hotels",
-      "url": "/book?type=hotel",
-      "description": "Browse hotel stays"
+      "short_name": "Hotels",
+      "url": "/book?type=hotel&source=shortcut",
+      "description": "Browse hotel stays",
+      "icons": [{ "src": "/static/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "My Suitcase",
-      "url": "/suitcase",
-      "description": "View saved itineraries"
+      "short_name": "Suitcase",
+      "url": "/suitcase?source=shortcut",
+      "description": "View saved itineraries",
+      "icons": [{ "src": "/static/icons/icon-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }

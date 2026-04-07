@@ -1665,9 +1665,21 @@ COMBINED_CSS = CSS + "\n" + NAV_CSS + "\n" + WIZARD_CSS + "\n" + SUITCASE_CSS + 
 PWA_HEADERS = (
     Meta(charset="utf-8"),
     Meta(name="viewport", content="width=device-width, initial-scale=1, viewport-fit=cover"),
-    Meta(name="theme-color", content="#0D9488"),
+    # Theme
+    Meta(name="theme-color", content="#006D77"),
+    Meta(name="msapplication-TileColor", content="#006D77"),
+    # Apple PWA
     Meta(name="apple-mobile-web-app-capable", content="yes"),
     Meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent"),
+    Meta(name="apple-mobile-web-app-title", content="Gegow"),
+    # Apple touch icon (iOS "Add to Home Screen")
+    Link(rel="apple-touch-icon", href="/static/icons/icon-192.png"),
+    Link(rel="apple-touch-icon", sizes="192x192", href="/static/icons/icon-192.png"),
+    Link(rel="apple-touch-icon", sizes="512x512", href="/static/icons/icon-512.png"),
+    # Favicon fallback
+    Link(rel="icon", type="image/png", sizes="192x192", href="/static/icons/icon-192.png"),
+    Link(rel="icon", type="image/png", sizes="512x512", href="/static/icons/icon-512.png"),
+    # Manifest
     Link(rel="manifest", href="/static/manifest.json"),
     Style(COMBINED_CSS),
     Script(src="/static/sw-register.js", defer=True),
@@ -2175,7 +2187,7 @@ def get(request):
         cls="profile-section",
     )
 
-    # ── PWA install nudge (shown only if not already installed via JS) ─
+    # ── PWA install nudge — hidden until beforeinstallprompt fires ──
     pwa_nudge = Div(
         Span("📲", cls="pwa-nudge-icon"),
         Div(
@@ -2183,10 +2195,12 @@ def get(request):
             Div("Works offline · No app store · Free", cls="pwa-nudge-sub"),
             cls="pwa-nudge-info",
         ),
-        Button("Install", cls="pwa-nudge-btn", id="profile-install-btn"),
+        Button("Install", cls="pwa-nudge-btn",
+               onclick="window.triggerPWAInstall && window.triggerPWAInstall()"),
         cls="pwa-nudge fade-up",
         id="profile-pwa-nudge",
-        **{"data-delay": "100"},
+        style="display:none",
+        **{"data-pwa-install": "1"},
     )
 
     content = Div(
@@ -2203,37 +2217,10 @@ def get(request):
 
     install_js = Script("""
 (function(){
+  // Hide nudge if already running as installed PWA
   const nudge = document.getElementById('profile-pwa-nudge');
-  const installBtn = document.getElementById('profile-install-btn');
-  let deferredPrompt = null;
-
-  // Hide nudge if already installed
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    if (nudge) nudge.style.display = 'none';
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (nudge) nudge.style.display = 'flex';
-  });
-
-  window.addEventListener('appinstalled', () => {
-    if (nudge) nudge.style.display = 'none';
-  });
-
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        if (outcome === 'accepted' && nudge) nudge.style.display = 'none';
-      } else {
-        // Redirect to landing where full install guide modal is
-        window.location.href = '/#install';
-      }
-    });
+  if (nudge && (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone)) {
+    nudge.style.display = 'none';
   }
 })();
 """)
