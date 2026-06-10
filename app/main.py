@@ -131,9 +131,12 @@ img { display: block; max-width: 100%; }
 
 /* ── 5. Hero ──────────────────────────────────────────────── */
 .hero {
-  background: linear-gradient(-45deg, #005A63, #008C99, #01C0D3, #008C99, #005A63);
-  background-size: 400% 400%;
-  animation: aurora 14s ease infinite;
+  background: linear-gradient(
+    to bottom,
+    #0A2A4A 0%, #0E4060 15%, #1A6080 30%,
+    #3D9AB8 48%, #7AC8DC 62%, #A8E0E8 72%,
+    #C8EEF3 82%, #8EC8D8 92%, #4A9AB5 100%
+  );
   padding: 48px 20px 0;
   overflow: hidden;
   position: relative;
@@ -143,8 +146,8 @@ img { display: block; max-width: 100%; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 30% 90%, rgba(255,255,255,.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 10%, rgba(255,143,0,.08) 0%, transparent 60%);
+    radial-gradient(ellipse at 75% 12%, rgba(255,245,180,.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(0,109,119,.12) 0%, transparent 55%);
   pointer-events: none;
 }
 @media (min-width: 768px) { .hero { padding: 64px 48px 0; } }
@@ -680,10 +683,10 @@ img { display: block; max-width: 100%; }
 }
 .shop-search-input::placeholder { color: rgba(255,255,255,.4); }
 .shop-search-input:focus {
-  border-color: rgba(0,201,177,.6); background: rgba(255,255,255,.14);
+  border-color: rgba(0,109,119,.6); background: rgba(255,255,255,.14);
 }
 .shop-search-btn {
-  background: linear-gradient(135deg, #00C9B1, #009e8c);
+  background: linear-gradient(135deg, #006D77, #004d55);
   color: #fff; border: none; border-radius: 12px;
   padding: 11px 20px; font-size: 14px; font-weight: 700; cursor: pointer;
   white-space: nowrap; transition: opacity .15s;
@@ -1151,7 +1154,11 @@ img { display: block; max-width: 100%; }
 
 /* ── 19. Search banner (hero) ─────────────────────────────── */
 .dash-search-banner {
-  background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
+  background: linear-gradient(
+    to bottom,
+    #0A2A4A 0%, #0E4060 20%, #1A6080 42%,
+    #3D9AB8 65%, #7AC8DC 84%, #9ED4E4 100%
+  );
   padding: 28px 16px 36px;
   position: relative; overflow: hidden;
 }
@@ -1219,7 +1226,7 @@ img { display: block; max-width: 100%; }
 .dsb-input::placeholder { color: rgba(255,255,255,.42); }
 .dsb-btn {
   padding: 0 18px;
-  background: linear-gradient(135deg, #00c9b1 0%, #006d77 100%);
+  background: linear-gradient(135deg, #006D77 0%, #004d55 100%);
   border: none; border-radius: 0;
   color: #fff; font-size: 13px; font-weight: 700;
   cursor: pointer; white-space: nowrap; flex-shrink: 0;
@@ -1348,20 +1355,25 @@ img { display: block; max-width: 100%; }
 /* ── 22. Dashboard welcome banner ────────────────────────────── */
 .welcome-banner {
   position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #04111a 0%, #003d45 45%, #005760 100%);
+  background: linear-gradient(
+    to bottom,
+    #0A2A4A 0%, #0E4060 22%, #1A6080 48%,
+    #3D9AB8 75%, #7AC8DC 100%
+  );
   padding: 20px 16px 0;
 }
 @media (min-width: 480px) { .welcome-banner { padding: 28px 20px 0; } }
 @media (min-width: 768px) { .welcome-banner { padding: 36px 32px 0; } }
 @media (min-width: 1200px){ .welcome-banner { padding: 44px 48px 0; } }
 
-/* mesh orbs */
+/* sun glow orbs */
 .wb-orb {
   position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none;
 }
-.wb-orb-1 { width: 350px; height: 350px; background: rgba(0,201,177,.15);
-  top: -80px; right: -60px; }
-.wb-orb-2 { width: 250px; height: 250px; background: rgba(255,107,53,.1);
+.wb-orb-1 { width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(255,245,180,.32) 0%, rgba(200,235,255,.14) 50%, transparent 72%);
+  top: -80px; right: -40px; }
+.wb-orb-2 { width: 240px; height: 240px; background: rgba(0,109,119,.12);
   bottom: -60px; left: -40px; }
 
 /* grid overlay */
@@ -1382,11 +1394,11 @@ img { display: block; max-width: 100%; }
 }
 .welcome-avatar {
   width: 54px; height: 54px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(135deg, #00C9B1, #009e8c);
+  background: linear-gradient(135deg, #006D77, #004d55);
   border: 2.5px solid rgba(255,255,255,.3);
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; font-weight: 900; color: #fff;
-  box-shadow: 0 0 20px rgba(0,201,177,.4);
+  box-shadow: 0 0 20px rgba(0,109,119,.45);
 }
 .welcome-text { flex: 1; min-width: 0; }
 .welcome-greeting {
@@ -1430,8 +1442,8 @@ img { display: block; max-width: 100%; }
   text-decoration: none; transition: background .18s, transform .18s;
   gap: 2px;
 }
-.status-item:hover { background: rgba(0,201,177,.12); transform: translateY(-2px); }
-.status-num   { font-size: clamp(18px, 4vw, 22px); font-weight: 900; color: #00C9B1; line-height: 1; }
+.status-item:hover { background: rgba(0,109,119,.14); transform: translateY(-2px); }
+.status-num   { font-size: clamp(18px, 4vw, 22px); font-weight: 900; color: #A8E0E8; line-height: 1; }
 .status-label { font-size: clamp(8px, 2vw, 10px); color: rgba(255,255,255,.5); font-weight: 600;
   text-transform: uppercase; letter-spacing: .4px; margin-top: 2px; }
 .status-link  { font-size: clamp(8px, 2vw, 10px); color: rgba(255,255,255,.35); font-weight: 600; margin-top: 1px; }
@@ -1450,22 +1462,22 @@ img { display: block; max-width: 100%; }
 /* guest strip */
 .guest-strip {
   position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #04111a, #005760);
+  background: linear-gradient(135deg, #0A2A4A 0%, #1A6080 55%, #3D9AB8 100%);
   padding: 24px 20px;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 @media (min-width: 768px) { .guest-strip { padding: 28px 32px; } }
 .guest-text { font-size: 15px; font-weight: 700; color: #fff; }
-.guest-text span { color: #00C9B1; }
+.guest-text span { color: #A8E0E8; }
 .btn-signin {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 11px 22px; border-radius: 12px;
-  background: linear-gradient(135deg, #00C9B1, #009e8c); color: #fff;
+  background: linear-gradient(135deg, #006D77, #004d55); color: #fff;
   font-size: 14px; font-weight: 800; text-decoration: none; flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(0,201,177,.4);
+  box-shadow: 0 4px 16px rgba(0,109,119,.45);
   transition: all .18s;
 }
-.btn-signin:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,201,177,.5); }
+.btn-signin:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,109,119,.55); }
 
 /* ── 21. Profile / User Dashboard ────────────────────────── */
 .profile-page { padding: 0 0 80px; background: var(--beige); }
@@ -1473,7 +1485,11 @@ img { display: block; max-width: 100%; }
 
 /* ── Hero ── */
 .profile-hero {
-  background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
+  background: linear-gradient(
+    to bottom,
+    #0A2A4A 0%, #0E4060 20%, #1A6080 45%,
+    #3D9AB8 72%, #7AC8DC 100%
+  );
   padding: 44px 20px 56px;
   text-align: center;
   position: relative; overflow: hidden;
@@ -1498,16 +1514,16 @@ img { display: block; max-width: 100%; }
 }
 .profile-avatar {
   width: 88px; height: 88px; border-radius: 50%;
-  background: linear-gradient(135deg, #00C9B1, #006d77);
+  background: linear-gradient(135deg, #006D77, #004d55);
   display: flex; align-items: center; justify-content: center;
   font-size: 34px; font-weight: 900; color: #fff;
   border: 4px solid rgba(255,255,255,.2);
-  box-shadow: 0 0 0 8px rgba(0,201,177,.14), 0 8px 32px rgba(0,0,0,.3);
+  box-shadow: 0 0 0 8px rgba(0,109,119,.18), 0 8px 32px rgba(0,0,0,.28);
   position: relative; z-index: 1;
 }
 .profile-avatar-ring {
   position: absolute; inset: -10px; border-radius: 50%;
-  border: 2px solid rgba(0,201,177,.35);
+  border: 2px solid rgba(0,109,119,.4);
   animation: profile-ring-pulse 2.8s ease-in-out infinite;
 }
 @keyframes profile-ring-pulse {
@@ -1528,8 +1544,8 @@ img { display: block; max-width: 100%; }
 .profile-badge {
   position: relative; z-index: 1;
   display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(0,201,177,.18); color: #5eead4;
-  border: 1px solid rgba(0,201,177,.3);
+  background: rgba(255,255,255,.15); color: #d0f2f5;
+  border: 1px solid rgba(255,255,255,.28);
   font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px;
   margin-bottom: 16px;
 }
@@ -1538,7 +1554,7 @@ img { display: block; max-width: 100%; }
   display: inline-flex; align-items: center; gap: 6px;
   padding: 9px 18px; border-radius: 12px;
   background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.2);
-  color: rgba(255,255,255,.75); font-size: 13px; font-weight: 700;
+  color: rgba(255,255,255,.82); font-size: 13px; font-weight: 700;
   text-decoration: none; transition: all .18s;
 }
 .profile-logout-btn:hover {
@@ -1699,21 +1715,21 @@ img { display: block; max-width: 100%; }
 /* ── PWA Install nudge ─────────────────────────────────────── */
 .pwa-nudge {
   margin: 0 16px;
-  background: linear-gradient(135deg, #04111a, #005760);
-  border: 1.5px solid rgba(0,201,177,.25);
+  background: linear-gradient(135deg, #0A2A4A 0%, #1A6080 60%, #3D9AB8 100%);
+  border: 1.5px solid rgba(0,109,119,.28);
   border-radius: 16px; padding: 14px 16px;
   display: flex; align-items: center; gap: 12px;
   text-decoration: none;
   transition: box-shadow .15s;
 }
-.pwa-nudge:hover { box-shadow: 0 4px 20px rgba(0,201,177,.2); }
+.pwa-nudge:hover { box-shadow: 0 4px 20px rgba(0,109,119,.25); }
 .pwa-nudge-icon { font-size: 26px; flex-shrink: 0; }
 .pwa-nudge-info { flex: 1; min-width: 0; }
 .pwa-nudge-title { font-size: 13px; font-weight: 800; color: #fff; }
-.pwa-nudge-sub   { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 2px; }
+.pwa-nudge-sub   { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
 .pwa-nudge-btn {
   flex-shrink: 0; padding: 8px 14px; border-radius: 10px;
-  background: linear-gradient(135deg, #00C9B1, #009e8c);
+  background: linear-gradient(135deg, #006D77, #004d55);
   color: #fff; font-size: 12px; font-weight: 800; border: none;
   cursor: pointer; white-space: nowrap;
 }
@@ -1721,7 +1737,11 @@ img { display: block; max-width: 100%; }
 /* ── App Splash Screen ────────────────────────────────────── */
 .app-splash {
   position: fixed; inset: 0; z-index: 99999;
-  background: linear-gradient(155deg, #03111A 0%, #00404A 45%, #006D77 100%);
+  background: linear-gradient(
+    to bottom,
+    #0A2A4A 0%, #0E4060 18%, #1A6080 38%,
+    #3D9AB8 60%, #7AC8DC 80%, #A8E0E8 100%
+  );
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   overflow: hidden;
@@ -1831,7 +1851,7 @@ img { display: block; max-width: 100%; }
 }
 .spl-promo-price {
   font-size: 16px; font-weight: 900;
-  color: #00C9B1;
+  color: #A8E0E8;
 }
 .spl-promo-unit { font-size: 10px; color: rgba(255,255,255,.45); }
 /* Loading dots */

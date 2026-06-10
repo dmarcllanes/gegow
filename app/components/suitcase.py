@@ -14,7 +14,7 @@ SUITCASE_CSS = """
 
 /* ── Hero ── */
 .sc-hero {
-  background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
+  background: linear-gradient(to bottom, #0A2A4A 0%, #0E4060 20%, #1A6080 45%, #3D9AB8 72%, #7AC8DC 100%);
   padding: 22px 16px 24px;
   position: relative; overflow: hidden;
 }

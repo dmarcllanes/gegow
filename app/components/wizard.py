@@ -253,7 +253,7 @@ WIZARD_CSS = """
 .btn-next {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   width: 100%; padding: 15px;
-  background: linear-gradient(135deg, #00c9b1 0%, #005c66 100%);
+  background: linear-gradient(135deg, #006D77 0%, #004d55 100%);
   border: none; border-radius: 14px;
   color: #fff; font-size: 16px; font-weight: 700;
   cursor: pointer; margin-top: 20px; text-align: center;
@@ -349,7 +349,7 @@ WIZARD_CSS = """
 .btn-suitcase {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 14px;
-  background: linear-gradient(135deg, #00c9b1 0%, #005c66 100%);
+  background: linear-gradient(135deg, #006D77 0%, #004d55 100%);
   border: none; border-radius: 14px; color: #fff;
   font-size: 15px; font-weight: 700; text-decoration: none;
   box-shadow: 0 6px 20px rgba(0,109,119,.28), inset 0 1px 0 rgba(255,255,255,.15);

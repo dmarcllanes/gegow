@@ -14,7 +14,7 @@ from app.logic.supabase_db import save_b2b_lead
 B2B_CSS = """
 /* ── B2B Hero ─────────────────────────────────────────────── */
 .b2b-hero {
-  background: linear-gradient(155deg, #03111A 0%, #00404A 45%, #006D77 100%);
+  background: linear-gradient(to bottom, #0A2A4A 0%, #0E4060 22%, #1A6080 48%, #3D9AB8 75%, #7AC8DC 100%);
   padding: 22px 16px 20px;
   color: #fff;
   position: relative;
@@ -27,7 +27,7 @@ B2B_CSS = """
   content: '';
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse at 15% 80%, rgba(0,201,177,.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 80%, rgba(0,109,119,.12) 0%, transparent 55%),
     radial-gradient(ellipse at 85% 20%, rgba(255,112,67,.08) 0%, transparent 50%);
   pointer-events: none;
 }

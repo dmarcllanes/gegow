@@ -14,7 +14,7 @@ NAV_ITEMS = [
 
 NAV_CSS = """
 /* ════════════════════════════════════════════════════════════
-   SIDEBAR  (desktop ≥ 768px)
+   SIDEBAR  (desktop ≥ 768px) — tropical ocean theme
 ════════════════════════════════════════════════════════════ */
 .sidebar { display: none; }
 
@@ -29,9 +29,9 @@ NAV_CSS = """
     height: 100vh;
     overflow-y: auto;
     scrollbar-width: none;
-    background: #070f1a;
-    border-right: 1px solid rgba(255,255,255,.06);
-    box-shadow: 2px 0 20px rgba(0,0,0,.3);
+    background: #041820;
+    border-right: 1px solid rgba(0,109,119,.18);
+    box-shadow: 2px 0 20px rgba(0,0,0,.22);
   }
   .sidebar::-webkit-scrollbar { display: none; }
 
@@ -40,7 +40,7 @@ NAV_CSS = """
     position: absolute; top: 0; left: 0; right: 0;
     height: 220px;
     background: radial-gradient(ellipse 180% 100% at 50% 0%,
-      rgba(0,201,177,.12) 0%, transparent 70%);
+      rgba(0,109,119,.18) 0%, transparent 70%);
     pointer-events: none; z-index: 0;
   }
 
@@ -52,11 +52,11 @@ NAV_CSS = """
   }
   .sidebar-brand-icon {
     width: 36px; height: 36px;
-    background: linear-gradient(135deg, #00C9B1, #007a6e);
+    background: linear-gradient(135deg, #006D77, #004d55);
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     font-size: 17px; flex-shrink: 0;
-    box-shadow: 0 2px 14px rgba(0,201,177,.4);
+    box-shadow: 0 2px 14px rgba(0,109,119,.45);
   }
   .sidebar-brand-name {
     font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -.3px;
@@ -67,7 +67,7 @@ NAV_CSS = """
 
   .sidebar-rule {
     height: 1px; margin: 0 18px;
-    background: linear-gradient(90deg, rgba(0,201,177,.35), rgba(0,201,177,.06) 60%, transparent);
+    background: linear-gradient(90deg, rgba(0,109,119,.45), rgba(0,109,119,.08) 60%, transparent);
     position: relative; z-index: 1;
   }
 
@@ -77,22 +77,22 @@ NAV_CSS = """
     display: flex; align-items: center; gap: 10px;
     margin: 14px 12px 6px;
     padding: 11px 13px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(0,109,119,.14);
     border-radius: 12px;
     text-decoration: none;
     transition: background .2s, border-color .2s;
   }
   .sidebar-profile:hover {
-    background: rgba(0,201,177,.07);
-    border-color: rgba(0,201,177,.22);
+    background: rgba(0,109,119,.1);
+    border-color: rgba(0,109,119,.3);
   }
   .sidebar-avatar {
     width: 30px; height: 30px;
-    background: linear-gradient(135deg, #00C9B1, #007a6e);
+    background: linear-gradient(135deg, #006D77, #004d55);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 800; color: #04111a;
+    font-size: 12px; font-weight: 800; color: #fff;
     flex-shrink: 0;
   }
   .sidebar-profile-info { flex: 1; min-width: 0; }
@@ -125,21 +125,21 @@ NAV_CSS = """
     transition: background .15s, color .15s;
   }
   .sidebar .nav-item:hover {
-    background: rgba(255,255,255,.06);
+    background: rgba(0,109,119,.1);
     color: rgba(255,255,255,.82);
   }
   .sidebar .nav-item.active {
-    background: rgba(0,201,177,.09);
-    color: #e0fff9;
+    background: rgba(0,109,119,.16);
+    color: #a0eef0;
     font-weight: 600;
   }
   .sidebar .nav-item.active::before {
     content: '';
     position: absolute; left: 0; top: 22%; bottom: 22%;
     width: 3px;
-    background: linear-gradient(180deg, #00C9B1, #00a08f);
+    background: linear-gradient(180deg, #006D77, #004d55);
     border-radius: 0 3px 3px 0;
-    box-shadow: 0 0 8px rgba(0,201,177,.65);
+    box-shadow: 0 0 8px rgba(0,109,119,.7);
   }
   .sidebar .nav-icon {
     font-size: 15px; width: 20px; text-align: center; flex-shrink: 0;
@@ -185,29 +185,28 @@ NAV_CSS = """
 }
 
 /* ════════════════════════════════════════════════════════════
-   MOBILE TOP HEADER  (< 768px)
+   MOBILE TOP HEADER  (< 768px) — light tropical
 ════════════════════════════════════════════════════════════ */
 .gegow-header {
-  background: rgba(5, 12, 22, 0.95);
+  background: rgba(240, 250, 250, 0.97);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   height: 58px;
   padding: 0 16px;
   position: sticky; top: 0; z-index: 300;
   display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  box-shadow: 0 1px 0 rgba(255,255,255,.04), 0 4px 24px rgba(0,0,0,.4);
+  border-bottom: 1px solid rgba(0,109,119,.12);
+  box-shadow: 0 1px 0 rgba(0,109,119,.06), 0 4px 16px rgba(0,0,0,.07);
   transform: translateY(0);
   transition: transform 0.3s ease;
 }
 .gegow-header.nav-hidden {
   transform: translateY(-100%);
 }
-/* teal accent line at very bottom of header */
 .gegow-header::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,201,177,.5) 40%, rgba(0,201,177,.5) 60%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(0,109,119,.45) 40%, rgba(0,109,119,.45) 60%, transparent 100%);
 }
 @media (min-width: 768px) { .gegow-header { display: none; } }
 
@@ -216,48 +215,48 @@ NAV_CSS = """
 
 .gh-logo-icon {
   width: 34px; height: 34px;
-  background: linear-gradient(135deg, #00C9B1, #007a6e);
+  background: linear-gradient(135deg, #006D77, #004d55);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   font-size: 17px; flex-shrink: 0;
-  box-shadow: 0 0 16px rgba(0,201,177,.35);
+  box-shadow: 0 0 14px rgba(0,109,119,.3);
 }
 .gh-brand-name {
-  font-size: 18px; font-weight: 900; letter-spacing: -.5px; color: #fff;
+  font-size: 18px; font-weight: 900; letter-spacing: -.5px; color: #0A1D20;
 }
-.gh-brand-sub { font-size: 9px; color: rgba(255,255,255,.3); margin-top: 1px; }
+.gh-brand-sub { font-size: 9px; color: rgba(10,29,32,.35); margin-top: 1px; }
 
 .gh-avatar {
   width: 34px; height: 34px;
-  background: linear-gradient(135deg, #00C9B1, #007a6e);
+  background: linear-gradient(135deg, #006D77, #004d55);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: #04111a;
+  font-size: 13px; font-weight: 800; color: #fff;
   text-decoration: none;
-  box-shadow: 0 0 0 2px rgba(0,201,177,.4);
+  box-shadow: 0 0 0 2px rgba(0,109,119,.3);
   transition: box-shadow .15s, transform .15s;
 }
-.gh-avatar:hover { box-shadow: 0 0 0 3px rgba(0,201,177,.65); transform: scale(1.05); }
+.gh-avatar:hover { box-shadow: 0 0 0 3px rgba(0,109,119,.55); transform: scale(1.05); }
 
 .gh-icon-btn {
   width: 34px; height: 34px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(0,109,119,.07);
+  border: 1px solid rgba(0,109,119,.14);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 15px; color: rgba(255,255,255,.55);
+  font-size: 15px; color: rgba(10,29,32,.55);
   text-decoration: none; cursor: pointer;
   transition: all .15s;
   position: relative;
 }
 .gh-icon-btn:hover {
-  background: rgba(0,201,177,.12);
-  border-color: rgba(0,201,177,.3);
-  color: #00C9B1;
+  background: rgba(0,109,119,.12);
+  border-color: rgba(0,109,119,.28);
+  color: #006D77;
 }
 
 /* ════════════════════════════════════════════════════════════
-   FLOATING BOTTOM NAV  (< 768px)
+   FLOATING BOTTOM NAV  (< 768px) — white glass pill
 ════════════════════════════════════════════════════════════ */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -279,24 +278,23 @@ NAV_CSS = """
 .bn-inner {
   flex: 1;
   display: flex; align-items: stretch;
-  background: rgba(5, 12, 22, 0.92);
-  backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(0,109,119,.16);
   border-radius: 22px;
   padding: 5px 6px;
   box-shadow:
-    0 -1px 0 rgba(255,255,255,.05) inset,
-    0 16px 48px rgba(0,0,0,.5),
-    0 4px 16px rgba(0,0,0,.3);
+    0 -1px 0 rgba(0,109,119,.06) inset,
+    0 16px 48px rgba(0,0,0,.14),
+    0 4px 16px rgba(0,0,0,.07);
   pointer-events: auto;
   overflow: hidden;
 }
-/* teal shimmer line at top of nav pill */
 .bn-inner::before {
   content: '';
   position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,201,177,.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,109,119,.45), transparent);
 }
 
 .bottom-nav .nav-item {
@@ -305,7 +303,7 @@ NAV_CSS = """
   gap: 3px;
   padding: 8px 4px 6px;
   border-radius: 16px;
-  color: rgba(255,255,255,.32);
+  color: rgba(10,29,32,.35);
   font-size: 10px; font-weight: 600;
   text-decoration: none;
   position: relative;
@@ -320,28 +318,24 @@ NAV_CSS = """
   .bottom-nav .nav-item { padding: 5px 4px 4px; min-height: 40px; }
 }
 
-/* Active state — teal bubble background */
 .bottom-nav .nav-item.active {
-  color: #00C9B1;
-  background: linear-gradient(160deg, rgba(0,201,177,.18) 0%, rgba(0,109,119,.12) 100%);
+  color: #006D77;
+  background: linear-gradient(160deg, rgba(0,109,119,.14) 0%, rgba(0,77,85,.08) 100%);
 }
 
-/* Hover */
 .bottom-nav .nav-item:not(.active):hover {
-  color: rgba(255,255,255,.65);
-  background: rgba(255,255,255,.05);
+  color: rgba(10,29,32,.65);
+  background: rgba(0,109,119,.06);
 }
 
-/* Active top glow */
 .bottom-nav .nav-item.active::before {
   content: '';
   position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
   border-radius: 0 0 4px 4px;
-  background: linear-gradient(90deg, transparent, #00C9B1, transparent);
-  box-shadow: 0 0 10px rgba(0,201,177,.9);
+  background: linear-gradient(90deg, transparent, #006D77, transparent);
+  box-shadow: 0 0 10px rgba(0,109,119,.7);
 }
 
-/* Icon */
 .bottom-nav .nav-icon {
   font-size: 20px; line-height: 1;
   transition: transform .2s cubic-bezier(.34,1.56,.64,1);
@@ -352,11 +346,10 @@ NAV_CSS = """
 
 .bottom-nav .nav-item.active .nav-icon {
   transform: scale(1.18) translateY(-1px);
-  filter: drop-shadow(0 0 6px rgba(0,201,177,.7));
+  filter: drop-shadow(0 0 6px rgba(0,109,119,.6));
 }
 .bottom-nav .nav-item:active .nav-icon { transform: scale(0.9); }
 
-/* Label */
 .bottom-nav .nav-label {
   line-height: 1;
   transition: opacity .2s, color .2s;

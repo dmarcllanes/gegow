@@ -36,7 +36,7 @@ def _pagination_bar(section: str, page: int, pages: int, sub: str, total: int) -
 
 EXPLORE_CSS = """
 .hero {
-    background: linear-gradient(160deg, #04111a 0%, #005760 55%, #0a9aa8 100%);
+    background: linear-gradient(to bottom, #0A2A4A 0%, #0E4060 20%, #1A6080 42%, #3D9AB8 65%, #7AC8DC 84%, #9ED4E4 100%);
     padding: 18px 14px 22px;
     color: #fff;
 }
