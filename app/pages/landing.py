@@ -37,17 +37,12 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   --border:rgba(0,140,153,.12);--border-md:rgba(0,140,153,.22);
   --card-bg:#ffffff;--card-bg-hover:rgba(0,140,153,.07);
   --nav-scrolled:rgba(240,250,250,.95);
-  --hero-bg:#BDEAEC;
-  --hero-bg-2:
-    radial-gradient(ellipse 90% 60% at 50% 0%,rgba(0,170,180,.3) 0%,transparent 58%),
-    radial-gradient(ellipse 55% 70% at 0% 90%,rgba(0,100,170,.15) 0%,transparent 55%),
-    radial-gradient(ellipse 55% 55% at 100% 90%,rgba(0,170,180,.18) 0%,transparent 52%),
-    radial-gradient(ellipse 40% 40% at 88% 10%,rgba(255,145,0,.14) 0%,transparent 52%),
-    #BDEAEC;
-  --hero-txt:#0A1D20;--hero-txt-2:#1B3A3D;--hero-muted:rgba(10,29,32,.42);
-  --hero-pill-bg:rgba(0,140,153,.12);--hero-pill-border:rgba(0,140,153,.3);
-  --hero-pill-txt:#006D77;
-  --hero-grid:rgba(0,0,0,.04);
+  --hero-bg:#0A2A4A;
+  --hero-txt:#ffffff;--hero-txt-2:rgba(255,255,255,.88);--hero-muted:rgba(255,255,255,.52);
+  --hero-accent:#7EE8F0;
+  --hero-pill-bg:rgba(255,255,255,.14);--hero-pill-border:rgba(255,255,255,.3);
+  --hero-pill-txt:rgba(255,255,255,.92);
+  --hero-grid:rgba(255,255,255,.04);
   --stats-bg:#E0F5F5;
   --shadow-card:0 4px 20px rgba(0,0,0,.09),0 0 0 1px rgba(0,140,153,.1);
   --search-card-bg:rgba(255,255,255,.9);--search-card-border:rgba(0,140,153,.18);
@@ -61,11 +56,11 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   --toggle-bg:rgba(0,140,153,.08);
   --glow-teal:0 0 28px rgba(0,140,153,.22);
   --glow-acc:0 0 28px rgba(255,145,0,.2);
-  --nav-pre-txt:#0A1D20;
-  --nav-pre-muted:#1B3A3D;
-  --nav-pre-btn-bg:rgba(0,0,0,.06);
-  --nav-pre-btn-border:rgba(0,0,0,.16);
-  --nav-pre-logo-color:#0A1D20;
+  --nav-pre-txt:#ffffff;
+  --nav-pre-muted:rgba(255,255,255,.72);
+  --nav-pre-btn-bg:rgba(255,255,255,.1);
+  --nav-pre-btn-border:rgba(255,255,255,.22);
+  --nav-pre-logo-color:#ffffff;
 }
 
 /* ── DARK — Philippine Midnight Sea ── */
@@ -638,7 +633,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   color:var(--hero-txt);
   animation:fadeUp .8s .15s ease both;
 }
-.hero-h1 em{font-style:normal;color:var(--g);text-shadow:0 0 20px rgba(0,140,153,.28)}
+.hero-h1 em{font-style:normal;color:var(--hero-accent,#7EE8F0);text-shadow:0 0 28px rgba(126,232,240,.45)}
 [data-theme="dark"] .hero-h1 em{text-shadow:0 0 40px rgba(0,232,212,.5),0 0 80px rgba(0,232,212,.2)}
 .hero-h1 .outline{
   -webkit-text-stroke:2px var(--hero-txt);

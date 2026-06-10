@@ -651,12 +651,7 @@ img { display: block; max-width: 100%; }
 @media (min-width: 480px) { .shop-hero { padding: 32px 20px 28px; } }
 @media (min-width: 768px) { .shop-hero { padding: 40px 32px 36px; } }
 @media (min-width: 1200px){ .shop-hero { padding: 48px 48px 40px; } }
-.shop-hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% -20%, rgba(255,255,255,.1) 0%, transparent 70%);
-}
-.shop-hero-inner { position: relative; z-index: 1; }
+.shop-hero-inner { position: relative; z-index: 7; }
 .shop-hero-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
@@ -1165,6 +1160,78 @@ img { display: block; max-width: 100%; }
 @media (min-width: 480px) { .dash-search-banner { padding: 36px 20px 42px; } }
 @media (min-width: 768px) { .dash-search-banner { padding: 48px 32px 48px; } }
 @media (min-width: 1200px){ .dash-search-banner { padding: 56px 48px 52px; } }
+/* ══════════════════════════════════════════════════════════
+   SHARED ISLAND SILHOUETTE LAYERS
+   Use inside any hero that has position:relative; overflow:hidden
+   ══════════════════════════════════════════════════════════ */
+.hero-sun {
+  position: absolute; border-radius: 50%; filter: blur(55px);
+  pointer-events: none; z-index: 0;
+  top: -20px; right: 8%; width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(255,245,180,.45) 0%, rgba(200,235,255,.18) 50%, transparent 72%);
+}
+.hero-sil-far {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 42%;
+  z-index: 1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(20,80,120,.18), rgba(10,50,90,.4));
+  clip-path: polygon(
+    0% 100%,0% 44%,4% 34%,9% 41%,14% 25%,20% 33%,26% 17%,32% 27%,
+    38% 12%,44% 22%,51% 8%,57% 18%,63% 5%,69% 14%,75% 9%,82% 18%,
+    88% 4%,94% 13%,100% 8%,100% 100%
+  );
+}
+.hero-sil-mid {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 33%;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(10,55,88,.44), rgba(5,32,62,.74));
+  clip-path: polygon(
+    0% 100%,0% 56%,4% 46%,9% 53%,14% 38%,20% 47%,26% 31%,32% 41%,
+    38% 25%,44% 35%,50% 20%,56% 30%,62% 15%,68% 25%,74% 19%,80% 29%,
+    86% 23%,92% 31%,97% 25%,100% 28%,100% 100%
+  );
+}
+.hero-sil-near {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 24%;
+  z-index: 3; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(4,18,38,.82), rgba(2,10,22,.96));
+  clip-path: polygon(
+    0% 100%,0% 68%,3% 57%,7% 66%,11% 49%,16% 59%,21% 43%,27% 55%,
+    33% 38%,39% 50%,45% 34%,51% 46%,57% 32%,63% 44%,69% 36%,75% 48%,
+    81% 40%,87% 50%,93% 43%,100% 48%,100% 100%
+  );
+}
+.hero-sil-ocean {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 13%;
+  z-index: 4; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(20,130,175,.78), rgba(8,88,130,.96));
+}
+.hero-sil-ocean::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 5%, rgba(255,255,220,.35) 28%, rgba(255,255,255,.65) 50%, rgba(255,255,220,.35) 72%, transparent 95%);
+  animation: waterShimmer 4s ease-in-out infinite;
+}
+.hero-palm-l {
+  position: absolute; bottom: 12%; left: -1%; width: 13%; max-width: 155px; height: 55%;
+  z-index: 5; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 250'%3E%3Cpath fill='%23030c1c' d='M55 250 C53 214 50 176 53 146 C55 130 60 114 55 98 C38 84 18 91 5 79 C20 75 44 88 54 95 C53 87 54 78 56 70 C70 51 90 36 103 32 C94 48 73 62 57 76 C56 66 59 54 65 38 C60 54 55 70 55 81 C67 69 80 73 93 81 C84 85 65 88 56 97 C63 89 76 93 85 100 C76 100 62 98 56 105 C52 123 50 148 49 174 C47 200 49 226 53 250 Z'/%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat; background-position: bottom left;
+}
+.hero-palm-r {
+  position: absolute; bottom: 10%; right: -1%; width: 10%; max-width: 125px; height: 46%;
+  z-index: 5; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 250'%3E%3Cpath fill='%23030c1c' d='M55 250 C53 214 50 176 53 146 C55 130 60 114 55 98 C38 84 18 91 5 79 C20 75 44 88 54 95 C53 87 54 78 56 70 C70 51 90 36 103 32 C94 48 73 62 57 76 C56 66 59 54 65 38 C60 54 55 70 55 81 C67 69 80 73 93 81 C84 85 65 88 56 97 C63 89 76 93 85 100 C76 100 62 98 56 105 C52 123 50 148 49 174 C47 200 49 226 53 250 Z'/%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat; background-position: bottom right;
+  transform: scaleX(-1);
+}
+/* curved bottom edge — shared */
+.hero-curve-bottom::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 28px; background: var(--beige);
+  border-radius: 20px 20px 0 0;
+  pointer-events: none; z-index: 6;
+}
+
 /* curved bottom edge into page */
 .dash-search-banner::after {
   content: '';
@@ -2940,6 +3007,13 @@ def get(category: str = "all"):
 
     # ── Hero banner ───────────────────────────────────────────
     hero = Div(
+        Div(cls="hero-sun"),
+        Div(cls="hero-sil-far"),
+        Div(cls="hero-sil-mid"),
+        Div(cls="hero-sil-near"),
+        Div(cls="hero-sil-ocean"),
+        Div(cls="hero-palm-l"),
+        Div(cls="hero-palm-r"),
         Div(
             Div("🛍️ Gegow Shop", cls="shop-hero-badge"),
             Div("Souvenirs · Food · Gear · Clothing", cls="shop-hero-title"),
@@ -2947,7 +3021,7 @@ def get(category: str = "all"):
                 cls="shop-hero-sub"),
             cls="shop-hero-inner",
         ),
-        cls="shop-hero",
+        cls="shop-hero hero-curve-bottom",
     )
 
     # ── Build sections ────────────────────────────────────────
@@ -3159,6 +3233,13 @@ def get(tab: str = "manning"):
     content = Div(
         # ── Hero ─────────────────────────────────────────────────
         Div(
+            Div(cls="hero-sun"),
+            Div(cls="hero-sil-far"),
+            Div(cls="hero-sil-mid"),
+            Div(cls="hero-sil-near"),
+            Div(cls="hero-sil-ocean"),
+            Div(cls="hero-palm-l"),
+            Div(cls="hero-palm-r"),
             Div(
                 Div("🏢 Partnership Portal", cls="b2b-hero-eyebrow"),
                 Div("Grow Your Business with Gegow", cls="b2b-hero-title"),
@@ -3196,7 +3277,7 @@ def get(tab: str = "manning"):
                 ),
                 cls="b2b-hero-inner",
             ),
-            cls="b2b-hero",
+            cls="b2b-hero hero-curve-bottom",
         ),
         # ── Tabs ─────────────────────────────────────────────────
         Div(

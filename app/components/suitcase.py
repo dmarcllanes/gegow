@@ -21,31 +21,24 @@ SUITCASE_CSS = """
 @media (min-width: 480px) { .sc-hero { padding: 28px 18px 26px; } }
 @media (min-width: 768px) { .sc-hero { padding: 36px 32px 32px; } }
 @media (min-width: 1200px){ .sc-hero { padding: 44px 48px 40px; } }
-.sc-hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
 .sc-hero::after {
   content: '';
   position: absolute; bottom: -1px; left: 0; right: 0;
   height: 28px; background: var(--beige);
   border-radius: 20px 20px 0 0;
+  z-index: 6;
 }
-.sc-hero-inner { position: relative; z-index: 1; }
+.sc-hero-inner { position: relative; z-index: 7; }
 
 .sc-hero-eyebrow {
   display: inline-flex; align-items: center; gap: 7px;
   font-size: 10px; font-weight: 800; letter-spacing: 2px;
-  text-transform: uppercase; color: #5eead4;
+  text-transform: uppercase; color: #A8E0E8;
   margin-bottom: 10px;
 }
 .sc-eyebrow-dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: #5eead4;
+  background: #A8E0E8;
   animation: sc-dot-pulse 1.8s ease-in-out infinite;
 }
 @keyframes sc-dot-pulse {
@@ -780,6 +773,13 @@ def suitcase_page() -> Div:
         Div(
             # ── Hero ──────────────────────────────────────────────────
             Div(
+                Div(cls="hero-sun"),
+                Div(cls="hero-sil-far"),
+                Div(cls="hero-sil-mid"),
+                Div(cls="hero-sil-near"),
+                Div(cls="hero-sil-ocean"),
+                Div(cls="hero-palm-l"),
+                Div(cls="hero-palm-r"),
                 Div(
                     # eyebrow
                     Div(
@@ -815,6 +815,7 @@ def suitcase_page() -> Div:
                 ),
                 cls="sc-hero",
             ),
+
 
             # ── Live ticker (active trip, shown by JS) ─────────────────
             Div(

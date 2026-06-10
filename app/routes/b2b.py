@@ -23,15 +23,7 @@ B2B_CSS = """
 @media (min-width: 480px) { .b2b-hero { padding: 28px 20px 24px; } }
 @media (min-width: 768px) { .b2b-hero { padding: 40px 32px 36px; } }
 @media (min-width: 1200px){ .b2b-hero { padding: 52px 48px 44px; } }
-.b2b-hero::after {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 80%, rgba(0,109,119,.12) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 20%, rgba(255,112,67,.08) 0%, transparent 50%);
-  pointer-events: none;
-}
-.b2b-hero-inner { position: relative; z-index: 1; }
+.b2b-hero-inner { position: relative; z-index: 7; }
 .b2b-hero-eyebrow {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255,255,255,.12);
