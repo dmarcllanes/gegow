@@ -29,18 +29,18 @@ NAV_CSS = """
     height: 100vh;
     overflow-y: auto;
     scrollbar-width: none;
-    background: #041820;
-    border-right: 1px solid rgba(0,109,119,.18);
-    box-shadow: 2px 0 20px rgba(0,0,0,.22);
+    background: #F0FAFA;
+    border-right: 1px solid rgba(0,109,119,.14);
+    box-shadow: 2px 0 12px rgba(0,0,0,.06);
   }
   .sidebar::-webkit-scrollbar { display: none; }
 
   .sidebar::after {
     content: '';
     position: absolute; top: 0; left: 0; right: 0;
-    height: 220px;
+    height: 180px;
     background: radial-gradient(ellipse 180% 100% at 50% 0%,
-      rgba(0,109,119,.18) 0%, transparent 70%);
+      rgba(0,109,119,.08) 0%, transparent 70%);
     pointer-events: none; z-index: 0;
   }
 
@@ -56,18 +56,18 @@ NAV_CSS = """
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     font-size: 17px; flex-shrink: 0;
-    box-shadow: 0 2px 14px rgba(0,109,119,.45);
+    box-shadow: 0 2px 14px rgba(0,109,119,.3);
   }
   .sidebar-brand-name {
-    font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -.3px;
+    font-size: 16px; font-weight: 800; color: #0A1D20; letter-spacing: -.3px;
   }
   .sidebar-brand-sub {
-    font-size: 10px; color: rgba(255,255,255,.3); margin-top: 2px;
+    font-size: 10px; color: rgba(10,29,32,.4); margin-top: 2px;
   }
 
   .sidebar-rule {
     height: 1px; margin: 0 18px;
-    background: linear-gradient(90deg, rgba(0,109,119,.45), rgba(0,109,119,.08) 60%, transparent);
+    background: linear-gradient(90deg, rgba(0,109,119,.3), rgba(0,109,119,.05) 60%, transparent);
     position: relative; z-index: 1;
   }
 
@@ -77,15 +77,15 @@ NAV_CSS = """
     display: flex; align-items: center; gap: 10px;
     margin: 14px 12px 6px;
     padding: 11px 13px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(0,109,119,.14);
+    background: rgba(0,109,119,.06);
+    border: 1px solid rgba(0,109,119,.12);
     border-radius: 12px;
     text-decoration: none;
     transition: background .2s, border-color .2s;
   }
   .sidebar-profile:hover {
-    background: rgba(0,109,119,.1);
-    border-color: rgba(0,109,119,.3);
+    background: rgba(0,109,119,.11);
+    border-color: rgba(0,109,119,.25);
   }
   .sidebar-avatar {
     width: 30px; height: 30px;
@@ -97,18 +97,18 @@ NAV_CSS = """
   }
   .sidebar-profile-info { flex: 1; min-width: 0; }
   .sidebar-profile-name {
-    font-size: 12px; font-weight: 700; color: rgba(255,255,255,.85);
+    font-size: 12px; font-weight: 700; color: #0A1D20;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .sidebar-profile-role { font-size: 10px; color: rgba(255,255,255,.3); margin-top: 1px; }
-  .sidebar-profile-arrow { font-size: 11px; color: rgba(255,255,255,.2); flex-shrink: 0; }
+  .sidebar-profile-role { font-size: 10px; color: rgba(10,29,32,.4); margin-top: 1px; }
+  .sidebar-profile-arrow { font-size: 11px; color: rgba(10,29,32,.25); flex-shrink: 0; }
 
   /* ── Section label ── */
   .sidebar-section-label {
     position: relative; z-index: 1;
     font-size: 9px; font-weight: 800;
     text-transform: uppercase; letter-spacing: 1.5px;
-    color: rgba(255,255,255,.2);
+    color: rgba(10,29,32,.3);
     padding: 14px 20px 4px;
   }
 
@@ -119,19 +119,19 @@ NAV_CSS = """
     padding: 10px 14px;
     margin: 1px 10px;
     border-radius: 10px;
-    color: rgba(255,255,255,.42);
+    color: rgba(10,29,32,.5);
     font-size: 13px; font-weight: 500;
     text-decoration: none;
     transition: background .15s, color .15s;
   }
   .sidebar .nav-item:hover {
-    background: rgba(0,109,119,.1);
-    color: rgba(255,255,255,.82);
+    background: rgba(0,109,119,.08);
+    color: #0A1D20;
   }
   .sidebar .nav-item.active {
-    background: rgba(0,109,119,.16);
-    color: #a0eef0;
-    font-weight: 600;
+    background: rgba(0,109,119,.12);
+    color: #006D77;
+    font-weight: 700;
   }
   .sidebar .nav-item.active::before {
     content: '';
@@ -139,11 +139,11 @@ NAV_CSS = """
     width: 3px;
     background: linear-gradient(180deg, #006D77, #004d55);
     border-radius: 0 3px 3px 0;
-    box-shadow: 0 0 8px rgba(0,109,119,.7);
+    box-shadow: 0 0 8px rgba(0,109,119,.5);
   }
   .sidebar .nav-icon {
     font-size: 15px; width: 20px; text-align: center; flex-shrink: 0;
-    opacity: .6; transition: opacity .15s;
+    opacity: .55; transition: opacity .15s;
   }
   .sidebar .nav-item:hover .nav-icon,
   .sidebar .nav-item.active .nav-icon { opacity: 1; }
@@ -152,7 +152,7 @@ NAV_CSS = """
   .sidebar-divider {
     position: relative; z-index: 1;
     height: 1px; margin: 10px 18px;
-    background: rgba(255,255,255,.07);
+    background: rgba(0,109,119,.1);
   }
 
   /* ── Footer ── */
@@ -164,18 +164,18 @@ NAV_CSS = """
     display: flex; align-items: center; gap: 9px;
     padding: 10px 14px; border-radius: 10px;
     background: transparent;
-    color: rgba(252,165,165,.55);
+    color: rgba(220,38,38,.55);
     font-size: 12px; font-weight: 500;
     cursor: pointer; border: 1px solid transparent;
     transition: all .15s; width: 100%; text-decoration: none;
   }
   .sidebar-logout:hover {
-    background: rgba(239,68,68,.09);
-    color: #fca5a5;
-    border-color: rgba(239,68,68,.2);
+    background: rgba(239,68,68,.07);
+    color: #dc2626;
+    border-color: rgba(239,68,68,.18);
   }
   .sidebar-footer-text {
-    font-size: 10px; color: rgba(255,255,255,.13);
+    font-size: 10px; color: rgba(10,29,32,.28);
     padding: 8px 14px 0; line-height: 1.6;
   }
 }

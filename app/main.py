@@ -29,25 +29,25 @@ from app.routes import explore, booking, shop, b2b, monitoring
 CSS = """
 /* ── 1. Tokens (UI.md) ───────────────────────────────────── */
 :root {
-  /* — Official Gegow palette from UI.md — */
-  --gegow-primary:      #008C99;
-  --gegow-accent:       #FF8F00;
-  --gegow-bg:           #F5F7F2;
-  --gegow-gradient-btn: linear-gradient(90deg, #FF8F00, #E65100);
-  --gegow-glass:        rgba(255,255,255,0.75);
+  /* — Gegow tropical island palette — */
+  --gegow-primary:      #006D77;
+  --gegow-accent:       #FF7043;
+  --gegow-bg:           #F0FAFA;
+  --gegow-gradient-btn: linear-gradient(135deg, #FF7043, #d44020);
+  --gegow-glass:        rgba(255,255,255,0.85);
 
-  /* — Aliases used throughout — */
-  --teal:      #008C99;
-  --teal-dk:   #005A63;
-  --teal-lt:   #80D4DC;
-  --teal-xl:   #E0F7FA;
-  --beige:     #F5F7F2;
-  --border:    #DCE3DA;
-  --border-dk: #BCC7B9;
+  /* — Core tokens — */
+  --teal:      #006D77;
+  --teal-dk:   #005760;
+  --teal-lt:   #B2DFDB;
+  --teal-xl:   #E0F2F1;
+  --beige:     #F0FAFA;
+  --border:    #DDD9CE;
+  --border-dk: #C8C4B8;
   --text:      #0A1D20;
-  --muted:     #526B6D;
-  --muted-lt:  #8CA1A3;
-  --amber:     #FF8F00;
+  --muted:     #4A7070;
+  --muted-lt:  #94A3B8;
+  --amber:     #FF7043;
   --amber-lt:  #FFF3E0;
   --white:     #FFFFFF;
   --sidebar:   240px;
@@ -259,7 +259,7 @@ img { display: block; max-width: 100%; }
   border-color: rgba(255,255,255,.6);
   background: rgba(255,255,255,.22);
 }
-.sf-select option { background: #0F766E; color: #fff; }
+.sf-select option { background: #006D77; color: #fff; }
 
 .search-submit {
   background: var(--amber);
@@ -272,14 +272,14 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
   white-space: nowrap;
   transition: background .15s, transform .1s, box-shadow .15s;
-  box-shadow: 0 4px 16px rgba(245,158,11,.4);
+  box-shadow: 0 4px 16px rgba(255,112,67,.35);
   position: relative;
   overflow: hidden;
 }
 .search-submit:hover {
-  background: #D97706;
+  background: #d44020;
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(245,158,11,.5);
+  box-shadow: 0 8px 24px rgba(255,112,67,.5);
 }
 
 /* ── 7. Trust bar ─────────────────────────────────────────── */
@@ -644,7 +644,7 @@ img { display: block; max-width: 100%; }
 
 /* ── Hero banner ── */
 .shop-hero {
-  background: linear-gradient(135deg, #008C99 0%, #005A63 60%, #041B1F 100%);
+  background: linear-gradient(to bottom, #0A2A4A 0%, #0E4060 20%, #1A6080 42%, #3D9AB8 65%, #7AC8DC 84%, #9ED4E4 100%);
   padding: 24px 16px 22px;
   position: relative; overflow: hidden;
 }
@@ -1165,25 +1165,82 @@ img { display: block; max-width: 100%; }
 @media (min-width: 480px) { .dash-search-banner { padding: 36px 20px 42px; } }
 @media (min-width: 768px) { .dash-search-banner { padding: 48px 32px 48px; } }
 @media (min-width: 1200px){ .dash-search-banner { padding: 56px 48px 52px; } }
-.dash-search-banner::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-}
+/* curved bottom edge into page */
 .dash-search-banner::after {
   content: '';
   position: absolute; bottom: -1px; left: 0; right: 0;
   height: 28px; background: var(--beige);
   border-radius: 20px 20px 0 0;
-  pointer-events: none;
+  pointer-events: none; z-index: 6;
+}
+/* sun glow */
+.dsb-sun {
+  position: absolute; top: -20px; right: 8%; width: 260px; height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,245,180,.45) 0%, rgba(200,235,255,.18) 50%, transparent 72%);
+  filter: blur(55px); pointer-events: none; z-index: 0;
+}
+/* island silhouettes */
+.dsb-sil-far {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 42%;
+  z-index: 1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(20,80,120,.18), rgba(10,50,90,.4));
+  clip-path: polygon(
+    0% 100%,0% 44%,4% 34%,9% 41%,14% 25%,20% 33%,26% 17%,32% 27%,
+    38% 12%,44% 22%,51% 8%,57% 18%,63% 5%,69% 14%,75% 9%,82% 18%,
+    88% 4%,94% 13%,100% 8%,100% 100%
+  );
+}
+.dsb-sil-mid {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 33%;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(10,55,88,.44), rgba(5,32,62,.74));
+  clip-path: polygon(
+    0% 100%,0% 56%,4% 46%,9% 53%,14% 38%,20% 47%,26% 31%,32% 41%,
+    38% 25%,44% 35%,50% 20%,56% 30%,62% 15%,68% 25%,74% 19%,80% 29%,
+    86% 23%,92% 31%,97% 25%,100% 28%,100% 100%
+  );
+}
+.dsb-sil-near {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 24%;
+  z-index: 3; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(4,18,38,.82), rgba(2,10,22,.96));
+  clip-path: polygon(
+    0% 100%,0% 68%,3% 57%,7% 66%,11% 49%,16% 59%,21% 43%,27% 55%,
+    33% 38%,39% 50%,45% 34%,51% 46%,57% 32%,63% 44%,69% 36%,75% 48%,
+    81% 40%,87% 50%,93% 43%,100% 48%,100% 100%
+  );
+}
+.dsb-sil-ocean {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 13%;
+  z-index: 4; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(20,130,175,.78), rgba(8,88,130,.96));
+}
+.dsb-sil-ocean::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 5%, rgba(255,255,220,.35) 28%, rgba(255,255,255,.65) 50%, rgba(255,255,220,.35) 72%, transparent 95%);
+  animation: waterShimmer 4s ease-in-out infinite;
+}
+.dsb-palm-l {
+  position: absolute; bottom: 12%; left: -1%; width: 13%; max-width: 160px; height: 55%;
+  z-index: 5; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 250'%3E%3Cpath fill='%23030c1c' d='M55 250 C53 214 50 176 53 146 C55 130 60 114 55 98 C38 84 18 91 5 79 C20 75 44 88 54 95 C53 87 54 78 56 70 C70 51 90 36 103 32 C94 48 73 62 57 76 C56 66 59 54 65 38 C60 54 55 70 55 81 C67 69 80 73 93 81 C84 85 65 88 56 97 C63 89 76 93 85 100 C76 100 62 98 56 105 C52 123 50 148 49 174 C47 200 49 226 53 250 Z'/%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat; background-position: bottom left;
+}
+.dsb-palm-r {
+  position: absolute; bottom: 10%; right: -1%; width: 10%; max-width: 130px; height: 46%;
+  z-index: 5; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 250'%3E%3Cpath fill='%23030c1c' d='M55 250 C53 214 50 176 53 146 C55 130 60 114 55 98 C38 84 18 91 5 79 C20 75 44 88 54 95 C53 87 54 78 56 70 C70 51 90 36 103 32 C94 48 73 62 57 76 C56 66 59 54 65 38 C60 54 55 70 55 81 C67 69 80 73 93 81 C84 85 65 88 56 97 C63 89 76 93 85 100 C76 100 62 98 56 105 C52 123 50 148 49 174 C47 200 49 226 53 250 Z'/%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat; background-position: bottom right;
+  transform: scaleX(-1);
+}
+@keyframes waterShimmer {
+  0%,100%{opacity:.5;transform:scaleX(.85)}
+  50%{opacity:1;transform:scaleX(1.08)}
 }
 .dsb-inner {
   max-width: 620px; margin: 0 auto;
-  width: 100%; position: relative; z-index: 1;
+  width: 100%; position: relative; z-index: 7;
 }
 
 /* headline */
@@ -2373,6 +2430,16 @@ def get(request):
     tp = get_tours_page(page=1)
 
     search_banner = Div(
+        # Sky & atmosphere
+        Div(cls="dsb-sun"),
+        # Island silhouettes
+        Div(cls="dsb-sil-far"),
+        Div(cls="dsb-sil-mid"),
+        Div(cls="dsb-sil-near"),
+        Div(cls="dsb-sil-ocean"),
+        Div(cls="dsb-palm-l"),
+        Div(cls="dsb-palm-r"),
+        # Content
         Div(
             Div("Where do you want to go?", cls="dsb-heading"),
             Div("Flights · Hotels · Tours — all in one place", cls="dsb-sub"),
