@@ -197,6 +197,11 @@ NAV_CSS = """
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid rgba(255,255,255,.06);
   box-shadow: 0 1px 0 rgba(255,255,255,.04), 0 4px 24px rgba(0,0,0,.4);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+.gegow-header.nav-hidden {
+  transform: translateY(-100%);
 }
 /* teal accent line at very bottom of header */
 .gegow-header::after {
@@ -260,6 +265,11 @@ NAV_CSS = """
   padding: 0 12px calc(env(safe-area-inset-bottom, 8px) + 8px);
   pointer-events: none;
   display: flex;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+.bottom-nav.nav-hidden {
+  transform: translateY(120%);
 }
 @media (min-width: 768px) { .bottom-nav { display: none; } }
 @media (orientation: landscape) and (max-width: 767px) {

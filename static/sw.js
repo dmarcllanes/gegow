@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gegow-v3';
+const CACHE_NAME = 'gegow-v5';
 
 const PRECACHE = [
   '/',

@@ -279,6 +279,40 @@ function seedDemoData() {
   }
 }
 
+/* ── Scroll-hide nav (LinkedIn style) ────────────────────── */
+(function () {
+  var lastY = 0;
+  var ticking = false;
+  var threshold = 6; // px of scroll before we act
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(function () {
+        var y = window.scrollY || window.pageYOffset;
+        var header = document.querySelector('.gegow-header');
+        var bottomNav = document.querySelector('.bottom-nav');
+        var delta = y - lastY;
+
+        if (delta > threshold) {
+          // Scrolling down — hide both navs
+          if (header) header.classList.add('nav-hidden');
+          if (bottomNav) bottomNav.classList.add('nav-hidden');
+        } else if (delta < -threshold) {
+          // Scrolling up — show both navs
+          if (header) header.classList.remove('nav-hidden');
+          if (bottomNav) bottomNav.classList.remove('nav-hidden');
+        }
+
+        lastY = y;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
 /* ── Init on load ────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   seedDemoData();

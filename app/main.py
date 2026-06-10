@@ -30,25 +30,25 @@ CSS = """
 /* ── 1. Tokens (UI.md) ───────────────────────────────────── */
 :root {
   /* — Official Gegow palette from UI.md — */
-  --gegow-primary:      #006D77;
-  --gegow-accent:       #FF7043;
-  --gegow-bg:           #F1F1E6;
-  --gegow-gradient-btn: linear-gradient(90deg, #FF7043, #F4511E);
-  --gegow-glass:        rgba(255,255,255,0.7);
+  --gegow-primary:      #008C99;
+  --gegow-accent:       #FF8F00;
+  --gegow-bg:           #F5F7F2;
+  --gegow-gradient-btn: linear-gradient(90deg, #FF8F00, #E65100);
+  --gegow-glass:        rgba(255,255,255,0.75);
 
   /* — Aliases used throughout — */
-  --teal:      #006D77;
-  --teal-dk:   #005760;
-  --teal-lt:   #B2DFDB;
-  --teal-xl:   #E0F2F1;
-  --beige:     #F1F1E6;
-  --border:    #DDD9CE;
-  --border-dk: #C8C4B8;
-  --text:      #0F172A;
-  --muted:     #5F6B72;
-  --muted-lt:  #94A3B8;
-  --amber:     #FF7043;
-  --amber-lt:  #FBE9E7;
+  --teal:      #008C99;
+  --teal-dk:   #005A63;
+  --teal-lt:   #80D4DC;
+  --teal-xl:   #E0F7FA;
+  --beige:     #F5F7F2;
+  --border:    #DCE3DA;
+  --border-dk: #BCC7B9;
+  --text:      #0A1D20;
+  --muted:     #526B6D;
+  --muted-lt:  #8CA1A3;
+  --amber:     #FF8F00;
+  --amber-lt:  #FFF3E0;
   --white:     #FFFFFF;
   --sidebar:   240px;
   --radius-sm: 8px;
@@ -131,7 +131,7 @@ img { display: block; max-width: 100%; }
 
 /* ── 5. Hero ──────────────────────────────────────────────── */
 .hero {
-  background: linear-gradient(-45deg, #005760, #006D77, #0F766E, #006D77, #005760);
+  background: linear-gradient(-45deg, #005A63, #008C99, #01C0D3, #008C99, #005A63);
   background-size: 400% 400%;
   animation: aurora 14s ease infinite;
   padding: 48px 20px 0;
@@ -143,8 +143,8 @@ img { display: block; max-width: 100%; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 80%, rgba(255,255,255,.07) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.05) 0%, transparent 55%);
+    radial-gradient(ellipse at 30% 90%, rgba(255,255,255,.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 10%, rgba(255,143,0,.08) 0%, transparent 60%);
   pointer-events: none;
 }
 @media (min-width: 768px) { .hero { padding: 64px 48px 0; } }
@@ -641,7 +641,7 @@ img { display: block; max-width: 100%; }
 
 /* ── Hero banner ── */
 .shop-hero {
-  background: linear-gradient(135deg, #006D77 0%, #004d55 60%, #0a1628 100%);
+  background: linear-gradient(135deg, #008C99 0%, #005A63 60%, #041B1F 100%);
   padding: 24px 16px 22px;
   position: relative; overflow: hidden;
 }
@@ -651,11 +651,7 @@ img { display: block; max-width: 100%; }
 .shop-hero::before {
   content: '';
   position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 90% 90% at 50% 0%, black 20%, transparent 100%);
+  background: radial-gradient(ellipse at 50% -20%, rgba(255,255,255,.1) 0%, transparent 70%);
 }
 .shop-hero-inner { position: relative; z-index: 1; }
 .shop-hero-badge {
@@ -2089,6 +2085,10 @@ from starlette.responses import FileResponse
 async def service_worker(request):
     return FileResponse(str(_STATIC_DIR / "sw.js"), media_type="application/javascript", headers={"Service-Worker-Allowed": "/"})
 
+@app.route("/favicon.ico")
+async def favicon(request):
+    return FileResponse(str(_STATIC_DIR / "favicon.ico"), media_type="image/x-icon")
+
 # ─────────────────────────────────────────────────────────────
 # Page shell
 # ─────────────────────────────────────────────────────────────
@@ -3232,4 +3232,4 @@ def get():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)
